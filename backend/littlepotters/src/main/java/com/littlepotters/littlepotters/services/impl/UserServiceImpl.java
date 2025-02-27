@@ -38,21 +38,22 @@ public class UserServiceImpl implements UserService {
         if (userRepository.existsByEmail(userRequestDTO.getEmail())) {
             throw new RuntimeException("Email already exists");
         }
-        User user = userMapper.toEntity(userRequestDTO);
 
+        User user = userMapper.toEntity(userRequestDTO);
         user.setPassword(passwordEncoder.encode(userRequestDTO.getPassword()));
 
-        Set<Role> roles = new HashSet<>();
-        for (String roleName : userRequestDTO.getRoles()) {
-            Role role = roleRepository.findByName(roleName);
-            if (role != null) {
-                roles.add(role);
-            } else {
-                throw new RoleException(roleName);
-            }
-        }
-        user.setRoles(roles);
+        List<Role> roles = userRequestDTO.getRoles().stream()
+                .map(roleName -> roleRepository.findByName(roleName)
+                        .orElseThrow(() -> new IllegalArgumentException("Role not found: " + roleName)))
+                .collect(Collectors.toList());
 
+        if (roles.isEmpty()) {
+            Role defaultRole = roleRepository.findByName("USER")
+                    .orElseThrow(() -> new IllegalArgumentException("Default 'USER' role not found"));
+            roles.add(defaultRole);
+        }
+
+        user.setRoles(new HashSet<>(roles));
         User savedUser = userRepository.save(user);
         return userMapper.toDTO(savedUser);
     }
@@ -60,27 +61,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserResponseDTO updateUser(Long id, UserRequestDTO userRequestDTO) {
-        User existingUser = userRepository.findById(id)
-                .orElseThrow(() -> new UserException(id));
-
-        userMapper.updateEntityFromDTO(userRequestDTO, existingUser);
-        if (userRequestDTO.getRoles() != null) {
-            Set<Role> roles = userRequestDTO.getRoles().stream()
-                    .map(roleName -> {
-                        Role role = roleRepository.findByName(roleName);
-                        if (role == null) {
-                            throw new RoleException(roleName);
-                        }
-                        return role;
-                    })
-                    .collect(Collectors.toSet());
-            existingUser.setRoles(roles);
-        }
-        if (userRequestDTO.getPassword() != null && !userRequestDTO.getPassword().isEmpty()) {
-            existingUser.setPassword(passwordEncoder.encode(userRequestDTO.getPassword()));
-        }
-        User updatedUser = userRepository.save(existingUser);
-
+        User user = userRepository.findById(id).orElseThrow(() -> new UserException(id));
+        userMapper.updateEntityFromDTO(userRequestDTO, user);
+        User updatedUser = userRepository.save(user);
         return userMapper.toDTO(updatedUser);
     }
 

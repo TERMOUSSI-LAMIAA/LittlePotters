@@ -5,8 +5,7 @@ import lombok.Data;
 import javax.validation.constraints.NotBlank;
 
 @Data
-public class AuthRequest {
-
+public class AuthRequestDTO {
     @NotBlank(message = "email is required")
     private String email;
 

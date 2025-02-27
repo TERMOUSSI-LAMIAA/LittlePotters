@@ -17,4 +17,7 @@ public class Role {
     @Column(nullable = false, unique = true)
     @NonNull
     private String name;
+
+
+
 }
