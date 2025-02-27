@@ -1,7 +1,6 @@
 package com.littlepotters.littlepotters.models.entities;
 
 
-import com.littlepotters.littlepotters.models.entities.Role;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -9,6 +8,7 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -35,6 +35,9 @@ public class User {
 
     @NotBlank
     private String phone;
+
+    @NotNull(message = "Active status cannot be null")
+    private Boolean active;
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(

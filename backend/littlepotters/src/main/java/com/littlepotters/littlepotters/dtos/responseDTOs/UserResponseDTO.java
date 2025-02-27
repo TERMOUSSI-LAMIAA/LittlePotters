@@ -14,5 +14,6 @@ public class UserResponseDTO {
     private String email;
     private String fullname;
     private String phone;
+    private Boolean active;
     private Set<RoleResponseDTO> roles;
 }

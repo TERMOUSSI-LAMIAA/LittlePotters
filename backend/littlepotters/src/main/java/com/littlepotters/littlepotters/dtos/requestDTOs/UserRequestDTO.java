@@ -23,6 +23,9 @@ public class UserRequestDTO {
     @NotBlank(message = "Phone number cannot be blank")
     private String phone;
 
+    @NotNull(message = "Active status cannot be null")
+    private Boolean active;
+
     @NotNull(message = "Roles cannot be null")
     private Set<String> roles;
 }

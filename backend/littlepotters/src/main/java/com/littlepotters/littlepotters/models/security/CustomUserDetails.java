@@ -1,10 +1,14 @@
 package com.littlepotters.littlepotters.models.security;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 
+@Data
+@AllArgsConstructor
 public class CustomUserDetails  implements UserDetails {
 
     private String username;
@@ -12,31 +16,6 @@ public class CustomUserDetails  implements UserDetails {
     private Boolean active;
     private Collection<? extends GrantedAuthority> authorities;
 
-    public CustomUserDetails(String username, String password, Boolean active, Collection<? extends GrantedAuthority> authorities) {
-        this.username = username;
-        this.password = password;
-        this.active = active;
-        this.authorities = authorities;
-    }
-
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return authorities;
-    }
-
-    @Override
-    public String getPassword() {
-        return password;
-    }
-
-    @Override
-    public String getUsername() {
-        return username;
-    }
-
-    public Boolean getActive() {
-        return active;
-    }
 
     @Override
     public boolean isAccountNonExpired() {
