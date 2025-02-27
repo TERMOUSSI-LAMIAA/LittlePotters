@@ -2,8 +2,8 @@ package com.littlepotters.littlepotters.mappers;
 
 import com.littlepotters.littlepotters.dtos.requestDTOs.UserRequestDTO;
 import com.littlepotters.littlepotters.dtos.responseDTOs.UserResponseDTO;
-import com.littlepotters.littlepotters.models.Role;
-import com.littlepotters.littlepotters.models.User;
+import com.littlepotters.littlepotters.models.entities.Role;
+import com.littlepotters.littlepotters.models.entities.User;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;

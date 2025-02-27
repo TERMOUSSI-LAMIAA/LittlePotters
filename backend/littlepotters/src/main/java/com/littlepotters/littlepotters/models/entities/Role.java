@@ -1,4 +1,4 @@
-package com.littlepotters.littlepotters.models;
+package com.littlepotters.littlepotters.models.entities;
 
 import lombok.*;
 

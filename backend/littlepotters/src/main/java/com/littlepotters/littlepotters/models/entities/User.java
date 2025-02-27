@@ -1,6 +1,7 @@
-package com.littlepotters.littlepotters.models;
+package com.littlepotters.littlepotters.models.entities;
 
 
+import com.littlepotters.littlepotters.models.entities.Role;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

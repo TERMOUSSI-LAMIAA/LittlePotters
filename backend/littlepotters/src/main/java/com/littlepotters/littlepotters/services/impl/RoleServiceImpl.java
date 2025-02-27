@@ -4,7 +4,7 @@ import com.littlepotters.littlepotters.dtos.requestDTOs.RoleRequestDTO;
 import com.littlepotters.littlepotters.dtos.responseDTOs.RoleResponseDTO;
 import com.littlepotters.littlepotters.exceptions.RoleException;
 import com.littlepotters.littlepotters.mappers.RoleMapper;
-import com.littlepotters.littlepotters.models.Role;
+import com.littlepotters.littlepotters.models.entities.Role;
 import com.littlepotters.littlepotters.repositories.RoleRepository;
 import com.littlepotters.littlepotters.services.inter.RoleService;
 import lombok.AllArgsConstructor;

@@ -28,7 +28,7 @@ public class UserController {
 
         return ResponseEntity.status(HttpStatus.CREATED).body(userResponseDTO);
     }
-    
+
     @PutMapping("/{id}")
     public ResponseEntity<UserResponseDTO> updateUser(
             @PathVariable Long id,

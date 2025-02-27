@@ -1,6 +1,6 @@
 package com.littlepotters.littlepotters.repositories;
 
-import com.littlepotters.littlepotters.models.User;
+import com.littlepotters.littlepotters.models.entities.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface UserRepository extends JpaRepository<User,Long> {
