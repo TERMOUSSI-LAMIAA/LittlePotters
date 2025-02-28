@@ -91,4 +91,9 @@ public class UserServiceImpl implements UserService {
                 .orElseThrow(() -> new UserException(id));
         return userMapper.toDTO(user);
     }
+
+    @Override
+    public boolean existsByEmail(String email) {
+        return userRepository.existsByEmail(email);
+    }
 }
