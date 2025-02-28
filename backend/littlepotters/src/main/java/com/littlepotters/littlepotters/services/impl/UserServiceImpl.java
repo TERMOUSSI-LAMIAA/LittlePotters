@@ -62,7 +62,21 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserResponseDTO updateUser(Long id, UserRequestDTO userRequestDTO) {
         User user = userRepository.findById(id).orElseThrow(() -> new UserException(id));
+
         userMapper.updateEntityFromDTO(userRequestDTO, user);
+
+        if (userRequestDTO.getPassword() != null && !userRequestDTO.getPassword().isEmpty()) {
+            user.setPassword(passwordEncoder.encode(userRequestDTO.getPassword()));
+        }
+
+        if (userRequestDTO.getRoles() != null && !userRequestDTO.getRoles().isEmpty()) {
+            List<Role> roles = userRequestDTO.getRoles().stream()
+                    .map(roleName -> roleRepository.findByName(roleName)
+                            .orElseThrow(() -> new IllegalArgumentException("Role not found: " + roleName)))
+                    .collect(Collectors.toList());
+            user.setRoles(new HashSet<>(roles));
+        }
+
         User updatedUser = userRepository.save(user);
         return userMapper.toDTO(updatedUser);
     }
