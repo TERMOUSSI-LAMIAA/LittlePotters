@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.util.Date;
+import java.util.UUID;
 
 @Component
 public class JwtTokenProvider {
@@ -22,6 +23,8 @@ public class JwtTokenProvider {
                 .withIssuer(ISSUER)
                 .withSubject(username)
                 .withClaim("role", role)
+                .withClaim("jti", UUID.randomUUID().toString())
+                .withIssuedAt(new Date())
                 .withExpiresAt(new Date(System.currentTimeMillis() + jwtExpirationMs))
                 .sign(Algorithm.HMAC512(jwtSecret));
     }
