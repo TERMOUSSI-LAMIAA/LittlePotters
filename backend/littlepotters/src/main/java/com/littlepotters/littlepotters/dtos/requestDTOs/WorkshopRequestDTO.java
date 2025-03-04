@@ -1,25 +1,19 @@
-package com.littlepotters.littlepotters.models.entities;
+package com.littlepotters.littlepotters.dtos.requestDTOs;
 
 import com.littlepotters.littlepotters.models.enums.WorkshopLevel;
 import com.littlepotters.littlepotters.models.enums.WorkshopSchedule;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.web.multipart.MultipartFile;
 
-import javax.persistence.*;
 import javax.validation.constraints.*;
 import java.time.LocalDate;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Entity
-@Table(name = "workshops")
-public class Workshop {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+public class WorkshopRequestDTO {
 
     @NotBlank(message = "Title cannot be empty")
     private String title;
@@ -31,11 +25,9 @@ public class Workshop {
     private LocalDate date;
 
     @NotNull(message = "Level is required")
-    @Enumerated(EnumType.STRING)
     private WorkshopLevel level;
 
     @NotNull(message = "Schedule is required")
-    @Enumerated(EnumType.STRING)
     private WorkshopSchedule schedule;
 
     @Min(value = 1, message = "At least 1 participant is required")
@@ -46,5 +38,5 @@ public class Workshop {
     @DecimalMin(value = "0.0", inclusive = false, message = "Price must be greater than 0")
     private double price;
 
-    private String imagePath;
+    private MultipartFile image;
 }
