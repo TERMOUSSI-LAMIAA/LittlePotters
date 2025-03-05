@@ -21,6 +21,6 @@ public class WorkshopResponseDTO {
     private WorkshopSchedule schedule;
     private int maxParticipants;
     private double price;
-    private String imagePath;
+    private String imageUrl;
 
 }

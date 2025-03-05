@@ -46,5 +46,5 @@ public class Workshop {
     @DecimalMin(value = "0.0", inclusive = false, message = "Price must be greater than 0")
     private double price;
 
-    private String imagePath;
+    private String imageFileName;
 }
