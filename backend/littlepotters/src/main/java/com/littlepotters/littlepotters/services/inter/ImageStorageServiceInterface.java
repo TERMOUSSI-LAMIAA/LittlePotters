@@ -7,4 +7,5 @@ import java.io.IOException;
 public interface ImageStorageServiceInterface {
     String saveImage(MultipartFile file) throws IOException;
     byte[] getImage(String fileName) throws IOException;
+    void deleteImage(String fileName) throws IOException;
 }

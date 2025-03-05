@@ -84,6 +84,15 @@ public class WorkshopServiceImpl implements WorkshopService {
     public void deleteWorkshop(Long id) {
         Workshop workshop = workshopRepository.findById(id)
                 .orElseThrow(() -> new WorkshopException(id));
+        String imageFileName = workshop.getImageFileName();
+
+        if (imageFileName != null && !imageFileName.isEmpty()) {
+            try {
+                imageStorageService.deleteImage(imageFileName);
+            } catch (IOException e) {
+                throw new RuntimeException("Error deleting image for workshop with id " + id, e);
+            }
+        }
         workshopRepository.delete(workshop);
     }
 }

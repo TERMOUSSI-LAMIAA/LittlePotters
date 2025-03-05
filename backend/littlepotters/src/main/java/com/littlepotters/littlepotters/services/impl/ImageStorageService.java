@@ -38,4 +38,10 @@ public class ImageStorageService implements ImageStorageServiceInterface {
         Path filePath = Paths.get(UPLOAD_DIR).resolve(fileName);
         return Files.readAllBytes(filePath);
     }
+
+    @Override
+    public void deleteImage(String fileName) throws IOException {
+        Path filePath = Paths.get(UPLOAD_DIR).resolve(fileName);
+        Files.deleteIfExists(filePath);
+    }
 }
