@@ -1,16 +1,25 @@
 package com.littlepotters.littlepotters.controllers;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.littlepotters.littlepotters.dtos.requestDTOs.WorkshopRequestDTO;
 import com.littlepotters.littlepotters.dtos.responseDTOs.WorkshopResponseDTO;
 import com.littlepotters.littlepotters.services.inter.WorkshopService;
 import lombok.AllArgsConstructor;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.server.ResponseStatusException;
 
 import javax.validation.Valid;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 
 @RestController
@@ -43,6 +52,29 @@ public class WorkshopController {
     public ResponseEntity<List<WorkshopResponseDTO>> getAllWorkshops() {
         return ResponseEntity.ok(workshopService.getAllWorkshops());
     }
+
+    @GetMapping("/images/{fileName}")
+    public ResponseEntity<byte[]> getImage(@PathVariable String fileName) {
+        try {
+            Path filePath = Paths.get("workshop-images").resolve(fileName);
+            System.out.println(" Searching for image at: " + filePath.toAbsolutePath());
+
+            if (!Files.exists(filePath)) {
+                System.out.println(" Image not found at: " + filePath.toAbsolutePath());
+                throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Image not found");
+            }
+
+            byte[] imageBytes = Files.readAllBytes(filePath);
+            String contentType = Files.probeContentType(filePath);
+
+            return ResponseEntity.ok()
+                    .contentType(MediaType.parseMediaType(contentType != null ? contentType : "application/octet-stream"))
+                    .body(imageBytes);
+        } catch (IOException e) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error reading image", e);
+        }
+    }
+
 
 
 
