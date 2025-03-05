@@ -48,15 +48,22 @@ public class WorkshopServiceImpl implements WorkshopService {
         Workshop existingWorkshop = workshopRepository.findById(id)
                 .orElseThrow(() -> new WorkshopException(id));
 
+        String oldFileName = existingWorkshop.getImageFileName();
+
         if (workshopRequestDTO.getImage() != null && !workshopRequestDTO.getImage().isEmpty()) {
             String newFileName = imageStorageService.saveImage(workshopRequestDTO.getImage());
-            workshopRequestDTO.setImage(null);
 
-            workshopMapper.updateEntityFromDTO(workshopRequestDTO, existingWorkshop);
+            if (oldFileName != null && !oldFileName.isEmpty()) {
+                try {
+                    imageStorageService.deleteImage(oldFileName);
+                } catch (IOException e) {
+                    throw new RuntimeException("Error deleting old image for workshop with id " + id, e);
+                }
+            }
+
             existingWorkshop.setImageFileName(newFileName);
-        } else {
-            workshopMapper.updateEntityFromDTO(workshopRequestDTO, existingWorkshop);
         }
+        workshopMapper.updateEntityFromDTO(workshopRequestDTO, existingWorkshop);
 
         Workshop updatedWorkshop = workshopRepository.save(existingWorkshop);
         return workshopMapper.toDTO(updatedWorkshop);
