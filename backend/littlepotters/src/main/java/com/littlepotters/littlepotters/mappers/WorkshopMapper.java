@@ -17,15 +17,18 @@ import org.springframework.stereotype.Component;
 @Mapper(componentModel = "spring",uses = {ImageUrlGenerator.class})
 @Component
 public interface WorkshopMapper {
-
+    @Mapping(target = "instructor", ignore = true)
     @Mapping(target = "imageFileName", source = "image.originalFilename")
     Workshop toEntity(WorkshopRequestDTO workshopRequestDTO);
 
     @Mapping(target = "imageUrl", source = "imageFileName",qualifiedByName = "generateImageUrl")
+    @Mapping(target = "instructorId", source = "instructor.id")
     WorkshopResponseDTO toDTO(Workshop workshop);
 
 
 
     @Mapping(target = "id", ignore = true)
+    @Mapping(target = "instructor", ignore = true)
+    @Mapping(target = "imageFileName", source = "image.originalFilename")
     void updateEntityFromDTO(WorkshopRequestDTO workshopRequestDTO, @MappingTarget Workshop workshop);
 }

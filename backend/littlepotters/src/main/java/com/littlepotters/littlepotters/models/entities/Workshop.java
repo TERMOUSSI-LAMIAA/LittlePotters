@@ -44,12 +44,20 @@ public class Workshop {
     @Max(value = 20, message = "Cannot have more than 20 participants")
     private int maxParticipants;
 
+    @NotNull(message = "available places is required")
+    @Min(0)
+    private int availablePlaces;
+
     @NotNull(message = "Price is required")
     @DecimalMin(value = "0.0", inclusive = false, message = "Price must be greater than 0")
     private double price;
 
     private String imageFileName;
-    //user:instructor ID
+
+    @ManyToOne
+    @JoinColumn(name = "instructor_id", nullable = false)
+    private User instructor;
+
     @OneToMany(mappedBy = "workshop", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<Reservation> reservations = new HashSet<>();
 }

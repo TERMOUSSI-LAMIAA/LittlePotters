@@ -26,6 +26,7 @@ import java.util.List;
 @RequestMapping("/api/instructor/workshops")
 @AllArgsConstructor
 public class WorkshopController {
+    //TODO: admin can access this endpoints but with an instructor credentials
     private final WorkshopService workshopService;
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)

@@ -22,5 +22,7 @@ public class WorkshopResponseDTO {
     private int maxParticipants;
     private double price;
     private String imageUrl;
+    private Long instructorId;
+    private int availablePlaces;
 
 }

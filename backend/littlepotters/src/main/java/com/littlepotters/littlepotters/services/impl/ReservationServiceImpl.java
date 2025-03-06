@@ -27,9 +27,11 @@ public class ReservationServiceImpl  implements ReservationService {
     private final WorkshopRepository workshopRepository;
     private final UserRepository userRepository;
     private final ReservationMapper reservationMapper;
-
+//TODO:check the available seats for each workshop if its == the max participants
+// then disable the reservation possibility
     @Override
     public ReservationResponseDTO createReservation(ReservationRequestDTO reservationRequestDTO) {
+        //TODO: Update available places
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         String email = ((UserDetails) principal).getUsername();
 

@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -28,7 +29,10 @@ public class ImageStorageService implements ImageStorageServiceInterface {
         String fileName = System.currentTimeMillis() + "_" + file.getOriginalFilename();
         Path filePath = uploadPath.resolve(fileName);
 
-        Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
+//        Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
+        try (   InputStream inputStream = file.getInputStream()) {
+            Files.copy(inputStream, filePath, StandardCopyOption.REPLACE_EXISTING);
+        }
 
         return fileName;
     }
@@ -41,7 +45,21 @@ public class ImageStorageService implements ImageStorageServiceInterface {
 
     @Override
     public void deleteImage(String fileName) throws IOException {
+        if (fileName == null || fileName.isEmpty()) {
+            return;
+        }
+
         Path filePath = Paths.get(UPLOAD_DIR).resolve(fileName);
-        Files.deleteIfExists(filePath);
+
+        try {
+            boolean deleted = Files.deleteIfExists(filePath);
+            if (!deleted) {
+                System.err.println("Warning: File does not exist or could not be deleted: " + fileName);
+            }
+        } catch (IOException e) {
+            System.err.println("Warning: Failed to delete image: " + fileName + ". Error: " + e.getMessage());
+
+        }
+
     }
 }
