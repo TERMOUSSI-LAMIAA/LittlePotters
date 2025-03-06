@@ -22,7 +22,8 @@ public class WorkshopServiceImpl implements WorkshopService {
     private final WorkshopRepository workshopRepository;
     private final WorkshopMapper workshopMapper;
     private final ImageStorageService imageStorageService;
-
+//TODO: calculate the total reservations for each workshop if its == the max participants
+// then disable the reservation possibility
     @Transactional
     @Override
     public WorkshopResponseDTO createWorkshop(WorkshopRequestDTO workshopRequestDTO) throws IOException {

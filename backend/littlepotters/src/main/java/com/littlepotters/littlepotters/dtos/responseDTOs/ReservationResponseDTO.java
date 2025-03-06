@@ -16,4 +16,6 @@ public class ReservationResponseDTO {
     private String status;
     private Long clientId;
     private Long workshopId;
+    private Integer placesBooked;
+    private double totalPrice;
 }
