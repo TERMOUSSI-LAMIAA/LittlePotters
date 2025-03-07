@@ -3,9 +3,11 @@ package com.littlepotters.littlepotters.services.impl;
 import com.littlepotters.littlepotters.dtos.requestDTOs.ReservationRequestDTO;
 import com.littlepotters.littlepotters.dtos.responseDTOs.ReservationResponseDTO;
 import com.littlepotters.littlepotters.exceptions.ReservationException;
+import com.littlepotters.littlepotters.exceptions.WorkshopException;
 import com.littlepotters.littlepotters.mappers.ReservationMapper;
 import com.littlepotters.littlepotters.models.entities.Reservation;
 import com.littlepotters.littlepotters.models.entities.User;
+import com.littlepotters.littlepotters.models.entities.Workshop;
 import com.littlepotters.littlepotters.models.enums.ReservationStatus;
 import com.littlepotters.littlepotters.repositories.ReservationRepository;
 import com.littlepotters.littlepotters.repositories.UserRepository;
@@ -15,6 +17,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -29,19 +32,26 @@ public class ReservationServiceImpl  implements ReservationService {
     private final ReservationMapper reservationMapper;
 //TODO:check the available seats for each workshop if its == the max participants
 // then disable the reservation possibility
+    @Transactional
     @Override
     public ReservationResponseDTO createReservation(ReservationRequestDTO reservationRequestDTO) {
-        //TODO: Update available places
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         String email = ((UserDetails) principal).getUsername();
 
         User client = userRepository.findByEmail(email).orElseThrow(() -> new RuntimeException("User not found"));
+        Workshop workshop = workshopRepository.findById(reservationRequestDTO.getWorkshopId())
+                .orElseThrow(() -> new WorkshopException(reservationRequestDTO.getWorkshopId()));
 
+        if (reservationRequestDTO.getPlacesBooked() > workshop.getAvailablePlaces()) {
+            throw new RuntimeException("Insufficient available places for booking. Requested: "
+                    + reservationRequestDTO.getPlacesBooked() + ", Available: " + workshop.getAvailablePlaces());
+        }
         Reservation reservation = reservationMapper.toEntity(reservationRequestDTO);
 
         reservation.setClient(client);
         reservation.setStatus(ReservationStatus.PENDING);
-
+        workshop.setAvailablePlaces(workshop.getAvailablePlaces() - reservationRequestDTO.getPlacesBooked());
+        workshopRepository.save(workshop);
         Reservation savedReservation = reservationRepository.save(reservation);
 
         return reservationMapper.toDTO(savedReservation);
@@ -51,8 +61,33 @@ public class ReservationServiceImpl  implements ReservationService {
     public ReservationResponseDTO updateReservationStatus(Long reservationId, ReservationRequestDTO reservationRequestDTO) {
         Reservation reservation = reservationRepository.findById(reservationId)
                 .orElseThrow(() -> new ReservationException(reservationId));
-        reservationMapper.updateEntityFromDTO(reservationRequestDTO, reservation);
+        reservation.setStatus(reservationRequestDTO.getStatus());
+        Reservation updatedReservation = reservationRepository.save(reservation);
 
+        return reservationMapper.toDTO(updatedReservation);
+    }
+
+    @Transactional
+    @Override
+    public ReservationResponseDTO updatePlacesBooked(Long reservationId, ReservationRequestDTO reservationRequestDTO) {
+        Reservation reservation = reservationRepository.findById(reservationId)
+                .orElseThrow(() -> new ReservationException(reservationId));
+
+        if (reservation.getStatus() != ReservationStatus.PENDING) {
+            throw new RuntimeException("Cannot update places booked for a non-pending reservation");
+        }
+
+        Workshop workshop = reservation.getWorkshop();
+        int currentPlacesBooked = reservation.getPlacesBooked();
+
+        if (reservationRequestDTO.getPlacesBooked() > workshop.getAvailablePlaces() + currentPlacesBooked) {
+            throw new RuntimeException("Cannot book more places than available");
+        }
+
+        workshop.setAvailablePlaces(workshop.getAvailablePlaces() + currentPlacesBooked - reservationRequestDTO.getPlacesBooked());
+        reservation.setPlacesBooked(reservationRequestDTO.getPlacesBooked());
+
+        workshopRepository.save(workshop);
         Reservation updatedReservation = reservationRepository.save(reservation);
 
         return reservationMapper.toDTO(updatedReservation);
@@ -74,12 +109,15 @@ public class ReservationServiceImpl  implements ReservationService {
 
         return reservationMapper.toDTO(reservation);
     }
-
+    @Transactional
     @Override
     public void deleteReservation(Long reservationId) {
         Reservation reservation = reservationRepository.findById(reservationId)
                 .orElseThrow(() -> new ReservationException(reservationId));
+        Workshop workshop = reservation.getWorkshop();
 
+        workshop.setAvailablePlaces(workshop.getAvailablePlaces() + reservation.getPlacesBooked());
+        workshopRepository.save(workshop);
         reservationRepository.delete(reservation);
     }
 

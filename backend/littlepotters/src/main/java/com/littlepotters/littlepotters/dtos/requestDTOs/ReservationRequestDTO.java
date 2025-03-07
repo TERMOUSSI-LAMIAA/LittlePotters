@@ -1,5 +1,6 @@
 package com.littlepotters.littlepotters.dtos.requestDTOs;
 
+import com.littlepotters.littlepotters.models.enums.ReservationStatus;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -17,4 +18,6 @@ public class ReservationRequestDTO {
 
     @Min(1)
     private Integer placesBooked = 1;
+
+    private ReservationStatus status;
 }
