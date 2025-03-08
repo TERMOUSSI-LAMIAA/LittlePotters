@@ -17,16 +17,16 @@ import org.springframework.stereotype.Component;
 @Component
 public interface ReservationMapper {
 
-    @Mapping(target = "client", ignore = true)
+    @Mapping(target = "customer", ignore = true)
     @Mapping(target = "workshop", source = "workshopId", qualifiedByName = "mapWorkshopIdToEntity")
     Reservation toEntity(ReservationRequestDTO reservationRequestDTO);
 
-    @Mapping(target = "clientId", source = "client.id")
+    @Mapping(target = "customerId", source = "customer.id")
     @Mapping(target = "workshopId", source = "workshop.id")
     ReservationResponseDTO toDTO(Reservation reservation);
 
     @Mapping(target = "id", ignore = true)
-    @Mapping(target = "client", ignore = true)
+    @Mapping(target = "customer", ignore = true)
     @Mapping(target = "workshop", ignore = true)
     void updateEntityFromDTO(ReservationRequestDTO reservationRequestDTO, @MappingTarget Reservation reservation);
 

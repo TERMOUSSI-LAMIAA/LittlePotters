@@ -14,7 +14,7 @@ public class ReservationResponseDTO {
     private Long id;
     private LocalDateTime reservationDate;
     private String status;
-    private Long clientId;
+    private Long customerId;
     private Long workshopId;
     private Integer placesBooked;
     private double totalPrice;

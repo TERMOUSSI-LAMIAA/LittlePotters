@@ -19,6 +19,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -31,16 +32,21 @@ public class ReservationServiceImpl  implements ReservationService {
     private final UserRepository userRepository;
     private final ReservationMapper reservationMapper;
 //TODO:check the available seats for each workshop if its == the max participants
-// then disable the reservation possibility
+// then disable the reservation possibility and can't reserv an old workshop
+
     @Transactional
     @Override
     public ReservationResponseDTO createReservation(ReservationRequestDTO reservationRequestDTO) {
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         String email = ((UserDetails) principal).getUsername();
 
-        User client = userRepository.findByEmail(email).orElseThrow(() -> new RuntimeException("User not found"));
+        User customer = userRepository.findByEmail(email).orElseThrow(() -> new RuntimeException("User not found"));
         Workshop workshop = workshopRepository.findById(reservationRequestDTO.getWorkshopId())
                 .orElseThrow(() -> new WorkshopException(reservationRequestDTO.getWorkshopId()));
+
+        if (reservationRepository.existsByCustomerAndWorkshop(customer, workshop)) {
+            throw new RuntimeException("You have already reserved this workshop.");
+        }
 
         if (reservationRequestDTO.getPlacesBooked() > workshop.getAvailablePlaces()) {
             throw new RuntimeException("Insufficient available places for booking. Requested: "
@@ -48,8 +54,11 @@ public class ReservationServiceImpl  implements ReservationService {
         }
         Reservation reservation = reservationMapper.toEntity(reservationRequestDTO);
 
-        reservation.setClient(client);
+        reservation.setCustomer(customer);
         reservation.setStatus(ReservationStatus.PENDING);
+        double totalPrice = workshop.getPrice() * reservationRequestDTO.getPlacesBooked();
+        reservation.setTotalPrice(totalPrice);
+        reservation.setWorkshop(workshop);
         workshop.setAvailablePlaces(workshop.getAvailablePlaces() - reservationRequestDTO.getPlacesBooked());
         workshopRepository.save(workshop);
         Reservation savedReservation = reservationRepository.save(reservation);
@@ -119,6 +128,38 @@ public class ReservationServiceImpl  implements ReservationService {
         workshop.setAvailablePlaces(workshop.getAvailablePlaces() + reservation.getPlacesBooked());
         workshopRepository.save(workshop);
         reservationRepository.delete(reservation);
+    }
+
+    @Override
+    public List<ReservationResponseDTO> getReservationsForCustomer() {
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String email = ((UserDetails) principal).getUsername();
+        User customer = userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("Customer not found"));
+
+        List<Reservation> reservations = reservationRepository.findByCustomer(customer);
+        return reservations.stream()
+                .map(reservationMapper::toDTO)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<ReservationResponseDTO> getReservationsForInstructor() {
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String email = ((UserDetails) principal).getUsername();
+        User instructor = userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("Instructor not found"));
+
+        List<Workshop> workshops = workshopRepository.findByInstructor(instructor);
+
+        List<Reservation> reservations = new ArrayList<>();
+        for (Workshop workshop : workshops) {
+            reservations.addAll(reservationRepository.findByWorkshop(workshop));
+        }
+
+        return reservations.stream()
+                .map(reservationMapper::toDTO)
+                .collect(Collectors.toList());
     }
 
 }

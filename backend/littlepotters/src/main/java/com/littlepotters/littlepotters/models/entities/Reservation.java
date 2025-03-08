@@ -27,7 +27,7 @@ public class Reservation {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private ReservationStatus status = ReservationStatus.PENDING;
+    private ReservationStatus status ;
 
     @Min(1)
     @Column(nullable = false)
@@ -37,8 +37,8 @@ public class Reservation {
     private double totalPrice;
 
     @ManyToOne
-    @JoinColumn(name = "client_id", nullable = false)
-    private User client;
+    @JoinColumn(name = "customer_id", nullable = false)
+    private User customer;
 
     @ManyToOne
     @JoinColumn(name = "workshop_id", nullable = false)
