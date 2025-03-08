@@ -14,6 +14,7 @@ import com.littlepotters.littlepotters.repositories.UserRepository;
 import com.littlepotters.littlepotters.repositories.WorkshopRepository;
 import com.littlepotters.littlepotters.services.inter.ReservationService;
 import lombok.AllArgsConstructor;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
@@ -70,6 +71,16 @@ public class ReservationServiceImpl  implements ReservationService {
     public ReservationResponseDTO updateReservationStatus(Long reservationId, ReservationRequestDTO reservationRequestDTO) {
         Reservation reservation = reservationRepository.findById(reservationId)
                 .orElseThrow(() -> new ReservationException(reservationId));
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String instructorEmail = authentication.getName();
+
+        User instructor = userRepository.findByEmail(instructorEmail)
+                .orElseThrow(() -> new RuntimeException("Instructor not found"));
+
+        if (!isInstructorOfWorkshop(instructor, reservation.getWorkshop())) {
+            throw new RuntimeException("You are not authorized to update the status of this reservation.");
+        }
+
         reservation.setStatus(reservationRequestDTO.getStatus());
         Reservation updatedReservation = reservationRepository.save(reservation);
 
@@ -81,6 +92,15 @@ public class ReservationServiceImpl  implements ReservationService {
     public ReservationResponseDTO updatePlacesBooked(Long reservationId, ReservationRequestDTO reservationRequestDTO) {
         Reservation reservation = reservationRepository.findById(reservationId)
                 .orElseThrow(() -> new ReservationException(reservationId));
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String customerEmail = authentication.getName();
+
+        User customer = userRepository.findByEmail(customerEmail)
+                .orElseThrow(() -> new RuntimeException("Customer not found"));
+
+        if (!reservation.getCustomer().equals(customer)) {
+            throw new RuntimeException("You are not authorized to update this reservation.");
+        }
 
         if (reservation.getStatus() != ReservationStatus.PENDING) {
             throw new RuntimeException("Cannot update places booked for a non-pending reservation");
@@ -160,6 +180,10 @@ public class ReservationServiceImpl  implements ReservationService {
         return reservations.stream()
                 .map(reservationMapper::toDTO)
                 .collect(Collectors.toList());
+    }
+
+    private boolean isInstructorOfWorkshop(User instructor, Workshop workshop) {
+        return workshop.getInstructor().equals(instructor);
     }
 
 }
