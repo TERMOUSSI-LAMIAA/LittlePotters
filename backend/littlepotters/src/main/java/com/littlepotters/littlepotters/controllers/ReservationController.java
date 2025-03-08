@@ -23,14 +23,13 @@ public class ReservationController {
         ReservationResponseDTO reservationResponseDTO = reservationService.createReservation(reservationRequestDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(reservationResponseDTO);
     }
-//TODO:the update should be handled by the instructor of the workshop reserved not any instrucor
+
     @PreAuthorize("hasRole('INSTRUCTOR')")
     @PutMapping("/{reservationId}/status")
     public ResponseEntity<ReservationResponseDTO> updateReservationStatus(@PathVariable Long reservationId, @RequestBody ReservationRequestDTO reservationRequestDTO) {
         ReservationResponseDTO reservationResponseDTO = reservationService.updateReservationStatus(reservationId, reservationRequestDTO);
         return ResponseEntity.ok(reservationResponseDTO);
     }
-//TODO:the update should be handled by the customer of the workshop reserved not any customer
 
     @PreAuthorize("hasRole('CUSTOMER')")
     @PutMapping("/{reservationId}/places")

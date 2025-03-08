@@ -29,7 +29,9 @@ public class WorkshopServiceImpl implements WorkshopService {
 
     private final ImageStorageService imageStorageService;
 //TODO: when delete a workshop notify the clients with reservations + cannot delete a workhop with date has passed
-    //TODO: delete old imge while updating
+// + when delete workshop delete its reservations
+    //TODO: delete old imge while updating (check content-type in header)
+    //TODO: update & delete the workshop by its instructor not any instructor
     @Transactional
     @Override
     public WorkshopResponseDTO createWorkshop(WorkshopRequestDTO workshopRequestDTO) throws IOException {

@@ -143,6 +143,15 @@ public class ReservationServiceImpl  implements ReservationService {
     public void deleteReservation(Long reservationId) {
         Reservation reservation = reservationRepository.findById(reservationId)
                 .orElseThrow(() -> new ReservationException(reservationId));
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String customerEmail = authentication.getName();
+
+        User customer = userRepository.findByEmail(customerEmail)
+                .orElseThrow(() -> new RuntimeException("Customer not found"));
+
+        if (!reservation.getCustomer().equals(customer)) {
+            throw new RuntimeException("You are not authorized to delete this reservation.");
+        }
         Workshop workshop = reservation.getWorkshop();
 
         workshop.setAvailablePlaces(workshop.getAvailablePlaces() + reservation.getPlacesBooked());
