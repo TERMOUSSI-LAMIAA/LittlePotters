@@ -108,7 +108,7 @@ export class AuthService {
       errorMessage = `Error Code: ${error.status}\nMessage: ${error.message}`;
     }
     console.error('HTTP Error:', errorMessage, error);
-    return throwError(() => error); // Return the actual error object for better error handling
+    return throwError(() => error); 
   }
 
 

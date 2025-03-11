@@ -18,6 +18,8 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @RestController
@@ -31,13 +33,16 @@ public class AuthController {
 
 
     @PostMapping("/login")
-    public String login(@RequestBody AuthRequestDTO authRequestDTO) {
+    public ResponseEntity<Map<String, String>> login(@RequestBody AuthRequestDTO authRequestDTO) {
         try {
             System.out.println("Attempting login for: " + authRequestDTO.getEmail());
             Authentication authentication = authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(authRequestDTO.getEmail(), authRequestDTO.getPassword()));
             System.out.println("Authentication successful");
-            return jwtTokenProvider.generateToken(authentication.getName(), authentication.getAuthorities().toString());
+            String token = jwtTokenProvider.generateToken(authentication.getName(), authentication.getAuthorities().toString());
+            Map<String, String> response = new HashMap<>();
+            response.put("token", token);
+            return ResponseEntity.ok(response);
         } catch (Exception e) {
             System.out.println("Authentication failed: " + e.getMessage());
             throw e;
