@@ -43,6 +43,7 @@ export class AuthService {
           if (isPlatformBrowser(this.platformId)) {
             localStorage.setItem('currentUser', JSON.stringify(authResponse));
             localStorage.setItem('auth_token', authResponse.token);
+            localStorage.setItem('roles', JSON.stringify(authResponse.roles));
           }
           this.currentUserSubject.next(authResponse);
         }),
@@ -81,6 +82,7 @@ export class AuthService {
           if (isPlatformBrowser(this.platformId)) {
             localStorage.removeItem('currentUser');
             localStorage.removeItem('auth_token');
+            localStorage.removeItem('roles'); 
           }
           this.currentUserSubject.next(null);
         }),

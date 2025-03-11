@@ -14,11 +14,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -33,15 +35,22 @@ public class AuthController {
 
 
     @PostMapping("/login")
-    public ResponseEntity<Map<String, String>> login(@RequestBody AuthRequestDTO authRequestDTO) {
+    public ResponseEntity<Map<String, Object>> login(@RequestBody AuthRequestDTO authRequestDTO) {
         try {
             System.out.println("Attempting login for: " + authRequestDTO.getEmail());
             Authentication authentication = authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(authRequestDTO.getEmail(), authRequestDTO.getPassword()));
             System.out.println("Authentication successful");
             String token = jwtTokenProvider.generateToken(authentication.getName(), authentication.getAuthorities().toString());
-            Map<String, String> response = new HashMap<>();
+            List<String> roles = authentication.getAuthorities()
+                    .stream()
+                    .map(GrantedAuthority::getAuthority)
+                    .collect(Collectors.toList());
+
+            Map<String, Object> response = new HashMap<>();
             response.put("token", token);
+            response.put("roles", roles);
+
             return ResponseEntity.ok(response);
         } catch (Exception e) {
             System.out.println("Authentication failed: " + e.getMessage());

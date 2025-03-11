@@ -59,7 +59,21 @@ export class LoginComponent implements OnInit {
       .subscribe({
         next: (response) => {
           this.loading = false;
-          this.router.navigate(['/home']);
+          const userRoles = response.roles; 
+          if (!userRoles || userRoles.length === 0) {
+            this.router.navigate(['/home']);
+            return;
+          }
+
+          if (userRoles.includes('ROLE_ADMIN')) {
+            this.router.navigate(['/admin-dashboard']);
+          } else if (userRoles.includes('ROLE_INSTRUCTOR')) {
+            this.router.navigate(['/instructor-dashboard']);
+          } else if (userRoles.includes('ROLE_CUSTOMER')) {
+            this.router.navigate(['/customer-space']);
+          } else {
+            this.router.navigate(['/home']);
+          }
         },
         error: (error) => {
           this.loading = false;
