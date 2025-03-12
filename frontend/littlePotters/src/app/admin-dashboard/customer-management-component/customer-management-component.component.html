@@ -1,0 +1,41 @@
+<div class="container mx-auto p-6">
+    <div class="flex items-center justify-between mb-4">
+        <h1 class="text-2xl font-semibold text-amber-900">Customer Management</h1>
+    </div>
+
+    <div class="overflow-x-auto bg-white shadow-md rounded-lg">
+        <table class="min-w-full table-auto">
+            <thead class="bg-amber-50">
+                <tr>
+                    <th class="px-4 py-2 text-left text-amber-800">Customer ID</th>
+                    <th class="px-4 py-2 text-left text-amber-800">Email</th>
+                    <th class="px-4 py-2 text-left text-amber-800">Full Name</th>
+                    <th class="px-4 py-2 text-left text-amber-800">Phone</th>
+                    <th class="px-4 py-2 text-left text-amber-800">Active Status</th>
+                    <th class="px-4 py-2 text-left text-amber-800">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let customer of customers" class="hover:bg-amber-50">
+                    <td class="px-4 py-2 border-b">{{ customer.id }}</td>
+                    <td class="px-4 py-2 border-b">{{ customer.email }}</td>
+                    <td class="px-4 py-2 border-b">{{ customer.fullname }}</td>
+                    <td class="px-4 py-2 border-b">{{ customer.phone }}</td>
+                    <td class="px-4 py-2 border-b">
+                        <span [class.text-green-600]="customer.active" [class.text-red-600]="!customer.active"
+                            class="font-medium">
+                            {{ customer.active ? 'Active' : 'Inactive' }}
+                        </span>
+                    </td>
+                    <td class="px-4 py-2 border-b">
+                        <button
+                            class="bg-amber-600 text-white py-2 px-4 rounded-md hover:bg-amber-700 focus:outline-none"
+                            (click)="deleteCustomer(customer.id)">
+                            Delete
+                        </button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

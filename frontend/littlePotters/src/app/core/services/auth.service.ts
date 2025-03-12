@@ -23,6 +23,13 @@ export class AuthService {
     this.currentUser = this.currentUserSubject.asObservable();
   }
 
+  isAuthenticated(): boolean {
+    if (isPlatformBrowser(this.platformId)) {
+      return !!localStorage.getItem('auth_token');
+    }
+    return false; 
+  }
+
   private getUserFromStorage(): AuthResponse | null {
     if (isPlatformBrowser(this.platformId)) {
       const userJson = localStorage.getItem('currentUser');

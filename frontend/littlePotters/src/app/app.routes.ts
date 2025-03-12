@@ -6,6 +6,8 @@ import { InstructorDashboardComponent } from './instructor-dashboard/instructor-
 import { CustomerSpaceComponent } from './customer-space/customer-space.component';
 import { AdminDashboardComponent } from './admin-dashboard/admin-dashboard.component';
 import { AuthGuard } from './core/auth/guards/auth.guard';
+import { CustomerManagementComponentComponent } from './admin-dashboard/customer-management-component/customer-management-component.component';
+import { InstructorManagementComponentComponent } from './admin-dashboard/instructor-management-component/instructor-management-component.component';
 
 export const routes: Routes = [
     { path: '', component: HomeComponent },
@@ -15,7 +17,17 @@ export const routes: Routes = [
     {
         path: 'admin-dashboard', component: AdminDashboardComponent,
         canActivate: [AuthGuard],
-        data: { role: 'ROLE_ADMIN' }
+        data: { role: 'ROLE_ADMIN' },
+        children: [
+            {
+                path: 'instructors',
+                component: InstructorManagementComponentComponent
+            },
+            {
+                path: 'customers',
+                component: CustomerManagementComponentComponent
+            }
+        ]
     },
     {
         path: 'instructor-dashboard', component: InstructorDashboardComponent,
