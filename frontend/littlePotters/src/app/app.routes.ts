@@ -9,6 +9,7 @@ import { AuthGuard } from './core/auth/guards/auth.guard';
 import { CustomerManagementComponentComponent } from './admin-dashboard/customer-management-component/customer-management-component.component';
 import { InstructorManagementComponentComponent } from './admin-dashboard/instructor-management-component/instructor-management-component.component';
 import { UserprofileComponent } from './shared/components/userprofile/userprofile.component';
+import { InstructorFormComponentComponent } from './admin-dashboard/instructor-form-component/instructor-form-component.component';
 
 export const routes: Routes = [
     { path: '', component: HomeComponent },
@@ -22,7 +23,17 @@ export const routes: Routes = [
         children: [
             {
                 path: 'instructors',
-                component: InstructorManagementComponentComponent
+                component: InstructorManagementComponentComponent,
+                children: [
+                    {
+                        path: 'new',
+                        component: InstructorFormComponentComponent
+                    },
+                    {
+                        path: ':id',
+                        component: InstructorFormComponentComponent
+                    }
+                ]
             },
             {
                 path: 'customers',

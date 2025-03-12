@@ -22,6 +22,7 @@ export class InstructorFormComponentComponent {
   showConfirmPassword = false;
   instructorId: number | null = null;
 
+  
   constructor(
     private fb: FormBuilder,
     private userService: UserService,
@@ -162,6 +163,6 @@ export class InstructorFormComponentComponent {
   }
 
   navigateBack(): void {
-    this.router.navigate(['/admin/instructors']);
+    this.router.navigate(['/admin-dashboard/instructors']);
   }
 }

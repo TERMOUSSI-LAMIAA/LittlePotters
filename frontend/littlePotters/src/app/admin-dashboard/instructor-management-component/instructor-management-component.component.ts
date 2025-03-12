@@ -2,19 +2,19 @@ import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { User } from '../../core/models/user.model';
 import { UserService } from '../../core/services/user.service';
-import { RouterOutlet } from '@angular/router';
+import { Router, RouterModule, RouterOutlet } from '@angular/router';
 
 @Component({
   selector: 'app-instructor-management-component',
   standalone: true,
-  imports: [CommonModule,],
+  imports: [CommonModule,RouterModule],
   templateUrl: './instructor-management-component.component.html',
   styleUrl: './instructor-management-component.component.scss'
 })
 export class InstructorManagementComponentComponent implements OnInit {
   instructors: User[] = [];
 
-  constructor(private userService: UserService) { }
+  constructor(private userService: UserService, private router: Router) { }
 
   ngOnInit(): void {
     this.loadInstructors();
@@ -33,11 +33,12 @@ export class InstructorManagementComponentComponent implements OnInit {
   }
   
   addInstructor(): void {
-    console.log('Open Add Instructor Modal');
+    console.log("in add")
+    this.router.navigate(['/admin-dashboard/instructors/new']);
   }
 
   updateInstructor(instructor: User): void {
-    console.log('Open Update Instructor Modal for:', instructor);
+    this.router.navigate([`/admin-dashboard/instructors/${instructor.id}`]);
   }
 
   deleteInstructor(id: number): void {

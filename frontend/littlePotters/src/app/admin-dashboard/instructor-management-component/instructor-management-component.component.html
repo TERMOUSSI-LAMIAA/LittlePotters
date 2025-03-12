@@ -9,8 +9,12 @@
             </svg>
             Add Instructor
         </button>
+        
     </div>
-
+    <div class="container mx-auto p-6">
+        <router-outlet></router-outlet>
+    </div>
+    
     <div class="overflow-x-auto bg-white shadow-md rounded-lg">
         <table class="min-w-full table-auto">
             <thead class="bg-amber-50">
@@ -24,7 +28,7 @@
                 </tr>
             </thead>
             <tbody>
-               
+
                 <tr *ngFor="let instructor of instructors" class="hover:bg-amber-50">
                     <td class="px-4 py-2 border-b">{{ instructor.id }}</td>
                     <td class="px-4 py-2 border-b">{{ instructor.fullname }}</td>
@@ -61,6 +65,8 @@
                         </div>
                     </td>
                 </tr>
+
+
             </tbody>
         </table>
     </div>
