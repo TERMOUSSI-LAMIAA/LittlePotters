@@ -1,7 +1,9 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { UserRequest, User } from '../models/user.model';
+import { PaginatedResponse } from '../models/PaginatedResponse.model';
+import { AuthService } from './auth.service';
 
 @Injectable({
   providedIn: 'root'
@@ -10,7 +12,7 @@ export class UserService {
 
   private apiUrl = 'http://localhost:8081/api/admin/users'; 
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private authService: AuthService) { }
 
   // For updating a user, you should use UserRequest
   updateUser(id: number, user: UserRequest): Observable<User> {
@@ -42,8 +44,10 @@ export class UserService {
     return this.http.get<User[]>(`${this.apiUrl}?role=customer`);
   }
 
-  // Get only instructors
-  getInstructors(): Observable<User[]> {
-    return this.http.get<User[]>(`${this.apiUrl}?role=instructor`);
+  getInstructors(): Observable<PaginatedResponse<User>> {
+    return this.http.get<PaginatedResponse<User>>(`${this.apiUrl}?role=INSTRUCTOR`);
   }
+  
+
+
 }

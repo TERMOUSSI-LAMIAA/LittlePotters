@@ -23,7 +23,10 @@ export class AdminDashboardComponent implements OnInit {
     { description: 'New workshop created', details: 'Advanced Glazing Techniques - 5 hours ago' },
     { description: 'Workshop booking confirmed', details: 'Beginner Wheel Throwing - 1 day ago' }
   ];
-
+  showDropdown: boolean = false;
+  toggleDropdown(): void {
+    this.showDropdown = !this.showDropdown;
+  }
   constructor(private router: Router) { }
 
   ngOnInit() {

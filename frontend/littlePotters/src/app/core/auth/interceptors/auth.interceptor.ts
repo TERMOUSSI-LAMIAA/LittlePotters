@@ -1,46 +1,43 @@
 import { isPlatformBrowser } from '@angular/common';
-import { HttpErrorResponse, HttpEvent, HttpHandler, HttpInterceptor, HttpInterceptorFn, HttpRequest } from '@angular/common/http';
-import { Inject, Injectable, PLATFORM_ID } from '@angular/core';
+import { HttpInterceptorFn } from '@angular/common/http';
+import { inject, PLATFORM_ID } from '@angular/core';
 import { Router } from '@angular/router';
-import { catchError, Observable, throwError } from 'rxjs';
+import { catchError,  throwError } from 'rxjs';
 
 
-@Injectable()
-export class AuthInterceptor implements HttpInterceptor {
+export const authInterceptor: HttpInterceptorFn = (req, next) => {
+  const router = inject(Router);
+  const platformId = inject(PLATFORM_ID);
+  let token = null;
 
-  constructor(
-    private router: Router,
-    @Inject(PLATFORM_ID) private platformId: Object
-  ) { }
-  intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    let token = null;
-
-    if (isPlatformBrowser(this.platformId)) {
-      token = localStorage.getItem('auth_token');
-    }
-
-    if (token) {
-      const cloned = request.clone({
-        setHeaders: {
-          Authorization: `Bearer ${token}`
-        }
-      });
-
-      return next.handle(cloned).pipe(
-        catchError((error: HttpErrorResponse) => {
-          if (error.status === 401 || error.status === 403) {
-            if (isPlatformBrowser(this.platformId)) {
-              localStorage.removeItem('auth_token');
-              localStorage.removeItem('currentUser');
-            }
-            this.router.navigate(['/login']);
-          }
-          return throwError(() => error);
-        })
-      );
-    }
-
-    return next.handle(request);
+  if (isPlatformBrowser(platformId)) {
+    token = localStorage.getItem('auth_token');
   }
 
-}
+  console.log('Token:', token); 
+  if (token) {
+    const cloned = req.clone({
+      setHeaders: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    console.log('Request with token:', cloned); 
+
+    return next(cloned).pipe(
+      catchError((error) => {
+        if (error.status === 401 || error.status === 403) {
+          if (isPlatformBrowser(platformId)) {
+            localStorage.removeItem('auth_token');
+            localStorage.removeItem('currentUser');
+            //TODO:remove the role also
+          }
+          router.navigate(['/login']);
+        }
+        return throwError(() => error);
+      })
+    );
+  }
+
+  return next(req);
+};

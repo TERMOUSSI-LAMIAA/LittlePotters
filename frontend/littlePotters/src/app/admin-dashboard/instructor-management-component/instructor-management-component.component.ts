@@ -21,16 +21,17 @@ export class InstructorManagementComponentComponent implements OnInit {
   }
 
   loadInstructors(): void {
-    this.userService.getInstructors().subscribe(
-      (data) => {
-        this.instructors = data;
+    this.userService.getInstructors().subscribe({
+      next: (response) => {
+        this.instructors = response.content;
+        console.log('Instructors loaded:', response.content);
       },
-      (error) => {
-        console.error('Error loading instructors', error);
+      error: (error) => {
+        console.error('Error loading instructors:', error);
       }
-    );
+    });
   }
-
+  
   addInstructor(): void {
     console.log('Open Add Instructor Modal');
   }

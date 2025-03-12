@@ -6,6 +6,9 @@ import com.littlepotters.littlepotters.dtos.responseDTOs.UserResponseDTO;
 import com.littlepotters.littlepotters.repositories.RoleRepository;
 import com.littlepotters.littlepotters.services.inter.UserService;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -47,10 +50,18 @@ public class UserController {
     }
 
     @GetMapping
-    public ResponseEntity<List<UserResponseDTO>> getAllUsers() {
-        List<UserResponseDTO> users = userService.getAllUsers();
-        return ResponseEntity.ok(users);
+    public ResponseEntity<Page<UserResponseDTO>> getAllUsers(
+            @RequestParam(name = "role", required = false) String role,
+            @PageableDefault(size = 6) Pageable pageable) {
+        if (role != null) {
+            Page<UserResponseDTO> filteredUsers = userService.getUsersByRole(role, pageable);
+            return ResponseEntity.ok(filteredUsers);
+        }
+
+        Page<UserResponseDTO> allUsers = userService.getAllUsers(pageable);
+        return ResponseEntity.ok(allUsers);
     }
+
 
     @GetMapping("/{id}")
     public ResponseEntity<UserResponseDTO> getUserById(@PathVariable Long id) {

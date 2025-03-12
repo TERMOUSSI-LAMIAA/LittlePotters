@@ -11,8 +11,12 @@ import com.littlepotters.littlepotters.repositories.RoleRepository;
 import com.littlepotters.littlepotters.repositories.UserRepository;
 import com.littlepotters.littlepotters.services.inter.UserService;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.HashSet;
 import java.util.List;
@@ -57,7 +61,17 @@ public class UserServiceImpl implements UserService {
         User savedUser = userRepository.save(user);
         return userMapper.toDTO(savedUser);
     }
-
+    @Override
+    public Page<UserResponseDTO> getUsersByRole(String roleName, Pageable pageable) {
+        if (!roleRepository.existsByName(roleName)) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    "Invalid role specified: " + roleName
+            );
+        }
+        Page<User> users = userRepository.findByRoles_Name(roleName, pageable);
+        return users.map(userMapper::toDTO);
+    }
 
     @Override
     public UserResponseDTO updateUser(Long id, UserRequestDTO userRequestDTO) {
@@ -91,11 +105,9 @@ public class UserServiceImpl implements UserService {
 
 
     @Override
-    public List<UserResponseDTO> getAllUsers() {
-        List<User> users = userRepository.findAll();
-        return users.stream()
-                .map(userMapper::toDTO)
-                .collect(Collectors.toList());
+    public Page<UserResponseDTO> getAllUsers(Pageable pageable) {
+        Page<User> users = userRepository.findAll(pageable);
+        return users.map(userMapper::toDTO);
     }
 
 

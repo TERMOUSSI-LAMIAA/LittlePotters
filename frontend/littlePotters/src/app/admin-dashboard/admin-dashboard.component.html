@@ -13,9 +13,8 @@
                     <div class="flex items-center">
                         <span class="text-sm text-gray-600 mr-4">Welcome, {{ adminName }}</span>
                         <div class="relative">
-                            <button class="flex items-center focus:outline-none">
-                                <img class="h-8 w-8 rounded-full object-cover" src="/placeholder.svg?height=32&width=32"
-                                    alt="Admin profile" />
+                            <button (click)="toggleDropdown()" class="flex items-center focus:outline-none" >
+                              
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400 ml-1"
                                     viewBox="0 0 20 20" fill="currentColor">
                                     <path fill-rule="evenodd"
@@ -23,7 +22,13 @@
                                         clip-rule="evenodd" />
                                 </svg>
                             </button>
-                            <!-- TODO:dropdown menu -->
+                            <div class="absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none"
+                                [class.hidden]="!showDropdown" [class.block]="showDropdown">
+                                <a routerLink="/admin-dashboard/profile"
+                                    class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900">
+                                    Profile
+                                </a>
+                            </div>
                         </div>
                     </div>
                 </div>

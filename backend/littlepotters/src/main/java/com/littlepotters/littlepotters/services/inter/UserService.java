@@ -2,6 +2,8 @@ package com.littlepotters.littlepotters.services.inter;
 
 import com.littlepotters.littlepotters.dtos.requestDTOs.UserRequestDTO;
 import com.littlepotters.littlepotters.dtos.responseDTOs.UserResponseDTO;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.util.HashSet;
 import java.util.List;
@@ -17,7 +19,8 @@ public interface UserService {
     void deleteUser(Long id);
     boolean existsByEmail(String email);
 
-    List<UserResponseDTO> getAllUsers();
+
 
     UserResponseDTO getUserById(Long id);
-}
+    Page<UserResponseDTO> getUsersByRole(String roleName, Pageable pageable);
+    Page<UserResponseDTO> getAllUsers(Pageable pageable);}

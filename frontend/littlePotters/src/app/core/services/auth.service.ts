@@ -120,6 +120,12 @@ export class AuthService {
     return throwError(() => error); 
   }
 
+  getToken(): string | null {
+    if (isPlatformBrowser(this.platformId)) {
+      return localStorage.getItem('auth_token');
+    }  
+    return null;
+  }
 
 
 }
