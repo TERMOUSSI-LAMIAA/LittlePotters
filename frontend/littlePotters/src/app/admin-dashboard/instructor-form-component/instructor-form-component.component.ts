@@ -45,7 +45,7 @@ export class InstructorFormComponentComponent {
     return this.fb.group({
       fullname: ['', [Validators.required]],
       email: [{ value: '', disabled: this.isEditMode }, [Validators.required, Validators.email]],
-      password: ['', [Validators.required, Validators.minLength(8)]],
+      password: ['', this.isEditMode ? [Validators.minLength(8)] : [Validators.required, Validators.minLength(8)]],
       confirmPassword: [''],
       phone: ['', [Validators.required, Validators.pattern(/^0[5-6-7]\d{8}$/)]],
       active: [true]
@@ -97,14 +97,14 @@ export class InstructorFormComponentComponent {
     this.loading = true;
 
     const instructorData: UserRequest = {
-      email: this.instructorForm.value.email,
+      email: this.instructorForm.getRawValue().email,
       fullname: this.instructorForm.value.fullname,
       phone: this.instructorForm.value.phone,
       active: this.instructorForm.value.active,
       roles: ['INSTRUCTOR'], 
       password: this.instructorForm.value.password || '' 
     };
-
+  
     if (this.isEditMode && this.instructorId) {
       this.userService.updateUser(this.instructorId, instructorData).subscribe({
         next: () => {

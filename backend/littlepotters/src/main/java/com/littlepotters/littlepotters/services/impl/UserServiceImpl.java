@@ -42,7 +42,9 @@ public class UserServiceImpl implements UserService {
         if (userRepository.existsByEmail(userRequestDTO.getEmail())) {
             throw new RuntimeException("Email already exists");
         }
-
+        if (userRequestDTO.getPassword() == null || userRequestDTO.getPassword().isEmpty()) {
+            throw new RuntimeException("Password cannot be blank");
+        }
         User user = userMapper.toEntity(userRequestDTO);
         user.setPassword(passwordEncoder.encode(userRequestDTO.getPassword()));
 
