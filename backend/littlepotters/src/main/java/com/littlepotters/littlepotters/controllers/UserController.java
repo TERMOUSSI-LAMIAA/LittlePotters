@@ -24,7 +24,7 @@ public class UserController {
     private final UserService userService;
     private final RoleRepository roleRepository;
 //TODO: can't delete instructor who has recent workshops
-    //TODO: email cannot be updated
+    //TODO: the phone number should be unique
     @PostMapping("/register")
     public ResponseEntity<UserResponseDTO> registerUser(@RequestBody @Valid UserRequestDTO userRequestDTO) {
 

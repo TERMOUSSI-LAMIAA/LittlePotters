@@ -18,7 +18,8 @@ export class InstructorManagementComponentComponent implements OnInit {
   pageSize = 6;
   totalElements = 0;
   totalPages = 0;
-
+  showDeleteModal = false;
+  instructorToDelete: number | null = null;
   constructor(private userService: UserService, private router: Router, private route: ActivatedRoute) {
  }
  
@@ -83,11 +84,34 @@ export class InstructorManagementComponentComponent implements OnInit {
   }
 
   deleteInstructor(id: number): void {
-    if (confirm('Are you sure you want to delete this instructor?')) {
-      this.userService.deleteUser(id).subscribe(() => {
-        this.instructors = this.instructors.filter(i => i.id !== id);
-        console.log(`Instructor with ID ${id} deleted successfully.`);
+    this.instructorToDelete = id;
+    this.showDeleteModal = true;
+  }
+
+  confirmDelete(): void {
+    if (this.instructorToDelete !== null) {
+      this.userService.deleteUser(this.instructorToDelete).subscribe({
+        next: (response) => {
+          this.instructors = this.instructors.filter(i => i.id !== this.instructorToDelete);
+          console.log(`Instructor with ID ${this.instructorToDelete} deleted successfully.`);
+          this.loadInstructors();
+          this.showDeleteModal = false;
+          this.instructorToDelete = null;
+        },
+        error: (error) => {
+          console.error('Error deleting instructor:', error);
+          this.showDeleteModal = false;
+          this.instructorToDelete = null;
+        }
       });
     }
   }
+
+
+  cancelDelete(): void {
+    this.showDeleteModal = false;
+    this.instructorToDelete = null;
+  }
+
+  
 }
