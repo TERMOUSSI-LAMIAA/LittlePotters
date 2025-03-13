@@ -9,12 +9,12 @@
             </svg>
             Add Instructor
         </button>
-        
+
     </div>
     <div class="container mx-auto p-6">
         <router-outlet></router-outlet>
     </div>
-    
+
     <div class="overflow-x-auto bg-white shadow-md rounded-lg">
         <table class="min-w-full table-auto">
             <thead class="bg-amber-50">
@@ -64,20 +64,34 @@
         </table>
     </div>
     <!-- Pagination controls -->
-    <div class="pagination-controls">
-        <button [disabled]="currentPage === 0" (click)="previousPage()">Previous</button>
-    
-        <span *ngFor="let page of [].constructor(totalPages); let i = index">
-            <button [class.active]="i === currentPage" (click)="goToPage(i)">
-                {{ i + 1 }}
+    <div
+        class="flex flex-col sm:flex-row items-center justify-between mt-6 px-4 py-3 bg-white border border-gray-200 rounded-lg shadow-sm">
+        <div class="flex items-center space-x-2 mb-3 sm:mb-0">
+            <button [disabled]="currentPage === 0" (click)="previousPage()"
+                class="px-3 py-1 rounded-md border border-gray-300 bg-white text-sm font-medium text-gray-700 hover:bg-amber-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-amber-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-200">
+                Previous
             </button>
-        </span>
-    
-        <button [disabled]="currentPage === totalPages - 1" (click)="nextPage()">Next</button>
-    
-        <div class="pagination-info">
+
+            <span class="flex space-x-1">
+                <button *ngFor="let page of [].constructor(totalPages); let i = index"
+                    [class.active]="i === currentPage" (click)="goToPage(i)"
+                    class="w-8 h-8 flex items-center justify-center rounded-md text-sm font-medium transition-colors duration-200"
+                    [ngClass]="i === currentPage 
+          ? 'bg-amber-600 text-white border border-amber-600' 
+          : 'text-gray-700 border border-gray-300 hover:bg-amber-50'">
+                    {{ i + 1 }}
+                </button>
+            </span>
+
+            <button [disabled]="currentPage === totalPages - 1" (click)="nextPage()"
+                class="px-3 py-1 rounded-md border border-gray-300 bg-white text-sm font-medium text-gray-700 hover:bg-amber-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-amber-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-200">
+                Next
+            </button>
+        </div>
+
+        <div class="pagination-info text-sm text-gray-600">
             Page {{ currentPage + 1 }} of {{ totalPages }}
-            ({{ totalElements }} total instructors)
+            <span class="text-amber-700 font-medium">({{ totalElements }} total instructors)</span>
         </div>
     </div>
 </div>
