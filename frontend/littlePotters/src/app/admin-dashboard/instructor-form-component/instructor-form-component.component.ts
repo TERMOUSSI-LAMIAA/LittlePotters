@@ -13,7 +13,6 @@ import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } 
   styleUrl: './instructor-form-component.component.scss'
 })
 export class InstructorFormComponentComponent {
-  //TODO: handle the password update but not the email 
   instructorForm: FormGroup;
   isEditMode = false;
   loading = false;
@@ -45,10 +44,10 @@ export class InstructorFormComponentComponent {
   createForm(): FormGroup {
     return this.fb.group({
       fullname: ['', [Validators.required]],
-      email: ['', [Validators.required, Validators.email]],
-      password: ['', this.isEditMode ? [] : [Validators.required, Validators.minLength(8)]],
+      email: [{ value: '', disabled: this.isEditMode }, [Validators.required, Validators.email]],
+      password: ['', [Validators.required, Validators.minLength(8)]],
       confirmPassword: [''],
-      phone: ['', [Validators.required, Validators.pattern(/^\d{3}-\d{3}-\d{4}$/)]],
+      phone: ['', [Validators.required, Validators.pattern(/^0[5-6-7]\d{8}$/)]],
       active: [true]
     }, { validators: this.passwordMatchValidator });
   }
@@ -102,7 +101,7 @@ export class InstructorFormComponentComponent {
       fullname: this.instructorForm.value.fullname,
       phone: this.instructorForm.value.phone,
       active: this.instructorForm.value.active,
-      roles: ['instructor'], 
+      roles: ['INSTRUCTOR'], 
       password: this.instructorForm.value.password || '' 
     };
 

@@ -23,7 +23,6 @@
                     <th class="px-4 py-2 text-left text-amber-800">Full Name</th>
                     <th class="px-4 py-2 text-left text-amber-800">Email</th>
                     <th class="px-4 py-2 text-left text-amber-800">Phone</th>
-                    <th class="px-4 py-2 text-left text-amber-800">Active</th>
                     <th class="px-4 py-2 text-left text-amber-800">Actions</th>
                 </tr>
             </thead>
@@ -34,12 +33,6 @@
                     <td class="px-4 py-2 border-b">{{ instructor.fullname }}</td>
                     <td class="px-4 py-2 border-b">{{ instructor.email }}</td>
                     <td class="px-4 py-2 border-b">{{ instructor.phone }}</td>
-                    <td class="px-4 py-2 border-b">
-                        <span [class.text-green-600]="instructor.active" [class.text-red-600]="!instructor.active"
-                            class="font-medium">
-                            {{ instructor.active ? 'Yes' : 'No' }}
-                        </span>
-                    </td>
                     <td class="px-4 py-2 border-b">
                         <div class="flex space-x-2">
                             <button
@@ -69,5 +62,22 @@
 
             </tbody>
         </table>
+    </div>
+    <!-- Pagination controls -->
+    <div class="pagination-controls">
+        <button [disabled]="currentPage === 0" (click)="previousPage()">Previous</button>
+    
+        <span *ngFor="let page of [].constructor(totalPages); let i = index">
+            <button [class.active]="i === currentPage" (click)="goToPage(i)">
+                {{ i + 1 }}
+            </button>
+        </span>
+    
+        <button [disabled]="currentPage === totalPages - 1" (click)="nextPage()">Next</button>
+    
+        <div class="pagination-info">
+            Page {{ currentPage + 1 }} of {{ totalPages }}
+            ({{ totalElements }} total instructors)
+        </div>
     </div>
 </div>

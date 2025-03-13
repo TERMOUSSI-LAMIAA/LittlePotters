@@ -10,6 +10,7 @@ import { CustomerManagementComponentComponent } from './admin-dashboard/customer
 import { InstructorManagementComponentComponent } from './admin-dashboard/instructor-management-component/instructor-management-component.component';
 import { UserprofileComponent } from './shared/components/userprofile/userprofile.component';
 import { InstructorFormComponentComponent } from './admin-dashboard/instructor-form-component/instructor-form-component.component';
+import { InstructorsResolver } from './core/resolvers/instructors.resolver';
 
 export const routes: Routes = [
     { path: '', component: HomeComponent },
@@ -24,6 +25,9 @@ export const routes: Routes = [
             {
                 path: 'instructors',
                 component: InstructorManagementComponentComponent,
+                resolve: {
+                    instructors: InstructorsResolver
+                },
                 children: [
                     {
                         path: 'new',

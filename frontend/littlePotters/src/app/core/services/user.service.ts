@@ -19,9 +19,8 @@ export class UserService {
     return this.http.put<User>(`${this.apiUrl}/${id}`, user);
   }
 
-  // For creating a new user, you should use UserRequest
   createUser(user: UserRequest): Observable<User> {
-    return this.http.post<User>(this.apiUrl, user);
+    return this.http.post<User>(`${this.apiUrl}/register`, user);
   }
 
   // For getting user data, you receive a User object
@@ -48,6 +47,10 @@ export class UserService {
     return this.http.get<PaginatedResponse<User>>(`${this.apiUrl}?role=INSTRUCTOR`);
   }
   
+  getInstructorsWithPage(page: number = 0, size: number = 6): Observable<PaginatedResponse<User>> {
+    console.log("in function")
+    return this.http.get<PaginatedResponse<User>>(`${this.apiUrl}?role=INSTRUCTOR&page=${page}&size=${size}`);
+  }
 
 
 }

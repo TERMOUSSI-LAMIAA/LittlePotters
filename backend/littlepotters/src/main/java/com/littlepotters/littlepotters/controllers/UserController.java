@@ -52,7 +52,7 @@ public class UserController {
     @GetMapping
     public ResponseEntity<Page<UserResponseDTO>> getAllUsers(
             @RequestParam(name = "role", required = false) String role,
-            @PageableDefault(size = 6) Pageable pageable) {
+            Pageable pageable) {
         if (role != null) {
             Page<UserResponseDTO> filteredUsers = userService.getUsersByRole(role, pageable);
             return ResponseEntity.ok(filteredUsers);
