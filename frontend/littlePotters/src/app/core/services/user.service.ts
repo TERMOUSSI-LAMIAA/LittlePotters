@@ -14,7 +14,6 @@ export class UserService {
 
   constructor(private http: HttpClient, private authService: AuthService) { }
 
-  // For updating a user, you should use UserRequest
   updateUser(id: number, user: UserRequest): Observable<User> {
     return this.http.put<User>(`${this.apiUrl}/${id}`, user);
   }
@@ -23,12 +22,10 @@ export class UserService {
     return this.http.post<User>(`${this.apiUrl}/register`, user);
   }
 
-  // For getting user data, you receive a User object
   getUserById(id: number): Observable<User> {
     return this.http.get<User>(`${this.apiUrl}/${id}`);
   }
 
-  // Get all users
   getAllUsers(): Observable<User[]> {
     return this.http.get<User[]>(this.apiUrl);
   }
@@ -37,17 +34,20 @@ export class UserService {
     return this.http.delete(`${this.apiUrl}/${id}`, { responseType: 'text' });
   }
 
-  // Get only customers
   getCustomers(): Observable<User[]> {
-    return this.http.get<User[]>(`${this.apiUrl}?role=customer`);
+    return this.http.get<User[]>(`${this.apiUrl}?role=CUSTOMER`);
   }
 
   getInstructors(): Observable<PaginatedResponse<User>> {
     return this.http.get<PaginatedResponse<User>>(`${this.apiUrl}?role=INSTRUCTOR`);
   }
-  
+
+  getCustomersWithPage(page: number = 0, size: number = 6): Observable<PaginatedResponse<User>> {
+    return this.http.get<PaginatedResponse<User>>(`${this.apiUrl}?role=CUSTOMER&page=${page}&size=${size}`);
+  }
+
+
   getInstructorsWithPage(page: number = 0, size: number = 6): Observable<PaginatedResponse<User>> {
-    console.log("in function")
     return this.http.get<PaginatedResponse<User>>(`${this.apiUrl}?role=INSTRUCTOR&page=${page}&size=${size}`);
   }
 

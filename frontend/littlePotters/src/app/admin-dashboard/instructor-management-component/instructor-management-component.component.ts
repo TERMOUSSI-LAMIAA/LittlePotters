@@ -28,6 +28,7 @@ export class InstructorManagementComponentComponent implements OnInit {
       const paginatedResponse = this.route.snapshot.data['instructors'] as PaginatedResponse<User>;
       this.handlePaginatedResponse(paginatedResponse);
     } else {
+
       this.loadInstructors();
     }
 
