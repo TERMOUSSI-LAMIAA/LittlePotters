@@ -4,6 +4,7 @@ import { SidebarComponent } from './sidebar/sidebar.component';
 import { NavigationEnd, Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { filter } from 'rxjs';
+import { AuthService } from '../core/services/auth.service';
 
 @Component({
   selector: 'app-admin-dashboard',
@@ -13,7 +14,7 @@ import { filter } from 'rxjs';
   styleUrl: './admin-dashboard.component.scss'
 })
 export class AdminDashboardComponent implements OnInit {
-  adminName: string = 'Admin User'; 
+  user: any = null;
   isDashboardRoute: boolean = true; 
   totalCustomers: number = 245; 
   totalInstructors: number = 12;  
@@ -27,7 +28,7 @@ export class AdminDashboardComponent implements OnInit {
   toggleDropdown(): void {
     this.showDropdown = !this.showDropdown;
   }
-  constructor(private router: Router) { }
+  constructor(private router: Router,private authService: AuthService) { }
 
   ngOnInit() {
     this.router.events
@@ -35,6 +36,9 @@ export class AdminDashboardComponent implements OnInit {
       .subscribe(() => {
         this.isDashboardRoute = this.router.url === '/admin/dashboard'; 
       });
+    this.authService.currentUser.subscribe(user => {
+      this.user = user;
+    });
   }
 
 }

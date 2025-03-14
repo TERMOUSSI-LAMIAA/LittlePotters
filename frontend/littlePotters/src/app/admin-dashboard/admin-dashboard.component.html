@@ -11,7 +11,7 @@
                         <a routerLink="/admin-dashboard" class="hover:text-amber-700">Admin Dashboard</a>
                     </h1>
                     <div class="flex items-center">
-                        <span class="text-sm text-gray-600 mr-4">Welcome, {{ adminName }}</span>
+                        <span class="text-sm text-gray-600 mr-4">Welcome, {{user.user.fullname }}</span>
                         <div class="relative">
                             <button (click)="toggleDropdown()" class="flex items-center focus:outline-none" >
                               

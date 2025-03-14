@@ -6,6 +6,8 @@ import com.littlepotters.littlepotters.dtos.requestDTOs.UserRequestDTO;
 import com.littlepotters.littlepotters.dtos.responseDTOs.AuthResponseDTO;
 import com.littlepotters.littlepotters.dtos.responseDTOs.RoleResponseDTO;
 import com.littlepotters.littlepotters.dtos.responseDTOs.UserResponseDTO;
+import com.littlepotters.littlepotters.models.entities.User;
+import com.littlepotters.littlepotters.repositories.UserRepository;
 import com.littlepotters.littlepotters.security.JwtTokenProvider;
 import com.littlepotters.littlepotters.services.inter.UserService;
 import com.littlepotters.littlepotters.services.security.TokenBlacklistService;
@@ -32,6 +34,7 @@ public class AuthController {
     private final JwtTokenProvider jwtTokenProvider;
     private final TokenBlacklistService tokenBlacklistService;
     private final UserService userService;
+    private final UserRepository userRepository;
 
 
     @PostMapping("/login")
@@ -47,9 +50,13 @@ public class AuthController {
                     .map(GrantedAuthority::getAuthority)
                     .collect(Collectors.toList());
 
+            User user = userRepository.findByEmail(authentication.getName())
+                    .orElseThrow(() -> new RuntimeException("User not found with email: " + authentication.getName()));
+
             Map<String, Object> response = new HashMap<>();
             response.put("token", token);
             response.put("roles", roles);
+            response.put("user", user);
 
             return ResponseEntity.ok(response);
         } catch (Exception e) {

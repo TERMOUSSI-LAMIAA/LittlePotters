@@ -37,7 +37,7 @@ export class AuthService {
     }
     return null;
   }
-
+  
   public get currentUserValue(): AuthResponse | null {
     return this.currentUserSubject.value;
   }
