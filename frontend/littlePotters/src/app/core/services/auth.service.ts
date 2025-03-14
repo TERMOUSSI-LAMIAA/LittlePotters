@@ -1,7 +1,7 @@
 import { Inject, Injectable, PLATFORM_ID } from '@angular/core';
-import { BehaviorSubject, catchError, Observable, tap, throwError } from 'rxjs';
+import { BehaviorSubject, catchError, finalize, Observable, tap, throwError } from 'rxjs';
 import { AuthResponse, RegisterRequest } from '../models/auth.model';
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { isPlatformBrowser } from '@angular/common';
 
 @Injectable({
@@ -81,21 +81,52 @@ export class AuthService {
       token = localStorage.getItem('auth_token');
     }
 
-    const headers = token ? { Authorization: `Bearer ${token}` } : {};
 
-    return this.http.post(`${this.apiUrl}/logout`, {}, { headers: headers as { Authorization?: string } })
+    const headers = new HttpHeaders(
+      token ? { Authorization: `Bearer ${token}` } : {}
+    );
+    
+    return this.http.post(`${this.apiUrl}/logout`, {}, { headers, responseType: 'text' })
       .pipe(
         tap(() => {
           if (isPlatformBrowser(this.platformId)) {
             localStorage.removeItem('currentUser');
             localStorage.removeItem('auth_token');
-            localStorage.removeItem('roles'); 
+            localStorage.removeItem('roles');
           }
           this.currentUserSubject.next(null);
         }),
-        catchError(this.handleError)
+        catchError((error) => {
+          console.error('Logout error:', error);
+          return throwError(error);
+        })
       );
   }
+
+
+  // logout(): Observable<any> {
+  //   let token = null;
+  //   if (isPlatformBrowser(this.platformId)) {
+  //     token = localStorage.getItem('auth_token');
+  //   }
+
+  //   const headers = token ? { Authorization: `Bearer ${token}` } : {};
+
+  //   return this.http.post(`${this.apiUrl}/logout`, {}, { headers: headers as { Authorization?: string } })
+  //     .pipe(
+  //       tap(() => {
+  //         if (isPlatformBrowser(this.platformId)) {
+  //           localStorage.removeItem('currentUser');
+  //           localStorage.removeItem('auth_token');
+  //           localStorage.removeItem('roles'); 
+  //         }
+  //         this.currentUserSubject.next(null);
+  //       }),
+  //       catchError(this.handleError)
+  //     );
+  // }
+  
+
 
 
   isLoggedIn(): boolean {
