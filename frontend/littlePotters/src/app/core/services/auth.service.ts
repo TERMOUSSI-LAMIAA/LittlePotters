@@ -58,6 +58,17 @@ export class AuthService {
       );
   }
 
+  private handleError(error: HttpErrorResponse) {
+    let errorMessage = 'An unknown error occurred!';
+    if (error.status === 403) {
+      errorMessage = 'Invalid email or password.';
+    } else if (error.status === 0) {
+      errorMessage = 'Network error. Please check your internet connection.';
+    } else {
+      errorMessage = error.error.message || errorMessage;
+    }
+    return throwError(() => new Error(errorMessage));
+  }
 
   register(userData: RegisterRequest): Observable<AuthResponse> {
     console.log("In register auth service, sending request to:", `${this.apiUrl}/register`);
@@ -85,7 +96,7 @@ export class AuthService {
     const headers = new HttpHeaders(
       token ? { Authorization: `Bearer ${token}` } : {}
     );
-    
+
     return this.http.post(`${this.apiUrl}/logout`, {}, { headers, responseType: 'text' })
       .pipe(
         tap(() => {
@@ -104,29 +115,6 @@ export class AuthService {
   }
 
 
-  // logout(): Observable<any> {
-  //   let token = null;
-  //   if (isPlatformBrowser(this.platformId)) {
-  //     token = localStorage.getItem('auth_token');
-  //   }
-
-  //   const headers = token ? { Authorization: `Bearer ${token}` } : {};
-
-  //   return this.http.post(`${this.apiUrl}/logout`, {}, { headers: headers as { Authorization?: string } })
-  //     .pipe(
-  //       tap(() => {
-  //         if (isPlatformBrowser(this.platformId)) {
-  //           localStorage.removeItem('currentUser');
-  //           localStorage.removeItem('auth_token');
-  //           localStorage.removeItem('roles'); 
-  //         }
-  //         this.currentUserSubject.next(null);
-  //       }),
-  //       catchError(this.handleError)
-  //     );
-  // }
-  
-
 
 
   isLoggedIn(): boolean {
@@ -138,18 +126,7 @@ export class AuthService {
     return !!user && user.roles.includes(role);
   }
   
-  private handleError(error: HttpErrorResponse) {
-    let errorMessage = 'An unknown error occurred!';
-    if (error.error instanceof ErrorEvent) {
-      // Client-side errors
-      errorMessage = `Error: ${error.error.message}`;
-    } else {
-      // Server-side errors
-      errorMessage = `Error Code: ${error.status}\nMessage: ${error.message}`;
-    }
-    console.error('HTTP Error:', errorMessage, error);
-    return throwError(() => error); 
-  }
+  
 
   getToken(): string | null {
     if (isPlatformBrowser(this.platformId)) {

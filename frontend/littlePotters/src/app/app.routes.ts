@@ -12,12 +12,23 @@ import { UserprofileComponent } from './shared/components/userprofile/userprofil
 import { InstructorFormComponentComponent } from './admin-dashboard/instructor-form-component/instructor-form-component.component';
 import { InstructorsResolver } from './core/resolvers/instructors.resolver';
 import { CustomersResolver } from './core/resolvers/customers.resolver';
+import { MainLayoutComponent } from './shared/components/main-layout/main-layout.component';
 
 export const routes: Routes = [
-    { path: '', component: HomeComponent },
-    { path: 'home', component: HomeComponent },
-    { path: 'login', component: LoginComponent },
-    { path: 'register', component: RegisterComponent },
+    // { path: '', component: HomeComponent },
+    // { path: 'home', component: HomeComponent },
+    // { path: 'login', component: LoginComponent },
+    // { path: 'register', component: RegisterComponent },
+    {
+        path: "",
+        component: MainLayoutComponent, 
+        children: [
+            { path: "", component: HomeComponent }, 
+            { path: "home", component: HomeComponent },
+            { path: "login", component: LoginComponent },
+            { path: "register", component: RegisterComponent },
+        ],
+    },
     {
         path: 'admin-dashboard', component: AdminDashboardComponent,
         canActivate: [AuthGuard],
