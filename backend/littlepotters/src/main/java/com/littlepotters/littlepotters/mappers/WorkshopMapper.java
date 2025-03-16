@@ -21,7 +21,7 @@ public interface WorkshopMapper {
     @Mapping(target = "imageFileName", source = "image.originalFilename")
     Workshop toEntity(WorkshopRequestDTO workshopRequestDTO);
 
-    @Mapping(target = "imageUrl", source = "imageFileName",qualifiedByName = "generateImageUrl")
+    @Mapping(target = "imageUrl", source = "imageFileName",qualifiedByName = "generateWorkshopImageUrl")
     @Mapping(target = "instructorId", source = "instructor.id")
     WorkshopResponseDTO toDTO(Workshop workshop);
 

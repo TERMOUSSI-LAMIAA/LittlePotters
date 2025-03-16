@@ -12,6 +12,7 @@ export interface User {
     phone: string;
     active: boolean;
     roles: Role[];
+    imageUrl?: string;
 }
 
 // UserRequest interface (request model)
@@ -21,5 +22,6 @@ export interface UserRequest {
     fullname: string;
     phone: string;
     active: boolean;
-    roles: string[];  // Array of role names
+    roles: string[];
+    image?: File;// Array of role names
 }

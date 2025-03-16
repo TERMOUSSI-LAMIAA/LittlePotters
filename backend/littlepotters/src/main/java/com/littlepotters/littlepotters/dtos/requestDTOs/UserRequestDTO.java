@@ -1,6 +1,7 @@
 package com.littlepotters.littlepotters.dtos.requestDTOs;
 
 import lombok.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.constraints.*;
 import java.util.Set;
@@ -27,4 +28,7 @@ public class UserRequestDTO {
 
     @NotNull(message = "Roles cannot be null")
     private Set<String> roles;
+
+    private MultipartFile image;
+
 }

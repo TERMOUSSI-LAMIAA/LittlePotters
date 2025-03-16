@@ -45,7 +45,7 @@ public class WorkshopServiceImpl implements WorkshopService {
         workshop.setAvailablePlaces(workshop.getMaxParticipants());
 
         if (workshopRequestDTO.getImage() != null && !workshopRequestDTO.getImage().isEmpty()) {
-            String fileName = imageStorageService.saveImage(workshopRequestDTO.getImage());
+            String fileName = imageStorageService.saveWorkshopImage(workshopRequestDTO.getImage());
             workshop.setImageFileName(fileName);
         }
 
@@ -69,7 +69,7 @@ public class WorkshopServiceImpl implements WorkshopService {
         String oldFileName = existingWorkshop.getImageFileName();
 
         if (workshopRequestDTO.getImage() != null && !workshopRequestDTO.getImage().isEmpty()) {
-            String newFileName = imageStorageService.saveImage(workshopRequestDTO.getImage());
+            String newFileName = imageStorageService.saveWorkshopImage(workshopRequestDTO.getImage());
 
             existingWorkshop.setImageFileName(newFileName);
         }
@@ -85,7 +85,7 @@ public class WorkshopServiceImpl implements WorkshopService {
                 && workshopRequestDTO.getImage() != null
                 && !workshopRequestDTO.getImage().isEmpty()) {
             try {
-                imageStorageService.deleteImage(oldFileName);
+                imageStorageService.deleteWorkshopImage(oldFileName);
             } catch (IOException e) {
                 System.err.println("Warning: Could not delete old image: " + oldFileName + ". Error: " + e.getMessage());
             }
@@ -119,7 +119,7 @@ public class WorkshopServiceImpl implements WorkshopService {
 
         if (imageFileName != null && !imageFileName.isEmpty()) {
             try {
-                imageStorageService.deleteImage(imageFileName);
+                imageStorageService.deleteWorkshopImage(imageFileName);
             } catch (IOException e) {
                 throw new RuntimeException("Error deleting image for workshop with id " + id, e);
             }

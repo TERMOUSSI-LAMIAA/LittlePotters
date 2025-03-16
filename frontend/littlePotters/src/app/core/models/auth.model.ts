@@ -4,10 +4,10 @@ export interface AuthRequest {
 }
 
 export interface AuthResponse {
-    id: number;             
-    login: string;         
-    roles: string[];        
-    token: string;          
+    id: number;
+    login: string;
+    roles: string[];
+    token: string;
 }
 
 export interface RegisterRequest {

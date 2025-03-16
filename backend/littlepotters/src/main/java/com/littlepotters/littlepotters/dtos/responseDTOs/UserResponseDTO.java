@@ -16,4 +16,5 @@ public class UserResponseDTO {
     private String phone;
     private Boolean active;
     private Set<RoleResponseDTO> roles;
+    private String imageUrl;
 }

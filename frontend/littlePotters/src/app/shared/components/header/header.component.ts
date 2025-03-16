@@ -19,6 +19,7 @@ export class HeaderComponent implements OnInit {
   ngOnInit(): void {
     this.authService.currentUser.subscribe(user => {
       this.user = user;
+      
       if (user) {
         this.user.dashboardLink = this.getDashboardLink(user.roles);
       }

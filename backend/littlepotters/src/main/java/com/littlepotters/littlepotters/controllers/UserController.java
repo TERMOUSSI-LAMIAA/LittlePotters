@@ -10,10 +10,16 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import javax.validation.Valid;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 
 @RestController
@@ -25,18 +31,18 @@ public class UserController {
     private final RoleRepository roleRepository;
 //TODO: can't delete instructor who has recent workshops
     //TODO: the phone number should be unique
-    @PostMapping("/register")
-    public ResponseEntity<UserResponseDTO> registerUser(@RequestBody @Valid UserRequestDTO userRequestDTO) {
+    @PostMapping(value="/register", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<UserResponseDTO> registerUser(@ModelAttribute @Valid UserRequestDTO userRequestDTO) {
 
         UserResponseDTO userResponseDTO = userService.save(userRequestDTO);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(userResponseDTO);
     }
 
-    @PutMapping("/{id}")
+    @PutMapping(value="/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<UserResponseDTO> updateUser(
             @PathVariable Long id,
-            @RequestBody @Valid UserRequestDTO userRequestDTO) {
+               @ModelAttribute @Valid UserRequestDTO userRequestDTO) {
 
         UserResponseDTO updatedUser = userService.updateUser(id, userRequestDTO);
 
@@ -62,7 +68,26 @@ public class UserController {
         return ResponseEntity.ok(allUsers);
     }
 
+    @GetMapping("/images/{fileName}")
+    public ResponseEntity<byte[]> getProfileImage(@PathVariable String fileName) {
+        try {
+            Path filePath = Paths.get("profile-images").resolve(fileName);
+            System.out.println(" Searching for profile image at: " + filePath.toAbsolutePath());
 
+            if (!Files.exists(filePath)) {
+                System.out.println(" Profile image not found at: " + filePath.toAbsolutePath());
+                throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Profile image not found");
+            }
+
+            byte[] imageBytes = Files.readAllBytes(filePath);
+            String contentType = Files.probeContentType(filePath);
+
+            return ResponseEntity.ok()
+                    .contentType(MediaType.parseMediaType(contentType != null ? contentType : "application/octet-stream"))
+                    .body(imageBytes);
+        } catch (IOException e) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error reading profile image", e);
+        }}
     @GetMapping("/{id}")
     public ResponseEntity<UserResponseDTO> getUserById(@PathVariable Long id) {
         UserResponseDTO user = userService.getUserById(id);

@@ -38,6 +38,8 @@ public class User {
     @NotNull(message = "Active status cannot be null")
     private Boolean active;
 
+    private String imageFileName;
+
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "user_roles",

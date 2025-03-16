@@ -4,6 +4,7 @@ import { User } from '../../core/models/user.model';
 import { UserService } from '../../core/services/user.service';
 import { ActivatedRoute, NavigationEnd, Router, RouterModule, RouterOutlet } from '@angular/router';
 import { PaginatedResponse } from '../../core/models/PaginatedResponse.model';
+import { HttpHeaders } from '@angular/common/http';
 
 @Component({
   selector: 'app-instructor-management-component',
@@ -20,6 +21,10 @@ export class InstructorManagementComponentComponent implements OnInit {
   totalPages = 0;
   showDeleteModal = false;
   instructorToDelete: number | null = null;
+
+  private apiBaseUrl = 'http://localhost:8081'
+  
+
   constructor(private userService: UserService, private router: Router, private route: ActivatedRoute) {
  }
  
@@ -39,8 +44,33 @@ export class InstructorManagementComponentComponent implements OnInit {
     });
   }
 
+  getFullImageUrl(relativeUrl: string): string {
+
+    if (!relativeUrl || relativeUrl.startsWith("http")) {
+      return relativeUrl
+    }
+
+    const baseUrl = this.apiBaseUrl.endsWith("/") ? this.apiBaseUrl.slice(0, -1) : this.apiBaseUrl
+    const imageUrl = relativeUrl.startsWith("/") ? relativeUrl : `/${relativeUrl}`
+  
+    return `${baseUrl}${imageUrl}`
+  }
+  loadImage(url: string, instructor: User): void {
+    console.log("load image",url)
+    this.userService.loadImage(url).subscribe({
+      next: (imageBlob) => {
+        const imageUrl = URL.createObjectURL(imageBlob);
+        instructor.imageUrl = imageUrl;  
+    
+      },
+      error: (error) => {
+        console.error('Error loading image', error);
+      }
+    });
+  }
  
   loadInstructors(): void {
+    
     this.userService.getInstructorsWithPage(this.currentPage, this.pageSize).subscribe({
       next: (response) => {
         this.handlePaginatedResponse(response);
@@ -56,6 +86,14 @@ export class InstructorManagementComponentComponent implements OnInit {
     this.instructors = response.content;
     this.totalElements = response.totalElements;
     this.totalPages = response.totalPages;
+
+    this.instructors.forEach((instructor) => {
+      if (instructor.imageUrl) {
+        instructor.imageUrl = this.getFullImageUrl(instructor.imageUrl)
+        console.log(instructor.imageUrl)
+        this.loadImage(instructor.imageUrl, instructor);
+}
+    })
   }
 
   goToPage(page: number): void {

@@ -35,7 +35,7 @@ public class AuthController {
     private final TokenBlacklistService tokenBlacklistService;
     private final UserService userService;
     private final UserRepository userRepository;
-
+//todo: handle image in register
 
     @PostMapping("/login")
     public ResponseEntity<Map<String, Object>> login(@RequestBody AuthRequestDTO authRequestDTO) {

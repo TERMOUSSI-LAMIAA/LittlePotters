@@ -18,6 +18,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.io.IOException;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -35,7 +36,7 @@ public class UserServiceImpl implements UserService {
     private UserMapper userMapper;
 
     private PasswordEncoder passwordEncoder;
-
+    private final ImageStorageService imageStorageService;
 
     @Override
     public UserResponseDTO save(UserRequestDTO userRequestDTO) {
@@ -60,6 +61,14 @@ public class UserServiceImpl implements UserService {
         }
 
         user.setRoles(new HashSet<>(roles));
+        if (userRequestDTO.getImage() != null && !userRequestDTO.getImage().isEmpty()) {
+            try {
+                String fileName = imageStorageService.saveProfileImage(userRequestDTO.getImage());
+                user.setImageFileName(fileName);
+            } catch (IOException e) {
+                throw new RuntimeException("Error saving profile image", e);
+            }
+        }
         User savedUser = userRepository.save(user);
         return userMapper.toDTO(savedUser);
     }
@@ -78,7 +87,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserResponseDTO updateUser(Long id, UserRequestDTO userRequestDTO) {
         User user = userRepository.findById(id).orElseThrow(() -> new UserException(id));
-
+        String oldImageFileName = user.getImageFileName();
         userMapper.updateEntityFromDTO(userRequestDTO, user);
 
         if (userRequestDTO.getPassword() != null && !userRequestDTO.getPassword().isEmpty()) {
@@ -92,8 +101,24 @@ public class UserServiceImpl implements UserService {
                     .collect(Collectors.toList());
             user.setRoles(new HashSet<>(roles));
         }
-
+        if (userRequestDTO.getImage() != null && !userRequestDTO.getImage().isEmpty()) {
+            try {
+                String newFileName = imageStorageService.saveProfileImage(userRequestDTO.getImage());
+                user.setImageFileName(newFileName);
+            } catch (IOException e) {
+                throw new RuntimeException("Error updating profile image", e);
+            }
+        }
         User updatedUser = userRepository.save(user);
+        if (oldImageFileName != null && !oldImageFileName.isEmpty()
+                && userRequestDTO.getImage() != null
+                && !userRequestDTO.getImage().isEmpty()) {
+            try {
+                imageStorageService.deleteProfileImage(oldImageFileName);
+            } catch (IOException e) {
+                System.err.println("Warning: Could not delete old profile image: " + oldImageFileName + ". Error: " + e.getMessage());
+            }
+        }
         return userMapper.toDTO(updatedUser);
     }
 
@@ -102,6 +127,16 @@ public class UserServiceImpl implements UserService {
     public void deleteUser(Long id) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new UserException(id));
+
+        String imageFileName = user.getImageFileName();
+        if (imageFileName != null && !imageFileName.isEmpty()) {
+            try {
+                imageStorageService.deleteProfileImage(imageFileName);
+            } catch (IOException e) {
+                throw new RuntimeException("Error deleting profile image for user with id " + id, e);
+            }
+        }
+
         userRepository.delete(user);
     }
 

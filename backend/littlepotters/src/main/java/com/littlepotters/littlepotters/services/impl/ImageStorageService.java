@@ -13,24 +13,32 @@ import java.nio.file.StandardCopyOption;
 
 @Service
 public class ImageStorageService implements ImageStorageServiceInterface {
-    private static final String UPLOAD_DIR = "workshop-images/";
+    private static final String workshopUploadDir = "workshop-images/";
+    private static final String profileUploadDir="profile-images/";
 
     @Override
-    public String saveImage(MultipartFile file) throws IOException {
+    public String saveWorkshopImage(MultipartFile file) throws IOException {
+        return saveImage(file, workshopUploadDir);
+    }
+
+    @Override
+    public String saveProfileImage(MultipartFile file) throws IOException {
+        return saveImage(file, profileUploadDir);
+    }
+
+    private String saveImage(MultipartFile file, String uploadDir) throws IOException {
         if (file.isEmpty()) {
             throw new IOException("Cannot save empty file.");
         }
 
-        Path uploadPath = Paths.get(UPLOAD_DIR);
+        Path uploadPath = Paths.get(uploadDir);
         if (!Files.exists(uploadPath)) {
             Files.createDirectories(uploadPath);
         }
 
         String fileName = System.currentTimeMillis() + "_" + file.getOriginalFilename();
         Path filePath = uploadPath.resolve(fileName);
-
-//        Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
-        try (   InputStream inputStream = file.getInputStream()) {
+        try (InputStream inputStream = file.getInputStream()) {
             Files.copy(inputStream, filePath, StandardCopyOption.REPLACE_EXISTING);
         }
 
@@ -38,18 +46,36 @@ public class ImageStorageService implements ImageStorageServiceInterface {
     }
 
     @Override
-    public byte[] getImage(String fileName) throws IOException {
-        Path filePath = Paths.get(UPLOAD_DIR).resolve(fileName);
+    public byte[] getWorkshopImage(String fileName) throws IOException {
+        return getImage(fileName, workshopUploadDir);
+    }
+
+    @Override
+    public byte[] getProfileImage(String fileName) throws IOException {
+        return getImage(fileName, profileUploadDir);
+    }
+
+    private byte[] getImage(String fileName, String uploadDir) throws IOException {
+        Path filePath = Paths.get(uploadDir).resolve(fileName);
         return Files.readAllBytes(filePath);
     }
 
     @Override
-    public void deleteImage(String fileName) throws IOException {
+    public void deleteWorkshopImage(String fileName) throws IOException {
+        deleteImage(fileName, workshopUploadDir);
+    }
+
+    @Override
+    public void deleteProfileImage(String fileName) throws IOException {
+        deleteImage(fileName, profileUploadDir);
+    }
+
+    private void deleteImage(String fileName, String uploadDir) throws IOException {
         if (fileName == null || fileName.isEmpty()) {
             return;
         }
 
-        Path filePath = Paths.get(UPLOAD_DIR).resolve(fileName);
+        Path filePath = Paths.get(uploadDir).resolve(fileName);
 
         try {
             boolean deleted = Files.deleteIfExists(filePath);
@@ -58,8 +84,6 @@ public class ImageStorageService implements ImageStorageServiceInterface {
             }
         } catch (IOException e) {
             System.err.println("Warning: Failed to delete image: " + fileName + ". Error: " + e.getMessage());
-
         }
-
     }
 }

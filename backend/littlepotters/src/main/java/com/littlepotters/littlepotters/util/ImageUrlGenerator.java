@@ -7,14 +7,25 @@ import org.springframework.stereotype.Component;
 @Component
 public class ImageUrlGenerator {
 
-    @Value("${app.image.base-url}")
-    private String imageBaseUrl;
+    @Value("${app.image.workshop-base-url}")
+    private String workshopImageBaseUrl;
 
-    @Named("generateImageUrl")
-    public String generateImageUrl(String fileName) {
+    @Value("${app.image.profile-base-url}")
+    private String profileImageBaseUrl;
+
+    @Named("generateWorkshopImageUrl")
+    public String generateWorkshopImageUrl(String fileName) {
         if (fileName == null || fileName.isEmpty()) {
             return null;
         }
-        return imageBaseUrl + fileName;
+        return workshopImageBaseUrl + fileName;
+    }
+
+    @Named("generateProfileImageUrl")
+    public String generateProfileImageUrl(String fileName) {
+        if (fileName == null || fileName.isEmpty()) {
+            return null;
+        }
+        return profileImageBaseUrl + fileName;
     }
 }

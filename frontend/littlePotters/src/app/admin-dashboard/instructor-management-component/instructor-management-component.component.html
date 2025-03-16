@@ -19,6 +19,7 @@
         <table class="min-w-full table-auto">
             <thead class="bg-amber-50">
                 <tr>
+                    <th class="px-4 py-2 text-left text-amber-800">Image</th>
                     <th class="px-4 py-2 text-left text-amber-800">ID</th>
                     <th class="px-4 py-2 text-left text-amber-800">Full Name</th>
                     <th class="px-4 py-2 text-left text-amber-800">Email</th>
@@ -29,6 +30,16 @@
             <tbody>
 
                 <tr *ngFor="let instructor of instructors" class="hover:bg-amber-50">
+                    <td class="px-4 py-2 border-b">
+                        <div
+                            class="h-12 w-12 rounded-full bg-amber-100 flex items-center justify-center overflow-hidden border border-amber-200">
+                            <img *ngIf="instructor.imageUrl" [src]="instructor.imageUrl" alt="Instructor Profile"
+                                class="h-full w-full object-cover">
+                            <span *ngIf="!instructor.imageUrl" class="text-lg font-bold text-amber-700">
+                                {{ instructor.fullname.charAt(0) || 'I' }}
+                            </span>
+                        </div>
+                    </td>
                     <td class="px-4 py-2 border-b">{{ instructor.id }}</td>
                     <td class="px-4 py-2 border-b">{{ instructor.fullname }}</td>
                     <td class="px-4 py-2 border-b">{{ instructor.email }}</td>
