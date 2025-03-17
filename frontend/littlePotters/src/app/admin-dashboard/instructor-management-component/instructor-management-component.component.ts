@@ -55,6 +55,7 @@ export class InstructorManagementComponentComponent implements OnInit {
   
     return `${baseUrl}${imageUrl}`
   }
+  
   loadImage(url: string, instructor: User): void {
     console.log("load image",url)
     this.userService.loadImage(url).subscribe({

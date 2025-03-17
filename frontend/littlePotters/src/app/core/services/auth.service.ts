@@ -3,6 +3,7 @@ import { BehaviorSubject, catchError, finalize, Observable, tap, throwError } fr
 import { AuthResponse, RegisterRequest } from '../models/auth.model';
 import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { isPlatformBrowser } from '@angular/common';
+import { Role, User } from '../models/user.model';
 
 @Injectable({
   providedIn: 'root'
@@ -29,6 +30,8 @@ export class AuthService {
     }
     return false; 
   }
+  
+  
 
   private getUserFromStorage(): AuthResponse | null {
     if (isPlatformBrowser(this.platformId)) {

@@ -2,83 +2,258 @@
     <div class="p-6">
         <h1 class="text-2xl font-bold text-amber-900 mb-6">User Profile</h1>
 
-        <!-- Profile Header -->
-        <div class="flex flex-col md:flex-row items-center mb-8 pb-6 border-b border-amber-100">
-            <div class="relative mb-4 md:mb-0 md:mr-6">
-                <div class="h-24 w-24 rounded-full bg-amber-100 flex items-center justify-center overflow-hidden">
-                    <img *ngIf="profileImage" [src]="profileImage" alt="Profile Image"
-                        class="h-full w-full object-cover">
-                    <span *ngIf="!profileImage" class="text-4xl font-bold text-amber-700">
-                        {{user?.fullname?.charAt(0) || 'A'}}
-                    </span>
-                </div>
-                <button (click)="triggerFileInput()"
-                    class="absolute bottom-0 right-0 bg-amber-600 text-white p-1 rounded-full hover:bg-amber-700 transition">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
-                        stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
-                    </svg>
-                </button>
-                <input #fileInput type="file" (change)="onFileSelected($event)" class="hidden" accept="image/*">
-            </div>
-
-            <div class="text-center md:text-left">
-                <h2 class="text-xl font-semibold text-amber-900">{{user?.fullname}}</h2>
-                <p class="text-gray-600">
-                    <span *ngFor="let role of user?.roles; let last = last" class="inline-block">
-                        {{role.name | slice:5 | titlecase}}{{!last ? ', ' : ''}}
-                    </span>
-                </p>
-            </div>
+        <!-- Loading indicator -->
+        <div *ngIf="loading" class="flex justify-center items-center py-8">
+            <div class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-amber-600"></div>
         </div>
 
-        <!-- Simple Profile Form -->
-        <form [formGroup]="profileForm" (ngSubmit)="onSubmit()" class="space-y-6">
-            <!-- Personal Information -->
-            <div class="space-y-4">
-                <div class="space-y-2">
-                    <label for="fullname" class="block text-sm font-medium text-gray-700">Full Name</label>
-                    <input type="text" id="fullname" formControlName="fullname"
-                        class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-amber-500">
-                    <div *ngIf="profileForm.get('fullname')?.invalid && profileForm.get('fullname')?.touched"
-                        class="text-red-500 text-sm mt-1">
-                        Full name is required
+        <div *ngIf="!loading">
+            <!-- Profile Header -->
+            <div class="flex flex-col md:flex-row items-center mb-8 pb-6 border-b border-amber-100">
+                <div class="relative mb-4 md:mb-0 md:mr-6">
+                    <div
+                        class="h-24 w-24 rounded-full bg-amber-100 flex items-center justify-center overflow-hidden border-2 border-amber-200">
+                        <img *ngIf="profileImage" [src]="profileImage" alt="Profile Image"
+                            class="h-full w-full object-cover">
+                        <span *ngIf="!profileImage" class="text-4xl font-bold text-amber-700">
+                            {{user?.fullname?.charAt(0) || 'A'}}
+                        </span>
                     </div>
+                    <button (click)="triggerFileInput()"
+                        class="absolute bottom-0 right-0 bg-amber-600 text-white p-1 rounded-full hover:bg-amber-700 transition">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                            stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
+                        </svg>
+                    </button>
+                    <input #fileInput type="file" (change)="onFileSelected($event)" class="hidden" accept="image/*">
                 </div>
 
-                <div class="space-y-2">
-                    <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
-                    <input type="email" id="email" formControlName="email"
-                        class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-amber-500">
-                    <div *ngIf="profileForm.get('email')?.invalid && profileForm.get('email')?.touched"
-                        class="text-red-500 text-sm mt-1">
-                        <span *ngIf="profileForm.get('email')?.errors?.['required']">Email is required</span>
-                        <span *ngIf="profileForm.get('email')?.errors?.['email']">Please enter a valid email</span>
-                    </div>
-                </div>
-
-                <div class="space-y-2">
-                    <label for="phone" class="block text-sm font-medium text-gray-700">Phone Number</label>
-                    <input type="tel" id="phone" formControlName="phone"
-                        class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-amber-500">
+                <div class="text-center md:text-left">
+                    <h2 class="text-xl font-semibold text-amber-900">{{user?.fullname}}</h2>
+                    <p class="text-gray-600">
+                        <span *ngFor="let role of user?.roles; let last = last" class="inline-block">
+                            {{role.name | slice:5 | titlecase}}{{!last ? ', ' : ''}}
+                        </span>
+                    </p>
                 </div>
             </div>
 
-            <!-- Form Actions -->
-            <div class="flex justify-end space-x-4 pt-4 border-t border-amber-100">
-                <button type="button" (click)="resetForm()"
-                    class="px-4 py-2 border border-amber-300 text-amber-700 rounded-md hover:bg-amber-50 transition">
-                    Cancel
-                </button>
-                <button type="submit" [disabled]="profileForm.invalid || isSubmitting"
-                    class="px-4 py-2 bg-amber-600 text-white rounded-md hover:bg-amber-700 transition disabled:opacity-50 disabled:cursor-not-allowed">
-                    <span *ngIf="isSubmitting" class="inline-block animate-spin mr-2">⟳</span>
-                    Save Changes
-                </button>
+            <!-- Error Message -->
+            <div *ngIf="errorMessage" class="rounded-md bg-red-50 p-4 mb-6 animate-fadeIn">
+                <div class="flex">
+                    <div class="flex-shrink-0">
+                        <svg class="h-5 w-5 text-red-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
+                            fill="currentColor">
+                            <path fill-rule="evenodd"
+                                d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+                                clip-rule="evenodd" />
+                        </svg>
+                    </div>
+                    <div class="ml-3">
+                        <h3 class="text-sm font-medium text-red-800">{{ errorMessage }}</h3>
+                    </div>
+                    <div class="ml-auto pl-3">
+                        <div class="-mx-1.5 -my-1.5">
+                            <button type="button"
+                                class="inline-flex rounded-md p-1.5 text-red-500 hover:bg-red-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
+                                (click)="errorMessage = ''" aria-label="Dismiss error">
+                                <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
+                                    fill="currentColor">
+                                    <path fill-rule="evenodd"
+                                        d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                                        clip-rule="evenodd" />
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                </div>
             </div>
-        </form>
+
+            <!-- Profile Form -->
+            <form [formGroup]="profileForm" (ngSubmit)="onSubmit()" class="space-y-6">
+                <!-- Personal Information -->
+                <div class="space-y-4">
+                    <div class="space-y-2">
+                        <label for="fullname" class="block text-sm font-medium text-gray-700">Full Name</label>
+                        <input type="text" id="fullname" formControlName="fullname"
+                            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-amber-500"
+                            [ngClass]="{'border-red-300': profileForm.get('fullname')?.invalid && profileForm.get('fullname')?.touched}">
+                        <div *ngIf="profileForm.get('fullname')?.invalid && profileForm.get('fullname')?.touched"
+                            class="text-red-500 text-sm mt-1">
+                            Full name is required
+                        </div>
+                    </div>
+
+                    <!-- Email Field -->
+                    <div class="space-y-2">
+                        <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
+                        <div class="relative">
+                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24"
+                                    stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                                </svg>
+                            </div>
+                            <input type="email" id="email" formControlName="email" [readonly]="isEditMode"
+                                [attr.disabled]="isEditMode ? true : null"
+                                class="w-full pl-10 pr-10 py-2.5 border rounded-md shadow-sm transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent"
+                                [ngClass]="{
+                                    'border-gray-300': !isFieldInvalid('email'),
+                                    'border-red-300 bg-red-50': isFieldInvalid('email'),
+                                    'bg-gray-100 cursor-not-allowed': isEditMode
+                                }" aria-describedby="email-error">
+                            <div *ngIf="isFieldInvalid('email')"
+                                class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+                                <svg class="h-5 w-5 text-red-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
+                                    aria-hidden="true">
+                                    <path fill-rule="evenodd"
+                                        d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
+                                        clip-rule="evenodd" />
+                                </svg>
+                            </div>
+                            <div *ngIf="isEditMode" class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24"
+                                    stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2z" />
+                                </svg>
+                            </div>
+                        </div>
+                        <div *ngIf="isFieldInvalid('email')" class="mt-2 text-sm text-red-600" id="email-error">
+                            <span *ngIf="getFieldError('email', 'required')">Email is required</span>
+                            <span *ngIf="getFieldError('email', 'email')">Please enter a valid email address</span>
+                        </div>
+                        <div *ngIf="isEditMode" class="mt-2 text-xs text-amber-600">
+                            Email address cannot be changed
+                        </div>
+                    </div>
+
+                    <div class="space-y-2">
+                        <label for="phone" class="block text-sm font-medium text-gray-700">Phone Number</label>
+                        <input type="tel" id="phone" formControlName="phone"
+                            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-amber-500">
+                    </div>
+                    <!-- Password Field -->
+                <!-- Password Field -->
+                <div class="form-group">
+                    <label for="password" class="block text-sm font-medium text-gray-700 mb-1">
+                        {{ isEditMode ? 'New Password' : 'Password' }}
+                        <span *ngIf="isEditMode" class="text-xs font-normal text-gray-500 ml-1">(leave blank to keep current
+                            password)</span>
+                    </label>
+                    <div class="relative">
+                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24"
+                                stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                            </svg>
+                        </div>
+                        <input [type]="showPassword ? 'text' : 'password'" id="password" formControlName="password"
+                            class="w-full pl-10 pr-10 py-2.5 border rounded-md shadow-sm transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent"
+                            [ngClass]="{
+                        'border-gray-300': !isFieldInvalid('password'),
+                        'border-red-300 bg-red-50': isFieldInvalid('password')
+                      }" aria-describedby="password-error">
+                        <button type="button"
+                            class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600 focus:outline-none"
+                            (click)="togglePasswordVisibility('password')" aria-label="Toggle password visibility">
+                            <svg *ngIf="!showPassword" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none"
+                                viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                            </svg>
+                            <svg *ngIf="showPassword" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                                stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" />
+                            </svg>
+                        </button>
+                    </div>
+                    <div *ngIf="isFieldInvalid('password')" class="mt-2 text-sm text-red-600" id="password-error">
+                        <span *ngIf="getFieldError('password', 'required') && !isEditMode">Password is required</span>
+                        <span *ngIf="getFieldError('password', 'minlength')">Password must be at least 8 characters</span>
+                    </div>
+                    <div *ngIf="!isFieldInvalid('password') && profileForm.get('password')?.value" class="mt-2 text-xs text-gray-500">
+                        Password must be at least 8 characters
+                    </div>
+                </div>
+                
+                <!-- Confirm Password Field -->
+                <div class="form-group" *ngIf="!isEditMode || (isEditMode && profileForm.get('password')?.value)">
+                    <label for="confirmPassword" class="block text-sm font-medium text-gray-700 mb-1">Confirm Password</label>
+                    <div class="relative">
+                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24"
+                                stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                            </svg>
+                        </div>
+                        <input [type]="showConfirmPassword ? 'text' : 'password'" id="confirmPassword" formControlName="confirmPassword"
+                            class="w-full pl-10 pr-10 py-2.5 border rounded-md shadow-sm transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent"
+                            [ngClass]="{
+                        'border-gray-300': !isFieldInvalid('confirmPassword') && !hasPasswordMismatch(),
+                        'border-red-300 bg-red-50': isFieldInvalid('confirmPassword') || hasPasswordMismatch()
+                      }" aria-describedby="confirm-password-error">
+                        <button type="button"
+                            class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600 focus:outline-none"
+                            (click)="togglePasswordVisibility('confirm')" aria-label="Toggle password visibility">
+                            <svg *ngIf="!showConfirmPassword" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none"
+                                viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                            </svg>
+                            <svg *ngIf="showConfirmPassword" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none"
+                                viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" />
+                            </svg>
+                        </button>
+                    </div>
+                    <div *ngIf="isFieldInvalid('confirmPassword') || hasPasswordMismatch()" class="mt-2 text-sm text-red-600"
+                        id="confirm-password-error">
+                        <span *ngIf="getFieldError('confirmPassword', 'required') && !isEditMode">Please confirm your
+                            password</span>
+                        <span *ngIf="hasPasswordMismatch()">Passwords do not match</span>
+                    </div>
+                </div>
+
+
+                </div>
+
+                <!-- Form Actions -->
+                <div class="flex justify-end space-x-4 pt-4 border-t border-amber-100">
+                    <button type="button" (click)="resetForm()"
+                        class="px-4 py-2 border border-amber-300 text-amber-700 rounded-md hover:bg-amber-50 transition">
+                        Cancel
+                    </button>
+                    <button type="submit" [disabled]="profileForm.invalid || isSubmitting"
+                        class="px-4 py-2 bg-amber-600 text-white rounded-md hover:bg-amber-700 transition disabled:opacity-50 disabled:cursor-not-allowed">
+                        <div class="flex items-center">
+                            <svg *ngIf="isSubmitting" class="animate-spin -ml-1 mr-2 h-4 w-4 text-white"
+                                xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor"
+                                    stroke-width="4">
+                                </circle>
+                                <path class="opacity-75" fill="currentColor"
+                                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
+                                </path>
+                            </svg>
+                            <span>{{ isSubmitting ? 'Saving...' : 'Save Changes' }}</span>
+                        </div>
+                    </button>
+                </div>
+            </form>
+        </div>
     </div>
 </div>

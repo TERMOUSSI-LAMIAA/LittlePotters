@@ -1,12 +1,19 @@
+import { User } from "./user.model";
+
 export interface AuthRequest {
     email: string;
     password: string;
 }
 
+// export interface AuthResponse {
+//     id: number;
+//     login: string;
+//     roles: string[];
+//     token: string;
+// }
 export interface AuthResponse {
-    id: number;
-    login: string;
     roles: string[];
+    user: User;
     token: string;
 }
 
