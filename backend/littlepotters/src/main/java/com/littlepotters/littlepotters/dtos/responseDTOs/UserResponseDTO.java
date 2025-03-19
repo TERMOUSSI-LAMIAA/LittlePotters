@@ -17,4 +17,5 @@ public class UserResponseDTO {
     private Boolean active;
     private Set<RoleResponseDTO> roles;
     private String imageUrl;
+    private Set<WorkshopResponseDTO> workshops;
 }

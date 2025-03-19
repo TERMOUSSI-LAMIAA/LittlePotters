@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { CustomerSpaceComponent } from './customer-space.component';
+import { WorkshopFormComponent } from './workshop-form.component';
 
-describe('CustomerSpaceComponent', () => {
-  let component: CustomerSpaceComponent;
-  let fixture: ComponentFixture<CustomerSpaceComponent>;
+describe('WorkshopFormComponent', () => {
+  let component: WorkshopFormComponent;
+  let fixture: ComponentFixture<WorkshopFormComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [CustomerSpaceComponent]
+      imports: [WorkshopFormComponent]
     })
     .compileComponents();
     
-    fixture = TestBed.createComponent(CustomerSpaceComponent);
+    fixture = TestBed.createComponent(WorkshopFormComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

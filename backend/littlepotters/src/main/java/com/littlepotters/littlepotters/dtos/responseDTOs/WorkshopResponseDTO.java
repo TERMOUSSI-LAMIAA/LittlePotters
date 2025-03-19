@@ -25,4 +25,5 @@ public class WorkshopResponseDTO {
     private Long instructorId;
     private int availablePlaces;
 
+
 }

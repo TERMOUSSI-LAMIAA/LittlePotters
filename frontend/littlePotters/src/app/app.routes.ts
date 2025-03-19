@@ -13,6 +13,8 @@ import { InstructorFormComponentComponent } from './admin-dashboard/instructor-f
 import { InstructorsResolver } from './core/resolvers/instructors.resolver';
 import { CustomersResolver } from './core/resolvers/customers.resolver';
 import { MainLayoutComponent } from './shared/components/main-layout/main-layout.component';
+import { WorkshopManagementComponent } from './instructor-dashboard/workshop-management/workshop-management.component';
+import { ReservationManagementComponent } from './instructor-dashboard/reservation-management/reservation-management.component';
 
 export const routes: Routes = [
     // { path: '', component: HomeComponent },
@@ -21,9 +23,9 @@ export const routes: Routes = [
     // { path: 'register', component: RegisterComponent },
     {
         path: "",
-        component: MainLayoutComponent, 
+        component: MainLayoutComponent,
         children: [
-            { path: "", component: HomeComponent }, 
+            { path: "", component: HomeComponent },
             { path: "home", component: HomeComponent },
             { path: "login", component: LoginComponent },
             { path: "register", component: RegisterComponent },
@@ -67,7 +69,27 @@ export const routes: Routes = [
     {
         path: 'instructor-dashboard', component: InstructorDashboardComponent,
         canActivate: [AuthGuard],
-        data: { role: 'ROLE_INSTRUCTOR' }
+        data: { role: 'ROLE_INSTRUCTOR' },
+        children: [
+            {
+                path: 'workshops',
+                component: WorkshopManagementComponent,
+                resolve: {
+                    // instructor-workshops: WorkshopsResolver
+                }
+               
+            },
+            {
+                path: 'reservations',
+                component: ReservationManagementComponent,
+                resolve: {
+                    // my-reservations: ReservationsResolver
+                }
+
+            },
+            
+           ]
+        
     },
     {
         path: 'customer-space', component: CustomerSpaceComponent,

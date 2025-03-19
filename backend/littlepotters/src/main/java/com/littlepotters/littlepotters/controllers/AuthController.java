@@ -6,6 +6,7 @@ import com.littlepotters.littlepotters.dtos.requestDTOs.UserRequestDTO;
 import com.littlepotters.littlepotters.dtos.responseDTOs.AuthResponseDTO;
 import com.littlepotters.littlepotters.dtos.responseDTOs.RoleResponseDTO;
 import com.littlepotters.littlepotters.dtos.responseDTOs.UserResponseDTO;
+import com.littlepotters.littlepotters.mappers.UserMapper;
 import com.littlepotters.littlepotters.models.entities.User;
 import com.littlepotters.littlepotters.repositories.UserRepository;
 import com.littlepotters.littlepotters.security.JwtTokenProvider;
@@ -37,6 +38,7 @@ public class AuthController {
     private final TokenBlacklistService tokenBlacklistService;
     private final UserService userService;
     private final UserRepository userRepository;
+    private final UserMapper userMapper;
 //todo: handle image in register
 
     @PostMapping("/login")
@@ -54,11 +56,12 @@ public class AuthController {
 
             User user = userRepository.findByEmail(authentication.getName())
                     .orElseThrow(() -> new RuntimeException("User not found with email: " + authentication.getName()));
+            UserResponseDTO userResponseDTO = userMapper.toDTO(user);
 
             Map<String, Object> response = new HashMap<>();
             response.put("token", token);
             response.put("roles", roles);
-            response.put("user", user);
+            response.put("user", userResponseDTO);
 
             return ResponseEntity.ok(response);
         } catch (Exception e) {
