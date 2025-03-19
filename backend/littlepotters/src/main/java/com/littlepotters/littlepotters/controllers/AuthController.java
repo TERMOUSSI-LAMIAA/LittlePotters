@@ -12,6 +12,7 @@ import com.littlepotters.littlepotters.security.JwtTokenProvider;
 import com.littlepotters.littlepotters.services.inter.UserService;
 import com.littlepotters.littlepotters.services.security.TokenBlacklistService;
 import lombok.AllArgsConstructor;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -21,6 +22,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -64,8 +66,8 @@ public class AuthController {
             throw e;
         }
     }
-    @PostMapping("/register")
-    public ResponseEntity<AuthResponseDTO> register(@RequestBody @Validated UserRequestDTO userRequestDTO) {
+    @PostMapping(value="/register", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<AuthResponseDTO> register(@ModelAttribute @Valid UserRequestDTO userRequestDTO) {
 
         UserResponseDTO userResponseDTO = userService.save(userRequestDTO);
 

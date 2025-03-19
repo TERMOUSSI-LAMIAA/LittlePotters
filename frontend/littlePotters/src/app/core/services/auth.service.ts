@@ -73,18 +73,11 @@ export class AuthService {
     return throwError(() => new Error(errorMessage));
   }
 
-  register(userData: RegisterRequest): Observable<AuthResponse> {
+  register(formData: FormData): Observable<AuthResponse> {
     console.log("In register auth service, sending request to:", `${this.apiUrl}/register`);
-    console.log("Request payload:", userData);
-    return this.http.post<AuthResponse>(`${this.apiUrl}/register`, userData)
+    console.log("Request payload:", formData);
+    return this.http.post<AuthResponse>(`${this.apiUrl}/register`, formData)
       .pipe(
-        tap(authResponse => {
-          if (isPlatformBrowser(this.platformId)) {
-            localStorage.setItem('currentUser', JSON.stringify(authResponse));
-            localStorage.setItem('auth_token', authResponse.token);
-          }
-          this.currentUserSubject.next(authResponse);
-        }),
         catchError(this.handleError)
       );
   }
