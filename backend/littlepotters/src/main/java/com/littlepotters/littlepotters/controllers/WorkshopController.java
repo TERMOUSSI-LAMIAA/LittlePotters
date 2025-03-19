@@ -7,6 +7,8 @@ import com.littlepotters.littlepotters.services.inter.WorkshopService;
 import lombok.AllArgsConstructor;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -50,8 +52,9 @@ public class WorkshopController {
     }
 
     @GetMapping
-    public ResponseEntity<List<WorkshopResponseDTO>> getAllWorkshops() {
-        return ResponseEntity.ok(workshopService.getAllWorkshops());
+    public ResponseEntity<Page<WorkshopResponseDTO>> getAllWorkshops(Pageable pageable) {
+        Page<WorkshopResponseDTO> workshopsPage = workshopService.getAllWorkshops(pageable);
+        return ResponseEntity.ok(workshopsPage);
     }
 
     @GetMapping("/images/{fileName}")
@@ -76,8 +79,12 @@ public class WorkshopController {
         }
     }
 
-
-
+    @GetMapping("/instructor/{instructorId}")
+    public ResponseEntity<Page<WorkshopResponseDTO>> getWorkshopsByInstructorId(
+            @PathVariable Long instructorId, Pageable pageable) {
+        Page<WorkshopResponseDTO> workshopsPage = workshopService.getWorkshopsByInstructorId(instructorId, pageable);
+        return ResponseEntity.ok(workshopsPage);
+    }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteWorkshop(@PathVariable Long id) {

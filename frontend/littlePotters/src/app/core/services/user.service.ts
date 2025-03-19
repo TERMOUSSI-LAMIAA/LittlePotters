@@ -24,31 +24,7 @@ export class UserService {
   createUser(formData: FormData): Observable<User> {
     return this.http.post<User>(`${this.apiUrl}/register`, formData);
   }
-  // createUser(user: UserRequest): Observable<User> {
-  //   return this.http.post<User>(`${this.apiUrl}/register`, user);
-  // }
-  // createUser(user: UserRequest): Observable<User> {
-  //   const formData = new FormData()
 
-  //   formData.append("email", user.email)
-  //   if (user.password) {
-  //     formData.append("password", user.password)
-  //   }
-  //   formData.append("fullname", user.fullname)
-  //   formData.append("phone", user.phone || "")
-  //   formData.append("active", user.active.toString())
-  //   if (user.roles && user.roles.length > 0) {
-  //     user.roles.forEach((role) => {
-  //       formData.append("roles", role)
-  //     })
-  //   }
-
-  //   if (user.image) {
-  //     formData.append("image", user.image)
-  //   }
-
-  //   return this.http.post<User>(`${this.apiUrl}/register`, formData)
-  // }
 
   getUserById(id: number): Observable<User> {
     return this.http.get<User>(`${this.apiUrl}/${id}`);

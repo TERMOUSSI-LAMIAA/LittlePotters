@@ -11,6 +11,8 @@ import com.littlepotters.littlepotters.repositories.UserRepository;
 import com.littlepotters.littlepotters.repositories.WorkshopRepository;
 import com.littlepotters.littlepotters.services.inter.WorkshopService;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
@@ -103,11 +105,9 @@ public class WorkshopServiceImpl implements WorkshopService {
 
     @Transactional(readOnly = true)
     @Override
-    public List<WorkshopResponseDTO> getAllWorkshops() {
-        List<Workshop> workshops = workshopRepository.findAll();
-        return workshops.stream()
-                .map(workshopMapper::toDTO)
-                .collect(Collectors.toList());
+    public Page<WorkshopResponseDTO> getAllWorkshops(Pageable pageable) {
+        Page<Workshop> workshopsPage = workshopRepository.findAll(pageable);
+        return workshopsPage.map(workshopMapper::toDTO);
     }
 
     @Transactional
@@ -126,4 +126,12 @@ public class WorkshopServiceImpl implements WorkshopService {
         }
         workshopRepository.delete(workshop);
     }
+
+    @Transactional(readOnly = true)
+    @Override
+    public Page<WorkshopResponseDTO> getWorkshopsByInstructorId(Long instructorId, Pageable pageable) {
+        Page<Workshop> workshopsPage = workshopRepository.findByInstructorId(instructorId, pageable);
+        return workshopsPage.map(workshopMapper::toDTO);
+    }
+
 }

@@ -64,25 +64,18 @@ export class UserprofileComponent implements OnInit {
     this.loading = true;
     const currentUser = this.authService.currentUserValue;
 
-    if (currentUser && currentUser.user.id) {
-      this.userService.getUserById(currentUser.user.id)
-        .pipe(finalize(() => this.loading = false))
-        .subscribe({
-          next: (userData) => {
-            this.user = userData;
-            this.updateFormValues(userData);
-            this.loadProfileImage(userData);
-          },
-          error: (error) => {
-            this.errorMessage = 'Failed to load user data. Please try again later.';
-            console.error('Error loading user data:', error);
-          }
-        });
+    if (currentUser && currentUser.user) {
+      this.user = currentUser.user; 
+      this.updateFormValues(currentUser.user);
+      this.loadProfileImage(currentUser.user);
+      this.loading = false;
     } else {
       this.loading = false;
       this.errorMessage = 'No user data available. Please login again.';
     }
   }
+
+ 
 
   loadProfileImage(userData: User): void {
     if (userData.imageUrl) {
@@ -168,32 +161,25 @@ export class UserprofileComponent implements OnInit {
               // Update localStorage with new user data
               const currentUser = this.authService.currentUserValue;
               if (currentUser) {
-                // Instead of trying to update the BehaviorSubject directly
-                // Update the values in local storage and then use the login method
-                // to update the user data in the auth service
+               
                 currentUser.user.fullname = updatedUser.fullname;
-                // Update the current user in local storage
                 localStorage.setItem('currentUser', JSON.stringify(currentUser));
 
-                // Re-login with the updated user information
-                // This will update the currentUserSubject through the auth service's methods
+              
                 if (formValue.password && formValue.password.trim() !== "") {
                   this.authService.login(updatedUser.email, formValue.password).subscribe({
                     error: (error) => {
                       console.error("Error refreshing user session:", error)
-                      // Silent error - user is still logged in with old data
                     },
                   })
                 }
               }
 
-              // Reset password fields
               this.profileForm.patchValue({
                 password: '',
                 confirmPassword: ''
               });
 
-              // Show success message or notification
               alert('Profile updated successfully!');
             },
             error: (error) => {
@@ -215,13 +201,11 @@ export class UserprofileComponent implements OnInit {
       this.profileForm.reset();
     }
 
-    // Reset the file input and selected file
     if (this.fileInput) {
       this.fileInput.nativeElement.value = '';
     }
     this.selectedFile = null;
 
-    // If we were showing a newly selected image, revert to the original
     if (this.user && this.user.imageUrl) {
       this.loadProfileImage(this.user);
     } else {
@@ -243,7 +227,6 @@ export class UserprofileComponent implements OnInit {
     const password = this.profileForm.get('password')?.value;
     const confirmPassword = this.profileForm.get('confirmPassword')?.value;
 
-    // Only check for mismatch if both fields have values
     if (password && confirmPassword) {
       return password !== confirmPassword;
     }

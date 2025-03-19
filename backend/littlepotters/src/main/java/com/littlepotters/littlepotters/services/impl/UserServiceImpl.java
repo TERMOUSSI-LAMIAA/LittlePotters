@@ -122,7 +122,12 @@ public class UserServiceImpl implements UserService {
         return userMapper.toDTO(updatedUser);
     }
 
-
+    @Override
+    public UserResponseDTO getUserByEmail(String email) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("User with email " + email + " not found"));
+        return userMapper.toDTO(user);
+    }
     @Override
     public void deleteUser(Long id) {
         User user = userRepository.findById(id)

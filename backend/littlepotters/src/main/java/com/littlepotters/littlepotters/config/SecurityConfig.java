@@ -42,6 +42,7 @@ public class SecurityConfig {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests()
+                .antMatchers("/api/users/me").authenticated()
                 .antMatchers("/api/admin/**").hasRole("ADMIN")
                 .antMatchers("/api/instructor/**").hasAnyRole("INSTRUCTOR","ADMIN")
                 .antMatchers("/api/customer/**").hasAnyRole("CUSTOMER","ADMIN")
