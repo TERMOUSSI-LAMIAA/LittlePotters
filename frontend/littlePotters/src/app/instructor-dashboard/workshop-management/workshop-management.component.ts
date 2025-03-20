@@ -53,6 +53,7 @@ export class WorkshopManagementComponent {
         this.workshops.forEach((workshop) => {
           if (workshop.imageUrl) {
             workshop.imageUrl = this.getFullImageUrl(workshop.imageUrl)
+            this.loadImage(workshop.imageUrl, workshop)
           }
         })
 
@@ -74,6 +75,18 @@ export class WorkshopManagementComponent {
     const imageUrl = relativeUrl.startsWith("/") ? relativeUrl : `/${relativeUrl}`
 
     return `${baseUrl}${imageUrl}`
+  }
+  
+  loadImage(url: string, workshop: Workshop): void {
+    this.workshopService.loadWorkshopImage(url).subscribe({
+      next: (imageBlob) => {
+        const imageUrl = URL.createObjectURL(imageBlob)
+        workshop.imageUrl = imageUrl
+      },
+      error: (error) => {
+        console.error('Error loading workshop image:', error)
+      }
+    })
   }
 
   goToPage(page: number): void {

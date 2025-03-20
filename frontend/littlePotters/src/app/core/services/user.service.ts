@@ -54,6 +54,7 @@ export class UserService {
   getInstructorsWithPage(page: number = 0, size: number = 6): Observable<PaginatedResponse<User>> {
     return this.http.get<PaginatedResponse<User>>(`${this.apiUrl}?role=INSTRUCTOR&page=${page}&size=${size}`);
   }
+  
   loadImage(url: string): Observable<Blob> {
     const cleanUrl = url.startsWith(this.apiBaseUrl) ? url.slice(this.apiBaseUrl.length) : url;
 

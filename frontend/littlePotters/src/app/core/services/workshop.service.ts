@@ -48,9 +48,14 @@ export class WorkshopService {
         return this.http.get<Workshop>(`${this.apiUrl}/${id}`);
     }
 
-    // Load workshop image
-    loadWorkshopImage(fileName: string): Observable<Blob> {
-        return this.http.get(`http://localhost:8081/api/instructor/workshops/images/${fileName}`, { responseType: 'blob' });
+    loadWorkshopImage(url: string): Observable<Blob> {
+        const cleanUrl = url.startsWith(this.apiUrl)
+            ? url.slice(this.apiUrl.length)
+            : url
+
+        return this.http.get(`${this.apiUrl}${cleanUrl}`, {
+            responseType: 'blob'
+        })
     }
 
     getWorkshopsByInstructor(instructorId: number, page: number = 0, size: number = 6): Observable<PaginatedResponse<Workshop>> {
