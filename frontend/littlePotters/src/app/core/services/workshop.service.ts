@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpParams } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { HttpClient, HttpErrorResponse, HttpParams } from '@angular/common/http';
+import { catchError, Observable, Subject, tap, throwError } from 'rxjs';
 import { Workshop } from '../models/workshop.model';
 import { WorkshopRequest } from '../models/workshop.model';
 import { PaginatedResponse } from '../models/PaginatedResponse.model';
@@ -8,9 +8,14 @@ import { PaginatedResponse } from '../models/PaginatedResponse.model';
 @Injectable({ providedIn: 'root' })
 export class WorkshopService {
     private apiUrl = 'http://localhost:8081/api/instructor/workshops';
+    private workshopChangedSubject = new Subject<void>();
+    workshopChanged$ = this.workshopChangedSubject.asObservable();
 
+ 
     constructor(private http: HttpClient) { }
-
+    notifyWorkshopChanged() {
+        this.workshopChangedSubject.next();
+    }
     // Get paginated workshops
     getWorkshops(page: number = 0, size: number = 6): Observable<PaginatedResponse<Workshop>> {
         const params = new HttpParams()
@@ -26,7 +31,18 @@ export class WorkshopService {
         Object.entries(workshopData).forEach(([key, value]) => {
             if (value !== null) formData.append(key, value);
         });
-        return this.http.post<Workshop>(this.apiUrl, formData);
+        return this.http.post<Workshop>(this.apiUrl, formData).pipe(
+            tap(() => this.notifyWorkshopChanged()),
+            catchError((error: HttpErrorResponse) => {
+                if (error.status === 400) {
+                    console.error('Validation error:', error.error);
+                    return throwError(error.error);
+                } else {
+                    console.error('Error creating workshop:', error);
+                    return throwError(error);
+                }
+            })
+        );
     }
 
     // Update workshop
@@ -35,12 +51,16 @@ export class WorkshopService {
         Object.entries(workshopData).forEach(([key, value]) => {
             if (value !== null) formData.append(key, value);
         });
-        return this.http.put<Workshop>(`${this.apiUrl}/${id}`, formData);
+        return this.http.put<Workshop>(`${this.apiUrl}/${id}`, formData).pipe(
+            tap(() => this.notifyWorkshopChanged())
+        );
     }
 
     // Delete workshop
     deleteWorkshop(id: number): Observable<void> {
-        return this.http.delete<void>(`${this.apiUrl}/${id}`);
+        return this.http.delete<void>(`${this.apiUrl}/${id}`).pipe(
+            tap(() => this.notifyWorkshopChanged())
+        );
     }
 
     // Get single workshop

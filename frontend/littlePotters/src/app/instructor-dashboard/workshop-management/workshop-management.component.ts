@@ -2,8 +2,9 @@ import { Component } from '@angular/core';
 import { Workshop } from '../../core/models/workshop.model';
 import { WorkshopService } from '../../core/services/workshop.service';
 import { AuthService } from '../../core/services/auth.service';
-import { ActivatedRoute, Router, RouterModule } from '@angular/router';
+import { ActivatedRoute, NavigationEnd, Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { PaginatedResponse } from '../../core/models/PaginatedResponse.model';
 
 @Component({
   selector: 'app-workshop-management',
@@ -31,40 +32,56 @@ export class WorkshopManagementComponent {
     private route: ActivatedRoute,
   ) { }
 
+
   ngOnInit(): void {
-    this.loadWorkshops()
-
-    this.route.children.length > 0 ? (this.showForm = true) : (this.showForm = false)
-
+    if (this.route.snapshot.data && this.route.snapshot.data['workshops']) {
+      const paginatedResponse = this.route.snapshot.data['workshops'] as PaginatedResponse<Workshop>;
+      this.handlePaginatedResponse(paginatedResponse);
+    } else {
+      this.loadWorkshops();
+    }
+    this.route.children.length > 0 ? (this.showForm = true) : (this.showForm = false);
     this.router.events.subscribe(() => {
-      this.showForm = this.route.children.length > 0
-    })
+      this.showForm = this.route.children.length > 0;
+    });
+
+    this.router.events.subscribe(event => {
+      if (event instanceof NavigationEnd && event.url === '/admin-dashboard/workshops') {
+        this.loadWorkshops();
+      }
+    });
+    this.workshopService.workshopChanged$.subscribe(() => {
+      console.log('Workshop changed, reloading list');
+      this.loadWorkshops();
+    });
   }
 
   loadWorkshops(): void {
-    this.loading = true
-
+    this.loading = true;
     this.workshopService.getWorkshops(this.currentPage, this.pageSize).subscribe({
       next: (response) => {
-        this.workshops = response.content
-        this.totalElements = response.totalElements
-        this.totalPages = response.totalPages
-
-        this.workshops.forEach((workshop) => {
-          if (workshop.imageUrl) {
-            workshop.imageUrl = this.getFullImageUrl(workshop.imageUrl)
-            this.loadImage(workshop.imageUrl, workshop)
-          }
-        })
-
-        this.loading = false
+        this.handlePaginatedResponse(response);
+        this.loading = false;
       },
       error: (error) => {
-        console.error("Error loading workshops:", error)
-        this.loading = false
-      },
-    })
+        console.error('Error loading workshops:', error);
+        this.loading = false;
+      }
+    });
   }
+
+  handlePaginatedResponse(response: PaginatedResponse<Workshop>): void {
+    this.workshops = response.content;
+    this.totalElements = response.totalElements;
+    this.totalPages = response.totalPages;
+    this.workshops.forEach((workshop) => {
+      if (workshop.imageUrl) {
+        workshop.imageUrl = this.getFullImageUrl(workshop.imageUrl);
+        this.loadImage(workshop.imageUrl, workshop);
+      }
+    });
+  }
+
 
   getFullImageUrl(relativeUrl: string): string {
     if (!relativeUrl || relativeUrl.startsWith("http")) {

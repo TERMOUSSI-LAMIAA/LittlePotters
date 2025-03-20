@@ -15,6 +15,8 @@ import { CustomersResolver } from './core/resolvers/customers.resolver';
 import { MainLayoutComponent } from './shared/components/main-layout/main-layout.component';
 import { WorkshopManagementComponent } from './instructor-dashboard/workshop-management/workshop-management.component';
 import { ReservationManagementComponent } from './instructor-dashboard/reservation-management/reservation-management.component';
+import { WorkshopFormComponent } from './instructor-dashboard/workshop-form/workshop-form.component';
+import { WorkshopResolver } from './core/resolvers/workshops.resolver';
 
 export const routes: Routes = [
     // { path: '', component: HomeComponent },
@@ -75,8 +77,18 @@ export const routes: Routes = [
                 path: 'workshops',
                 component: WorkshopManagementComponent,
                 resolve: {
-                    // instructor-workshops: WorkshopsResolver
-                }
+                    workshops: WorkshopResolver
+                },
+                children: [
+                    {
+                        path: 'new',
+                        component: WorkshopFormComponent
+                    },
+                    {
+                        path: ':id',
+                        component: WorkshopFormComponent
+                    }
+                ]
                
             },
             {
