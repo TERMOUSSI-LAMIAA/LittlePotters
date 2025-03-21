@@ -186,6 +186,11 @@ export class WorkshopManagementComponent {
     }
   }
 
+  isWorkshopOwner(workshop: Workshop): boolean {
+    const currentUser = this.authService.currentUserValue;
+    return !!currentUser && workshop.instructorId === currentUser.user.id;
+  }
+
   cancelDelete(): void {
     this.showDeleteModal = false
     this.workshopToDelete = null

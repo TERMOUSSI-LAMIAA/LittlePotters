@@ -13,6 +13,8 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
@@ -41,8 +43,9 @@ public class WorkshopController {
     @PutMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<WorkshopResponseDTO> updateWorkshop(
             @PathVariable Long id,
-            @Valid @ModelAttribute WorkshopRequestDTO workshopRequestDTO) throws IOException {
-        WorkshopResponseDTO updatedWorkshop = workshopService.updateWorkshop(id, workshopRequestDTO);
+            @Valid @ModelAttribute WorkshopRequestDTO workshopRequestDTO,
+            @AuthenticationPrincipal UserDetails userDetails) throws IOException {
+        WorkshopResponseDTO updatedWorkshop = workshopService.updateWorkshop(id, workshopRequestDTO,userDetails);
         return ResponseEntity.ok(updatedWorkshop);
     }
 
@@ -85,16 +88,12 @@ public class WorkshopController {
         }
     }
 
-//    @GetMapping("/instructor/{instructorId}")
-//    public ResponseEntity<Page<WorkshopResponseDTO>> getWorkshopsByInstructorId(
-//            @PathVariable Long instructorId, Pageable pageable) {
-//        Page<WorkshopResponseDTO> workshopsPage = workshopService.getWorkshopsByInstructorId(instructorId, pageable);
-//        return ResponseEntity.ok(workshopsPage);
-//    }
+
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteWorkshop(@PathVariable Long id) {
-        workshopService.deleteWorkshop(id);
+    public ResponseEntity<Void> deleteWorkshop(@PathVariable Long id,
+                                               @AuthenticationPrincipal UserDetails userDetails) {
+        workshopService.deleteWorkshop(id,userDetails);
         return ResponseEntity.noContent().build();
     }
 }

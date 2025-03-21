@@ -13,6 +13,7 @@ import com.littlepotters.littlepotters.services.inter.WorkshopService;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
@@ -58,12 +59,15 @@ public class WorkshopServiceImpl implements WorkshopService {
 
     @Transactional
     @Override
-    public WorkshopResponseDTO updateWorkshop(Long id, WorkshopRequestDTO workshopRequestDTO) throws IOException {
+    public WorkshopResponseDTO updateWorkshop(Long id, WorkshopRequestDTO workshopRequestDTO,
+                                              UserDetails userDetails) throws IOException {
 
         Workshop existingWorkshop = workshopRepository.findById(id)
                 .orElseThrow(() -> new WorkshopException(id));
 
-
+        if (!existingWorkshop.getInstructor().getEmail().equals(userDetails.getUsername())) {
+            throw new AccessDeniedException("You are not authorized to update this workshop.");
+        }
         if (!existingWorkshop.getReservations().isEmpty()) {
             throw new RuntimeException("Cannot update workshop with existing reservations");
         }
@@ -131,9 +135,13 @@ public class WorkshopServiceImpl implements WorkshopService {
 
     @Transactional
     @Override
-    public void deleteWorkshop(Long id) {
+    public void deleteWorkshop(Long id, UserDetails userDetails) {
         Workshop workshop = workshopRepository.findById(id)
                 .orElseThrow(() -> new WorkshopException(id));
+
+        if (!workshop.getInstructor().getEmail().equals(userDetails.getUsername())) {
+            throw new AccessDeniedException("You are not authorized to delete this workshop.");
+        }
         String imageFileName = workshop.getImageFileName();
 
         if (imageFileName != null && !imageFileName.isEmpty()) {
