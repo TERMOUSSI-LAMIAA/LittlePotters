@@ -52,8 +52,14 @@ public class WorkshopController {
     }
 
     @GetMapping
-    public ResponseEntity<Page<WorkshopResponseDTO>> getAllWorkshops(Pageable pageable) {
-        Page<WorkshopResponseDTO> workshopsPage = workshopService.getAllWorkshops(pageable);
+    public ResponseEntity<Page<WorkshopResponseDTO>> getAllWorkshops(Pageable pageable, Long userId) {
+        Page<WorkshopResponseDTO> workshopsPage ;
+        if (userId != null) {
+            workshopsPage  = workshopService.getWorkshopsByInstructorId(userId, pageable);
+        }else{
+            workshopsPage  = workshopService.getAllWorkshops(pageable);
+        }
+
         return ResponseEntity.ok(workshopsPage);
     }
 
@@ -79,12 +85,12 @@ public class WorkshopController {
         }
     }
 
-    @GetMapping("/instructor/{instructorId}")
-    public ResponseEntity<Page<WorkshopResponseDTO>> getWorkshopsByInstructorId(
-            @PathVariable Long instructorId, Pageable pageable) {
-        Page<WorkshopResponseDTO> workshopsPage = workshopService.getWorkshopsByInstructorId(instructorId, pageable);
-        return ResponseEntity.ok(workshopsPage);
-    }
+//    @GetMapping("/instructor/{instructorId}")
+//    public ResponseEntity<Page<WorkshopResponseDTO>> getWorkshopsByInstructorId(
+//            @PathVariable Long instructorId, Pageable pageable) {
+//        Page<WorkshopResponseDTO> workshopsPage = workshopService.getWorkshopsByInstructorId(instructorId, pageable);
+//        return ResponseEntity.ok(workshopsPage);
+//    }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteWorkshop(@PathVariable Long id) {

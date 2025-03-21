@@ -5,11 +5,12 @@ import { AuthService } from '../../core/services/auth.service';
 import { ActivatedRoute, NavigationEnd, Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { PaginatedResponse } from '../../core/models/PaginatedResponse.model';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-workshop-management',
   standalone: true,
-  imports: [CommonModule,RouterModule],
+  imports: [CommonModule, RouterModule, FormsModule],
   templateUrl: './workshop-management.component.html',
   styleUrl: './workshop-management.component.scss'
 })
@@ -25,6 +26,8 @@ export class WorkshopManagementComponent {
   workshopToDelete: number | null = null
   apiBaseUrl = "http://localhost:8081"
 
+  filterByUser = false;
+  
   constructor(
     private workshopService: WorkshopService,
     private authService: AuthService,
@@ -56,9 +59,21 @@ export class WorkshopManagementComponent {
     });
   }
 
+  applyFilter(): void {
+    this.currentPage = 0; 
+    this.loadWorkshops();
+  }
   loadWorkshops(): void {
     this.loading = true;
-    this.workshopService.getWorkshops(this.currentPage, this.pageSize).subscribe({
+
+    // Include the filterByUser parameter in the request
+    const filterParams = {
+      page: this.currentPage,
+      size: this.pageSize,
+      filterByUser: this.filterByUser ? this.authService.currentUserValue?.user.id : undefined, 
+    };
+
+    this.workshopService.getWorkshops(filterParams).subscribe({
       next: (response) => {
         this.handlePaginatedResponse(response);
         this.loading = false;
@@ -66,9 +81,22 @@ export class WorkshopManagementComponent {
       error: (error) => {
         console.error('Error loading workshops:', error);
         this.loading = false;
-      }
+      },
     });
   }
+  // loadWorkshops(): void {
+  //   this.loading = true;
+  //   this.workshopService.getWorkshops(this.currentPage, this.pageSize).subscribe({
+  //     next: (response) => {
+  //       this.handlePaginatedResponse(response);
+  //       this.loading = false;
+  //     },
+  //     error: (error) => {
+  //       console.error('Error loading workshops:', error);
+  //       this.loading = false;
+  //     }
+  //   });
+  // }
 
   handlePaginatedResponse(response: PaginatedResponse<Workshop>): void {
     this.workshops = response.content;

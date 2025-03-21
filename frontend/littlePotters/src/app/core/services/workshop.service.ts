@@ -17,12 +17,23 @@ export class WorkshopService {
         this.workshopChangedSubject.next();
     }
     // Get paginated workshops
-    getWorkshops(page: number = 0, size: number = 6): Observable<PaginatedResponse<Workshop>> {
-        const params = new HttpParams()
-            .set('page', page.toString())
-            .set('size', size.toString());
+    // getWorkshops(page: number = 0, size: number = 6): Observable<PaginatedResponse<Workshop>> {
+    //     const params = new HttpParams()
+    //         .set('page', page.toString())
+    //         .set('size', size.toString());
 
-        return this.http.get<PaginatedResponse<Workshop>>(this.apiUrl, { params });
+    //     return this.http.get<PaginatedResponse<Workshop>>(this.apiUrl, { params });
+    // }
+    getWorkshops(params: { page: number, size: number, filterByUser?: number }): Observable<PaginatedResponse<Workshop>> {
+        const { page, size, filterByUser } = params;
+        let url = `${this.apiUrl}?page=${page}&size=${size}`;
+        
+        // Add the filterByUser parameter to the URL if provided
+        if (filterByUser) {
+            url += `&userId=${filterByUser}`;
+        }
+
+        return this.http.get<PaginatedResponse<Workshop>>(url);
     }
 
     // Create new workshop

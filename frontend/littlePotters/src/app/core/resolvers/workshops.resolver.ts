@@ -14,9 +14,10 @@ export class WorkshopResolver implements Resolve<PaginatedResponse<Workshop>> {
 
     resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<any> {
         const page = route.queryParams['page'] ? +route.queryParams['page'] : 0;
-        const pageSize = route.queryParams['size'] ? +route.queryParams['size'] : 6;
+        const size = route.queryParams['size'] ? +route.queryParams['size'] : 6;
+        const filterByUser = route.queryParams['userId'] ? +route.queryParams['userId'] : undefined;
 
-        return this.workshopService.getWorkshops(page, pageSize).pipe(
+        return this.workshopService.getWorkshops({page, size, filterByUser}).pipe(
             catchError(error => {
                 console.error('Error loading workshops:', error);
                 return of(null);

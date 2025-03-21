@@ -178,24 +178,13 @@ export class WorkshopFormComponent implements OnInit {
     if (this.selectedFile) {
       workshopData.image = this.selectedFile;
     }
-    // If we're in edit mode, have an original image, but want to remove it
     else if (this.isEditMode && this.originalImageUrl && this.removeCurrentImage) {
-      // Set imageFileName to null explicitly to signal removal
       workshopData.imageFileName = null;
     }
-    // Otherwise, keep the existing image
     else if (this.isEditMode && this.originalImageUrl) {
       workshopData.imageFileName = this.originalImageUrl.split("/").pop();
     }
-    // if (!this.selectedFile && this.originalImageUrl ) {
-    //   workshopData.imageFileName = this.originalImageUrl.split("/").pop(); 
-    // }
-    
-  
-    // if (this.selectedFile) {
-    //   workshopData.image = this.selectedFile;
-    // }
-    
+
 
 
     if (this.isEditMode && this.workshopId) {
