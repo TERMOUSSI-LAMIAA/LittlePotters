@@ -33,5 +33,6 @@ export interface WorkshopRequest {
     schedule: WorkshopSchedule;
     maxParticipants: number;
     price: number;
-    image: File | null;
+    image?: File | null;
+    imageFileName?: string | null;
 }

@@ -39,4 +39,6 @@ public class WorkshopRequestDTO {
     private double price;
 
     private MultipartFile image;
+
+    private String imageFileName;
 }

@@ -108,7 +108,15 @@ export class WorkshopFormComponent implements OnInit {
   }
 
   loadImage(url: string): void {
-    this.imagePreview = url
+    this.workshopService.loadWorkshopImage(url).subscribe({
+      next: (imageBlob) => {
+        const imageUrl = URL.createObjectURL(imageBlob)
+        this.imagePreview = imageUrl
+      },
+      error: (error) => {
+        console.error('Error loading workshop image:', error)
+      }
+    })
   }
 
   triggerFileInput(): void {
@@ -164,21 +172,43 @@ export class WorkshopFormComponent implements OnInit {
       schedule: this.workshopForm.value.schedule, 
       maxParticipants: this.workshopForm.value.maxParticipants,
       price: this.workshopForm.value.price,
-      image: this.selectedFile || null,
+
     };
+
+    if (this.selectedFile) {
+      workshopData.image = this.selectedFile;
+    }
+    // If we're in edit mode, have an original image, but want to remove it
+    else if (this.isEditMode && this.originalImageUrl && this.removeCurrentImage) {
+      // Set imageFileName to null explicitly to signal removal
+      workshopData.imageFileName = null;
+    }
+    // Otherwise, keep the existing image
+    else if (this.isEditMode && this.originalImageUrl) {
+      workshopData.imageFileName = this.originalImageUrl.split("/").pop();
+    }
+    // if (!this.selectedFile && this.originalImageUrl ) {
+    //   workshopData.imageFileName = this.originalImageUrl.split("/").pop(); 
+    // }
+    
+  
+    // if (this.selectedFile) {
+    //   workshopData.image = this.selectedFile;
+    // }
+    
+
 
     if (this.isEditMode && this.workshopId) {
       this.workshopService
         .updateWorkshop(this.workshopId, workshopData)
-        .pipe(
-          finalize(() => {
-            this.isSubmitting = false
-            this.loading = false
-          }),
-        )
         .subscribe({
-          next: () => {
-            this.navigateBack()
+          next: (updatedWorkshop) => {
+            if (updatedWorkshop.imageUrl) {
+              this.originalImageUrl = updatedWorkshop.imageUrl
+              const fullImageUrl = this.getFullImageUrl(updatedWorkshop.imageUrl)
+              this.loadImage(fullImageUrl)
+            }
+            this.navigateBack();
           },
           error: (error) => {
             this.errorMessage = error.error?.message || "Failed to update workshop. Please try again."

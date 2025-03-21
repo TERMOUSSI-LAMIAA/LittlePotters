@@ -26,9 +26,17 @@ public interface WorkshopMapper {
     WorkshopResponseDTO toDTO(Workshop workshop);
 
 
-
+    //    @Mapping(target = "imageFileName", source = "image.originalFilename")
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "instructor", ignore = true)
-    @Mapping(target = "imageFileName", source = "image.originalFilename")
+    @Mapping(target = "imageFileName", expression = "java(mapImageFileName(workshopRequestDTO, workshop))")
     void updateEntityFromDTO(WorkshopRequestDTO workshopRequestDTO, @MappingTarget Workshop workshop);
+
+    default String mapImageFileName(WorkshopRequestDTO workshopRequestDTO, Workshop workshop) {
+        if (workshopRequestDTO.getImage() == null || workshopRequestDTO.getImage().isEmpty()) {
+            return workshop.getImageFileName();
+        }
+
+        return workshopRequestDTO.getImage().getOriginalFilename();
+    }
 }

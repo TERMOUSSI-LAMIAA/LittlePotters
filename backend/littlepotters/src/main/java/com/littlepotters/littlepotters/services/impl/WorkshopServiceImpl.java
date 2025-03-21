@@ -67,31 +67,50 @@ public class WorkshopServiceImpl implements WorkshopService {
         if (!existingWorkshop.getReservations().isEmpty()) {
             throw new RuntimeException("Cannot update workshop with existing reservations");
         }
+        workshopMapper.updateEntityFromDTO(workshopRequestDTO, existingWorkshop);
 
         String oldFileName = existingWorkshop.getImageFileName();
-
         if (workshopRequestDTO.getImage() != null && !workshopRequestDTO.getImage().isEmpty()) {
+            // Save the new image and delete the old one
             String newFileName = imageStorageService.saveWorkshopImage(workshopRequestDTO.getImage());
-
             existingWorkshop.setImageFileName(newFileName);
+
+            // Delete the old image if it exists
+            if (oldFileName != null && !oldFileName.isEmpty()) {
+                try {
+                    imageStorageService.deleteWorkshopImage(oldFileName);
+                } catch (IOException e) {
+                    System.err.println("Warning: Could not delete old image: " + oldFileName + ". Error: " + e.getMessage());
+                }
+            }
+        }
+        // If imageFileName is explicitly set to null, remove the image
+        else if (workshopRequestDTO.getImageFileName() == null) {
+            existingWorkshop.setImageFileName(null);
+
+            // Delete the old image if it exists
+            if (oldFileName != null && !oldFileName.isEmpty()) {
+                try {
+                    imageStorageService.deleteWorkshopImage(oldFileName);
+                } catch (IOException e) {
+                    System.err.println("Warning: Could not delete old image: " + oldFileName + ". Error: " + e.getMessage());
+                }
+            }
+        }
+        // Otherwise, keep the existing filename
+        else {
+            workshopRequestDTO.setImageFileName(existingWorkshop.getImageFileName());
         }
 
+
+
         int originalMaxParticipants = existingWorkshop.getMaxParticipants();
-        workshopMapper.updateEntityFromDTO(workshopRequestDTO, existingWorkshop);
         if (existingWorkshop.getMaxParticipants() !=originalMaxParticipants ) {
             existingWorkshop.setAvailablePlaces(workshopRequestDTO.getMaxParticipants());
         }
 
         Workshop updatedWorkshop = workshopRepository.save(existingWorkshop);
-        if (oldFileName != null && !oldFileName.isEmpty()
-                && workshopRequestDTO.getImage() != null
-                && !workshopRequestDTO.getImage().isEmpty()) {
-            try {
-                imageStorageService.deleteWorkshopImage(oldFileName);
-            } catch (IOException e) {
-                System.err.println("Warning: Could not delete old image: " + oldFileName + ". Error: " + e.getMessage());
-            }
-        }
+
         return workshopMapper.toDTO(updatedWorkshop);
     }
 
