@@ -4,6 +4,7 @@ import com.littlepotters.littlepotters.models.enums.WorkshopLevel;
 import com.littlepotters.littlepotters.models.enums.WorkshopSchedule;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
@@ -15,12 +16,14 @@ import java.util.Set;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@EqualsAndHashCode(onlyExplicitlyIncluded=true)
 @Entity
 @Table(name = "workshops")
 public class Workshop {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @EqualsAndHashCode.Include
     private Long id;
 
     @NotBlank(message = "Title cannot be empty")

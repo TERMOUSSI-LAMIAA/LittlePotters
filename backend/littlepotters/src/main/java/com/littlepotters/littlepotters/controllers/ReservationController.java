@@ -4,6 +4,8 @@ import com.littlepotters.littlepotters.dtos.requestDTOs.ReservationRequestDTO;
 import com.littlepotters.littlepotters.dtos.responseDTOs.ReservationResponseDTO;
 import com.littlepotters.littlepotters.services.inter.ReservationService;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -45,7 +47,7 @@ public class ReservationController {
         return ResponseEntity.ok(reservationResponseDTOS);
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')") //??
     @GetMapping("/{id}")
     public ResponseEntity<ReservationResponseDTO> getReservationById(@PathVariable Long id) {
         ReservationResponseDTO reservationResponseDTO = reservationService.getReservationById(id);
@@ -63,17 +65,26 @@ public class ReservationController {
         }
     }
 
-    @GetMapping("/customer")
-    @PreAuthorize("hasRole('CUSTOMER')")
-    public ResponseEntity<List<ReservationResponseDTO>> getCustomerReservations() {
-        List<ReservationResponseDTO> reservations = reservationService.getReservationsForCustomer();
+//    @GetMapping("/customer")
+//    @PreAuthorize("hasRole('CUSTOMER')")
+//    public ResponseEntity<List<ReservationResponseDTO>> getCustomerReservations() {
+//        List<ReservationResponseDTO> reservations = reservationService.getReservationsForCustomer();
+//        return ResponseEntity.ok(reservations);
+//    }
+
+    @PreAuthorize("hasRole('INSTRUCTOR')")
+    @GetMapping("/instructor/workshops")
+    public ResponseEntity<Page<ReservationResponseDTO>> getInstructorWorkshopReservations(
+            @RequestParam(required = false) Long workshopId,Pageable pageable) {
+        Page<ReservationResponseDTO> reservations = reservationService.getReservationsForInstructorWorkshops(
+                workshopId,pageable);
         return ResponseEntity.ok(reservations);
     }
 
-    @GetMapping("/instructor")
-    @PreAuthorize("hasRole('INSTRUCTOR')")
-    public ResponseEntity<List<ReservationResponseDTO>> getInstructorReservations() {
-        List<ReservationResponseDTO> reservations = reservationService.getReservationsForInstructor();
-        return ResponseEntity.ok(reservations);
-    }
+//    @GetMapping("/instructor/{instructorId}")
+//    @PreAuthorize("hasRole('INSTRUCTOR')")
+//    public ResponseEntity<Page<ReservationResponseDTO>> getInstructorReservations(Pageable pageable) {
+//        List<ReservationResponseDTO> reservations = reservationService.getReservationsForInstructor();
+//        return ResponseEntity.ok(reservations);
+//    }
 }

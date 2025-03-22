@@ -14,6 +14,8 @@ import com.littlepotters.littlepotters.repositories.UserRepository;
 import com.littlepotters.littlepotters.repositories.WorkshopRepository;
 import com.littlepotters.littlepotters.services.inter.ReservationService;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -22,6 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -158,38 +161,64 @@ public class ReservationServiceImpl  implements ReservationService {
         workshopRepository.save(workshop);
         reservationRepository.delete(reservation);
     }
-
     @Override
-    public List<ReservationResponseDTO> getReservationsForCustomer() {
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        String email = ((UserDetails) principal).getUsername();
-        User customer = userRepository.findByEmail(email)
-                .orElseThrow(() -> new RuntimeException("Customer not found"));
-
-        List<Reservation> reservations = reservationRepository.findByCustomer(customer);
-        return reservations.stream()
-                .map(reservationMapper::toDTO)
-                .collect(Collectors.toList());
-    }
-
-    @Override
-    public List<ReservationResponseDTO> getReservationsForInstructor() {
+    public Page<ReservationResponseDTO> getReservationsForInstructorWorkshops(Long workshopId,Pageable pageable) {
+        // Get the authenticated user
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         String email = ((UserDetails) principal).getUsername();
         User instructor = userRepository.findByEmail(email)
-                .orElseThrow(() -> new RuntimeException("Instructor not found"));
+                .orElseThrow(() -> new RuntimeException("User not found with email: " + email));
 
-        List<Workshop> workshops = workshopRepository.findByInstructor(instructor);
+        Set<Long> workshopIds = instructor.getWorkshops().stream()
+                .map(Workshop::getId)
+                .collect(Collectors.toSet());
 
-        List<Reservation> reservations = new ArrayList<>();
-        for (Workshop workshop : workshops) {
-            reservations.addAll(reservationRepository.findByWorkshop(workshop));
+        Page<Reservation> reservationsPage;
+
+        if (workshopId != null) {
+            if (workshopIds.contains(workshopId)) {
+                reservationsPage = reservationRepository.findByWorkshopId(workshopId, pageable);
+            } else {
+                throw new RuntimeException("Workshop not found or does not belong to the instructor");
+            }
+        } else {
+            reservationsPage = reservationRepository.findByWorkshopIdIn(workshopIds, pageable);
         }
 
-        return reservations.stream()
-                .map(reservationMapper::toDTO)
-                .collect(Collectors.toList());
+        return reservationsPage.map(reservationMapper::toDTO);
     }
+
+//    @Override
+//    public List<ReservationResponseDTO> getReservationsForCustomer() {
+//        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+//        String email = ((UserDetails) principal).getUsername();
+//        User customer = userRepository.findByEmail(email)
+//                .orElseThrow(() -> new RuntimeException("Customer not found"));
+//
+//        List<Reservation> reservations = reservationRepository.findByCustomer(customer);
+//        return reservations.stream()
+//                .map(reservationMapper::toDTO)
+//                .collect(Collectors.toList());
+//    }
+//
+//    @Override
+//    public List<ReservationResponseDTO> getReservationsForInstructor() {
+//        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+//        String email = ((UserDetails) principal).getUsername();
+//        User instructor = userRepository.findByEmail(email)
+//                .orElseThrow(() -> new RuntimeException("Instructor not found"));
+//
+//        List<Workshop> workshops = workshopRepository.findByInstructor(instructor);
+//
+//        List<Reservation> reservations = new ArrayList<>();
+//        for (Workshop workshop : workshops) {
+//            reservations.addAll(reservationRepository.findByWorkshop(workshop));
+//        }
+//
+//        return reservations.stream()
+//                .map(reservationMapper::toDTO)
+//                .collect(Collectors.toList());
+//    }
 
     private boolean isInstructorOfWorkshop(User instructor, Workshop workshop) {
         return workshop.getInstructor().equals(instructor);

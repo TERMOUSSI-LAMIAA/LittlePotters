@@ -3,6 +3,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Reservation } from '../models/reservation.model';
 import { ReservationRequest } from '../models/reservation.model';
+import { PaginatedResponse } from '../models/PaginatedResponse.model';
 
 @Injectable({ providedIn: 'root' })
 export class ReservationService {
@@ -44,8 +45,15 @@ export class ReservationService {
         return this.http.get<Reservation[]>(`${this.apiUrl}/customer`);
     }
 
-    // Get reservations for instructor
-    getInstructorReservations(): Observable<Reservation[]> {
-        return this.http.get<Reservation[]>(`${this.apiUrl}/instructor`);
+    getInstructorReservations(page: number, size: number, workshopId?: number): Observable<PaginatedResponse<Reservation>> {
+        const params: any = {
+            page: page.toString(),
+            size: size.toString(),
+        };
+
+        if (workshopId) {
+            params.workshopId = workshopId.toString(); 
+        }
+        return this.http.get<PaginatedResponse<Reservation>>(`${this.apiUrl}/instructor/workshops`, { params });
     }
 }
