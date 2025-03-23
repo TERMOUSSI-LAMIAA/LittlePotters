@@ -56,7 +56,7 @@ export class InstructorFormComponentComponent {
       {
         fullname: ["", [Validators.required]],
         email: [{ value: "", disabled: this.isEditMode }, [Validators.required, Validators.email]],
-        password: ["", this.isEditMode ? [Validators.minLength(8)] : [Validators.required, Validators.minLength(8)]],
+        password: [null, this.isEditMode ? [Validators.minLength(8)] : [Validators.required, Validators.minLength(8)]],
         confirmPassword: [""],
         phone: ["", [Validators.required, Validators.pattern(/^0[5-6-7]\d{8}$/)]],
         active: [true],
@@ -200,18 +200,21 @@ export class InstructorFormComponentComponent {
     formData.append("roles", "INSTRUCTOR")
 
     // Only append password if it's not empty
-    if (this.instructorForm.value.password && this.instructorForm.value.password.trim() !== "") {
+    if (this.instructorForm.value.password ) {
       formData.append("password", this.instructorForm.value.password)
     }
 
-    // Handle image logic
     if (this.selectedFile) {
       // New image selected
-      formData.append("image", this.selectedFile)
-    } else if (this.removeCurrentImage) {
+      formData.append("image", this.selectedFile);
+    } else if (this.isEditMode && this.originalImageUrl && this.removeCurrentImage) {
       // User explicitly removed the image
-      formData.append("removeImage", "true")
+      formData.append("imageFileName", "null");
+    } else if (this.isEditMode && this.originalImageUrl) {
+      // Preserve the existing image
+      formData.append("imageFileName", this.originalImageUrl.split("/").pop() || "");
     }
+
 
     if (this.isEditMode && this.instructorId) {
       this.userService

@@ -30,5 +30,7 @@ public class UserRequestDTO {
     private Set<String> roles;
 
     private MultipartFile image;
+    private String imageFileName;
+
 
 }

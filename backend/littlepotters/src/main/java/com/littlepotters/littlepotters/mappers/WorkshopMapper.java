@@ -5,13 +5,11 @@ import com.littlepotters.littlepotters.dtos.requestDTOs.WorkshopRequestDTO;
 import com.littlepotters.littlepotters.dtos.responseDTOs.WorkshopResponseDTO;
 import com.littlepotters.littlepotters.models.entities.Workshop;
 import com.littlepotters.littlepotters.util.ImageUrlGenerator;
-import lombok.AllArgsConstructor;
-import lombok.RequiredArgsConstructor;
+
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
-import org.mapstruct.Named;
-import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.stereotype.Component;
 
 @Mapper(componentModel = "spring",uses = {ImageUrlGenerator.class})
@@ -26,7 +24,6 @@ public interface WorkshopMapper {
     WorkshopResponseDTO toDTO(Workshop workshop);
 
 
-    //    @Mapping(target = "imageFileName", source = "image.originalFilename")
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "instructor", ignore = true)
     @Mapping(target = "imageFileName", expression = "java(mapImageFileName(workshopRequestDTO, workshop))")

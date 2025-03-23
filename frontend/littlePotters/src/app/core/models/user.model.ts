@@ -23,5 +23,6 @@ export interface UserRequest {
     phone: string;
     active: boolean;
     roles: string[];
-    image?: File;// Array of role names
+    image?: File | null;
+    imageFileName?: string | null;
 }

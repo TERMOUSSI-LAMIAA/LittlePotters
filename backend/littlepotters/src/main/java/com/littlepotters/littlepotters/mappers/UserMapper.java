@@ -27,8 +27,16 @@ public interface UserMapper {
 
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "roles", ignore = true)
-    @Mapping(target = "imageFileName", source = "image.originalFilename")
+    @Mapping(target = "imageFileName", expression = "java(mapImageFileName(userRequestDTO, user))")
+    @Mapping(target = "password", ignore = true)
     void updateEntityFromDTO(UserRequestDTO userRequestDTO, @MappingTarget User user);
+
+    default String mapImageFileName(UserRequestDTO userRequestDTO, User user) {
+        if (userRequestDTO.getImage() == null || userRequestDTO.getImage().isEmpty()) {
+            return user.getImageFileName();
+        }
+        return userRequestDTO.getImage().getOriginalFilename();
+    }
 
     default Set<String> map(Set<Role> roles) {
         return roles.stream()
