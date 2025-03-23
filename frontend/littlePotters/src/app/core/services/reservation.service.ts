@@ -17,9 +17,9 @@ export class ReservationService {
         return this.http.post<Reservation>(this.apiUrl, reservationData);
     }
 
-    // Update reservation status
-    updateReservationStatus(id: number, reservationData: ReservationRequest): Observable<Reservation> {
-        return this.http.put<Reservation>(`${this.apiUrl}/${id}/status`, reservationData);
+    // todo: change it in backend
+    updateReservationStatus(id: number, status: string): Observable<Reservation> {
+        return this.http.put<Reservation>(`${this.apiUrl}/${id}/status`, { status });
     }
 
     // Update places booked

@@ -10,6 +10,11 @@ import { FormsModule } from '@angular/forms';
 import { User } from '../../core/models/user.model';
 import { UserService } from '../../core/services/user.service';
 import { PaginatedResponse } from '../../core/models/PaginatedResponse.model';
+import { ReservationsFilter, ReservationState } from '../../store/reservation.state';
+import { Store } from '@ngrx/store';
+import { Observable, take } from 'rxjs';
+import * as ReservationSelectors from '../../store/reservations/reservation.selectors';
+import * as ReservationActions from '../../store/reservations/reservation.actions';
 
 @Component({
   selector: 'app-reservation-management',
@@ -19,154 +24,159 @@ import { PaginatedResponse } from '../../core/models/PaginatedResponse.model';
   styleUrl: './reservation-management.component.scss'
 })
 export class ReservationManagementComponent implements OnInit {
-  reservations: Reservation[] = []
-  workshops: Workshop[] = []
-  users: User[] = []
-  loading = false
-  currentPage = 0
-  pageSize = 10
-  totalElements = 0
-  totalPages = 0
-  selectedWorkshopId: number | null = null
-  instructorId: number | null = null
+  reservations$: Observable<Reservation[]>;
+  currentPage$: Observable<number>;
+  pageSize$: Observable<number>;
+  totalElements$: Observable<number>;
+  totalPages$: Observable<number>;
+  loading$: Observable<boolean>;
+
+  // Regular properties for workshops and users
+  workshops: Workshop[] = [];
+  users: User[] = [];
+  selectedWorkshopId: number | null = null;
+  instructorId: number | null = null;
 
   constructor(
+    private store: Store<{ reservations: ReservationState }>,
     private reservationService: ReservationService,
     private workshopService: WorkshopService,
     private userService: UserService,
     private authService: AuthService,
-    private route: ActivatedRoute,
-  ) { }
+    private route: ActivatedRoute
+  ) {
+    // Initialize observables from the store
+    this.reservations$ = this.store.select(state => state.reservations.reservations);
+    this.currentPage$ = this.store.select(state => state.reservations.currentPage);
+    this.pageSize$ = this.store.select(state => state.reservations.pageSize);
+    this.totalElements$ = this.store.select(state => state.reservations.totalElements);
+    this.totalPages$ = this.store.select(state => state.reservations.totalPages);
+    this.loading$ = this.store.select(state => state.reservations.loading);
+  }
 
   ngOnInit(): void {
     // Get the current instructor ID from the auth service
-    this.instructorId = this.authService.currentUserValue?.user?.id || null
+    this.instructorId = this.authService.currentUserValue?.user?.id || null;
 
     if (!this.instructorId) {
-      console.error("No instructor ID found. User may not be logged in or not an instructor.")
-      return
+      console.error("No instructor ID found. User may not be logged in or not an instructor.");
+      return;
     }
 
     // Check if we have a workshopId in the query params
-    this.route.queryParams.subscribe((params) => {
-      if (params["workshopId"]) {
-        this.selectedWorkshopId = +params["workshopId"]
+    this.route.queryParams.subscribe(params => {
+      if (params['workshopId']) {
+        this.selectedWorkshopId = +params['workshopId'];
       }
 
       // Load instructor's workshops for the filter dropdown
-      this.loadInstructorWorkshops()
+      this.loadInstructorWorkshops();
 
-      // this.loadReservations()
       // Load users for customer information
-      this.loadUsers()
-    })
+      this.loadUsers();
+    });
   }
 
+ 
   loadInstructorWorkshops(): void {
     if (!this.instructorId) return
 
-    this.loading = true
-    this.workshopService.getWorkshops({ page: 0, size: 10, filterByUser: this.instructorId}).subscribe({
+    this.workshopService.getWorkshops({ page: 0, size: 10, filterByUser: this.instructorId }).subscribe({
       next: (response: PaginatedResponse<Workshop>) => {
         this.workshops = response.content
-        this.loadReservations()
+        this.loadReservationsViaStore();
       },
       error: (error) => {
         console.error("Error loading workshops:", error)
-        this.loading = false
       },
     })
+  }
+
+  loadReservationsViaStore(): void {
+    this.store.dispatch(ReservationActions.loadReservations({
+      filter: {
+        workshopId: this.selectedWorkshopId,
+        page: 0,
+        size: 10
+      }
+    }));
   }
 
   loadUsers(): void {
     this.userService.getAllUsers().subscribe({
       next: (users: any) => {
-        this.users = users.content
+        this.users = users.content;
       },
       error: (error) => {
-        console.error("Error loading users:", error)
-      },
-    })
+        console.error("Error loading users:", error);
+      }
+    });
   }
 
-  loadReservations(): void {
-    this.loading = true
+  onWorkshopFilterChange(workshopId: number | null): void {
+    this.selectedWorkshopId = workshopId;
 
-    // Use the getInstructorReservations method with optional workshopId filter
-    this.reservationService
-      .getInstructorReservations(this.currentPage, this.pageSize, this.selectedWorkshopId || undefined)
-      .subscribe({
-        next: (response: PaginatedResponse<Reservation>) => {
-          this.reservations = response.content
-          this.totalElements = response.totalElements
-          this.totalPages = response.totalPages
-          this.loading = false
-        },
-        error: (error) => {
-          console.error("Error loading reservations:", error)
-          this.loading = false
-        },
-      })
-  }
-
-  onWorkshopFilterChange(): void {
-    this.currentPage = 0 // Reset to first page when filter changes
-    this.loadReservations()
+    // Dispatch action to load reservations with the new filter
+    this.store.dispatch(ReservationActions.loadReservations({
+      filter: {
+        workshopId,
+        page: 0, // Reset to first page when filter changes
+        size: 10
+      }
+    }));
   }
 
   // Helper methods for displaying workshop and customer information
   getWorkshopTitle(workshopId: number): string {
-    const workshop = this.workshops.find((w) => w.id === workshopId)
-    return workshop ? workshop.title : "Unknown Workshop"
+    const workshop = this.workshops.find(w => w.id === workshopId);
+    return workshop ? workshop.title : "Unknown Workshop";
   }
 
   getCustomerName(customerId: number): string {
-
-    const user = this.users.find((u) => u.id === customerId)
-    return user ? user.fullname : "Unknown Customer"
+    const user = this.users.find(u => u.id === customerId);
+    return user ? user.fullname : "Unknown Customer";
   }
 
   getCustomerEmail(customerId: number): string {
-    const user = this.users.find((u) => u.id === customerId)
-    return user ? user.email : "Unknown Email"
+    const user = this.users.find(u => u.id === customerId);
+    return user ? user.email : "Unknown Email";
   }
 
   // Pagination methods
   goToPage(page: number): void {
-    if (page >= 0 && page < this.totalPages) {
-      this.currentPage = page
-      this.loadReservations()
-    }
+    this.currentPage$.pipe(take(1)).subscribe(currentPage => {
+      this.pageSize$.pipe(take(1)).subscribe(pageSize => {
+        this.store.dispatch(ReservationActions.loadReservations({
+          filter: {
+            workshopId: this.selectedWorkshopId,
+            page,
+            size: pageSize
+          }
+        }));
+      });
+    });
   }
 
   nextPage(): void {
-    this.goToPage(this.currentPage + 1)
+    this.currentPage$.pipe(take(1)).subscribe(currentPage => {
+      this.totalPages$.pipe(take(1)).subscribe(totalPages => {
+        if (currentPage < totalPages - 1) {
+          this.goToPage(currentPage + 1);
+        }
+      });
+    });
   }
 
   previousPage(): void {
-    this.goToPage(this.currentPage - 1)
+    this.currentPage$.pipe(take(1)).subscribe(currentPage => {
+      if (currentPage > 0) {
+        this.goToPage(currentPage - 1);
+      }
+    });
   }
 
   // Update reservation status
   updateReservationStatus(id: number, status: string): void {
-    // this.reservationService.updateReservationStatus(id, status).subscribe({
-    //   next: (updatedReservation: Reservation) => {
-    //     // Update the reservation in the list
-    //     const index = this.reservations.findIndex((r) => r.id === id)
-    //     if (index !== -1) {
-    //       this.reservations[index].status = updatedReservation.status
-    //     }
-    //   },
-    //   error: (error) => {
-    //     console.error("Error updating reservation status:", error)
-
-    //     // Handle authentication errors
-    //     if (error.status === 401 || error.status === 403) {
-    //       alert("Your session may have expired. Please log in again.")
-    //       this.authService.logout()
-    //       window.location.href = "/login"
-    //     }
-    //   },
-    // })
+    this.store.dispatch(ReservationActions.updateReservationStatus({ id, status }));
   }
 }
