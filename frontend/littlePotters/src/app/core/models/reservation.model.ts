@@ -1,7 +1,8 @@
 export enum ReservationStatus {
     PENDING = 'PENDING',
     CONFIRMED = 'CONFIRMED',
-    CANCELED = 'CANCELLED'
+    CANCELLED = 'CANCELLED',
+    COMPLETED = 'COMPLETED'
 }
 
 export interface Reservation {

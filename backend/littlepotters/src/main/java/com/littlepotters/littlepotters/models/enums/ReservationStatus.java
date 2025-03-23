@@ -1,5 +1,5 @@
 package com.littlepotters.littlepotters.models.enums;
 
 public enum ReservationStatus {
-    PENDING, CONFIRMED, CANCELLED
+    PENDING, CONFIRMED, CANCELLED,COMPLETED
 }
