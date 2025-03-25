@@ -24,4 +24,10 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
     Page<Reservation> findByCustomerIdAndWorkshopId(Long customerId, Long workshopId, Pageable pageable);
     long countByWorkshopInstructorId(Long instructorId);
     long countByWorkshopInstructorIdAndStatus(Long instructorId, ReservationStatus status);
+    long countByStatus(ReservationStatus status);
+
+    @Query("SELECT SUM(r.totalPrice) FROM Reservation r WHERE r.status = 'COMPLETED'")
+    Double sumTotalPriceByCompletedStatus();
+
+    long count();
 }

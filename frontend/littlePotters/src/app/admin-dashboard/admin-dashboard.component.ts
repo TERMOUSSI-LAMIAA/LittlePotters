@@ -5,11 +5,12 @@ import { NavigationEnd, Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { filter } from 'rxjs';
 import { AuthService } from '../core/services/auth.service';
+import { AdminStatsComponent } from './admin-stats/admin-stats.component';
 
 @Component({
   selector: 'app-admin-dashboard',
   standalone: true,
-  imports: [ SidebarComponent,RouterModule,CommonModule],
+  imports: [SidebarComponent, RouterModule, CommonModule, AdminStatsComponent],
   templateUrl: './admin-dashboard.component.html',
   styleUrl: './admin-dashboard.component.scss'
 })
@@ -27,6 +28,10 @@ export class AdminDashboardComponent implements OnInit {
   showDropdown: boolean = false;
   toggleDropdown(): void {
     this.showDropdown = !this.showDropdown;
+  }
+
+  isBaseRoute(): boolean {
+    return this.router.url === '/admin-dashboard';
   }
   constructor(private router: Router,private authService: AuthService) { }
 

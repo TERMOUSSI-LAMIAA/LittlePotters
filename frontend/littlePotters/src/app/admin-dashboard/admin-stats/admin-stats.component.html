@@ -1,0 +1,258 @@
+<div class="p-6 bg-gradient-to-br from-gray-50 to-gray-100 min-h-screen" *ngIf="stats">
+    <!-- Header -->
+    <div class="mb-8">
+        <h1 class="text-3xl font-bold text-gray-800">Admin Dashboard</h1>
+        <p class="text-gray-600 mt-2">Comprehensive overview of platform performance</p>
+        <div class="w-16 h-1 bg-blue-500 rounded-full mt-3"></div>
+    </div>
+
+    <!-- Summary Cards Grid -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <!-- Instructor Card -->
+        <div
+            class="bg-white rounded-2xl shadow-lg border border-gray-100 p-6 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-sm font-medium text-gray-500 uppercase tracking-wider">Instructors</p>
+                    <p class="text-4xl font-bold text-blue-600 mt-2">{{ stats.totalInstructors }}</p>
+                </div>
+                <div class="p-3 rounded-xl bg-blue-100 text-blue-600 shadow-inner">
+                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253">
+                        </path>
+                    </svg>
+                </div>
+            </div>
+            <div class="mt-4 pt-3 border-t border-gray-100">
+                <p class="text-xs font-medium text-gray-500 flex items-center">
+                    <span class="w-2 h-2 bg-blue-500 rounded-full mr-2"></span>
+                    Total registered instructors
+                </p>
+            </div>
+        </div>
+
+        <!-- Customer Card -->
+        <div
+            class="bg-white rounded-2xl shadow-lg border border-gray-100 p-6 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-sm font-medium text-gray-500 uppercase tracking-wider">Customers</p>
+                    <p class="text-4xl font-bold text-green-600 mt-2">{{ stats.totalCustomers }}</p>
+                </div>
+                <div class="p-3 rounded-xl bg-green-100 text-green-600 shadow-inner">
+                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z">
+                        </path>
+                    </svg>
+                </div>
+            </div>
+            <div class="mt-4 pt-3 border-t border-gray-100">
+                <p class="text-xs font-medium text-gray-500 flex items-center">
+                    <span class="w-2 h-2 bg-green-500 rounded-full mr-2"></span>
+                    Total registered customers
+                </p>
+            </div>
+        </div>
+
+        <!-- Reservation Card -->
+        <div
+            class="bg-white rounded-2xl shadow-lg border border-gray-100 p-6 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-sm font-medium text-gray-500 uppercase tracking-wider">Reservations</p>
+                    <p class="text-4xl font-bold text-purple-600 mt-2">{{ stats.totalReservations }}</p>
+                </div>
+                <div class="p-3 rounded-xl bg-purple-100 text-purple-600 shadow-inner">
+                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z">
+                        </path>
+                    </svg>
+                </div>
+            </div>
+            <div class="mt-4 pt-3 border-t border-gray-100">
+                <p class="text-xs font-medium text-gray-500 flex items-center">
+                    <span class="w-2 h-2 bg-purple-500 rounded-full mr-2"></span>
+                    Total bookings made
+                </p>
+            </div>
+        </div>
+
+        <!-- Revenue Card -->
+        <div
+            class="bg-white rounded-2xl shadow-lg border border-gray-100 p-6 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-sm font-medium text-gray-500 uppercase tracking-wider">Revenue</p>
+                    <p class="text-4xl font-bold text-amber-600 mt-2">{{ stats.totalRevenue |
+                        currency:'DH ':'symbol':'1.0-0' }}</p>
+                </div>
+                <div class="p-3 rounded-xl bg-amber-100 text-amber-600 shadow-inner">
+                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z">
+                        </path>
+                    </svg>
+                </div>
+            </div>
+            <div class="mt-4 pt-3 border-t border-gray-100">
+                <p class="text-xs font-medium text-gray-500 flex items-center">
+                    <span class="w-2 h-2 bg-amber-500 rounded-full mr-2"></span>
+                    Total revenue generated
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content Grid -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+        <!-- Cancellation Rate Card -->
+        <div class="bg-white rounded-2xl shadow-lg border border-gray-100 p-6 lg:col-span-1">
+            <div class="flex items-center justify-between mb-4">
+                <h3 class="text-xl font-semibold text-gray-800">Cancellation Rate</h3>
+                <span class="px-2 py-1 bg-red-100 text-red-800 text-xs font-medium rounded-full">
+                    Important Metric
+                </span>
+            </div>
+            <div class="flex flex-col items-center">
+                <div class="relative w-48 h-48 mb-4">
+                    <svg class="w-full h-full" viewBox="0 0 100 100">
+                        <circle cx="50" cy="50" r="45" fill="none" stroke="#e2e8f0" stroke-width="8" />
+                        <circle cx="50" cy="50" r="45" fill="none" stroke="#ef4444" stroke-width="8"
+                            stroke-linecap="round" stroke-dasharray="283"
+                            [attr.stroke-dashoffset]="283 - (283 * stats.reservationCancellationRate / 100)" />
+                    </svg>
+                    <div class="absolute inset-0 flex items-center justify-center flex-col">
+                        <span class="text-3xl font-bold text-gray-800">
+                            {{ stats.reservationCancellationRate | number:'1.1-1' }}%
+                        </span>
+                        <span class="text-sm text-gray-500 mt-1">Cancellation Rate</span>
+                    </div>
+                </div>
+                <div class="w-full bg-gray-100 rounded-full h-2.5 mt-4">
+                    <div class="bg-red-500 h-2.5 rounded-full" [style.width.%]="stats.reservationCancellationRate">
+                    </div>
+                </div>
+                <p class="text-sm text-gray-600 text-center mt-4">
+                    {{ stats.reservationCancellationRate | number:'1.1-1' }}% of
+                    {{ stats.totalReservations }} total reservations were cancelled
+                </p>
+            </div>
+        </div>
+
+        <!-- Workshop Distribution Card -->
+        <div class="bg-white rounded-2xl shadow-lg border border-gray-100 p-6 lg:col-span-2">
+            <h3 class="text-xl font-semibold text-gray-800 mb-6">Workshop Distribution</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <!-- By Level -->
+                <div>
+                    <div class="flex items-center justify-between mb-4">
+                        <h4 class="text-sm font-semibold text-gray-700 uppercase tracking-wider">By Skill Level</h4>
+                        <span class="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded-full">
+                            {{ getMostPopularLevel() }} Most Popular
+                        </span>
+                    </div>
+                    <div class="space-y-4">
+                        <div *ngFor="let level of getLevelEntries()" class="flex items-center">
+                            <span class="w-28 text-sm font-medium text-gray-700">{{ level.key }}</span>
+                            <div class="flex-1 ml-4">
+                                <div class="flex justify-between text-xs mb-1">
+                                    <span class="font-medium">{{ level.value }} workshops</span>
+                                    <span class="font-bold">{{ (level.value / stats.totalWorkshops * 100) |
+                                        number:'1.0-0' }}%</span>
+                                </div>
+                                <div class="w-full bg-gray-200 rounded-full h-2.5">
+                                    <div class="bg-blue-600 h-2.5 rounded-full"
+                                        [style.width.%]="(level.value / stats.totalWorkshops) * 100">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- By Schedule -->
+                <div>
+                    <div class="flex items-center justify-between mb-4">
+                        <h4 class="text-sm font-semibold text-gray-700 uppercase tracking-wider">By Time Slot</h4>
+                        <span class="text-xs bg-green-100 text-green-800 px-2 py-1 rounded-full">
+                            {{ getBusiestTime() }} Busiest
+                        </span>
+                    </div>
+                    <div class="space-y-4">
+                        <div *ngFor="let time of getScheduleEntries()" class="flex items-center">
+                            <span class="w-28 text-sm font-medium text-gray-700">{{ time.key }}</span>
+                            <div class="flex-1 ml-4">
+                                <div class="flex justify-between text-xs mb-1">
+                                    <span class="font-medium">{{ time.value }} workshops</span>
+                                    <span class="font-bold">{{ (time.value / stats.totalWorkshops * 100) |
+                                        number:'1.0-0' }}%</span>
+                                </div>
+                                <div class="w-full bg-gray-200 rounded-full h-2.5">
+                                    <div class="bg-green-600 h-2.5 rounded-full"
+                                        [style.width.%]="(time.value / stats.totalWorkshops) * 100">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Workshop Highlights -->
+    <div class="bg-white rounded-2xl shadow-lg border border-gray-100 p-6">
+        <h3 class="text-xl font-semibold text-gray-800 mb-6">Workshop Highlights</h3>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div
+                class="bg-gradient-to-br from-blue-50 to-blue-100 rounded-xl p-5 border border-blue-200 hover:shadow-md transition-shadow">
+                <div class="flex items-center mb-3">
+                    <div class="p-2 bg-blue-100 rounded-lg mr-3">
+                        <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10">
+                            </path>
+                        </svg>
+                    </div>
+                    <h4 class="text-sm font-semibold text-gray-700">Total Workshops</h4>
+                </div>
+                <p class="text-3xl font-bold text-blue-600 mb-2">{{ stats.totalWorkshops }}</p>
+                <p class="text-xs text-gray-500">Across all levels and time slots</p>
+            </div>
+
+            <div
+                class="bg-gradient-to-br from-green-50 to-green-100 rounded-xl p-5 border border-green-200 hover:shadow-md transition-shadow">
+                <div class="flex items-center mb-3">
+                    <div class="p-2 bg-green-100 rounded-lg mr-3">
+                        <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z">
+                            </path>
+                        </svg>
+                    </div>
+                    <h4 class="text-sm font-semibold text-gray-700">Most Popular Level</h4>
+                </div>
+                <p class="text-3xl font-bold text-green-600 mb-2">{{ getMostPopularLevel() }}</p>
+                <p class="text-xs text-gray-500">Based on enrollment numbers</p>
+            </div>
+
+            <div
+                class="bg-gradient-to-br from-purple-50 to-purple-100 rounded-xl p-5 border border-purple-200 hover:shadow-md transition-shadow">
+                <div class="flex items-center mb-3">
+                    <div class="p-2 bg-purple-100 rounded-lg mr-3">
+                        <svg class="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                    </div>
+                    <h4 class="text-sm font-semibold text-gray-700">Busiest Time</h4>
+                </div>
+                <p class="text-3xl font-bold text-purple-600 mb-2">{{ getBusiestTime() }}</p>
+                <p class="text-xs text-gray-500">Peak workshop time slot</p>
+            </div>
+        </div>
+    </div>
+</div>

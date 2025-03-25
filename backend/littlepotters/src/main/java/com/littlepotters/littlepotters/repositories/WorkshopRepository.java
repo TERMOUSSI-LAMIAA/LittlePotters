@@ -24,4 +24,9 @@ public interface WorkshopRepository extends JpaRepository<Workshop, Long> {
     long countByInstructorId(Long instructorId);
     long countByInstructorIdAndLevel(Long instructorId, WorkshopLevel level);
     long countByInstructorIdAndSchedule(Long instructorId, WorkshopSchedule schedule);
+
+    long countByLevel(WorkshopLevel level);
+    long countBySchedule(WorkshopSchedule schedule);
+
+    long count();
 }

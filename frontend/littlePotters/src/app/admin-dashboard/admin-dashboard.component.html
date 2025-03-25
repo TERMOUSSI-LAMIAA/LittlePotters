@@ -40,6 +40,7 @@
             <div class="max-w-7xl mx-auto">
 
                 <div class="bg-white rounded-lg shadow-md p-6">
+                    <app-admin-stats  *ngIf="isBaseRoute()"></app-admin-stats>
                     <router-outlet></router-outlet>
                 </div>
 
