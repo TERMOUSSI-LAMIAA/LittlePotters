@@ -96,10 +96,10 @@ export const reservationReducer = createReducer(
         updatingReservationId: id
     })),
 
-    on(ReservationActions.updateReservationPlacesSuccess, (state, { id, updatedPlaces }) => {
+    on(ReservationActions.updateReservationPlacesSuccess, (state, { id, updatedPlaces, workshopPrice }) => {
         const updatedReservations = state.reservations.map(res =>
             res.id === id
-                ? { ...res, placesBooked: updatedPlaces }
+                ? { ...res, placesBooked: updatedPlaces, totalPrice: workshopPrice * updatedPlaces }
                 : res
         );
 

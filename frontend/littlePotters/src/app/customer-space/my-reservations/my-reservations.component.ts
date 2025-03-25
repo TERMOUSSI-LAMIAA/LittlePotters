@@ -242,7 +242,6 @@ export class MyReservationsComponent implements OnInit {
   confirmUpdateReservation(): void {
     if (!this.selectedReservation) return
 
-    // Only update if the number of places has changed
     if (this.updatePlacesCount === this.selectedReservation.placesBooked) {
       this.closeUpdateModal()
       return
@@ -251,23 +250,16 @@ export class MyReservationsComponent implements OnInit {
     const workshop = this.getWorkshop(this.selectedReservation.workshopId)
     if (!workshop) return
 
-    // Calculate new total price
-    const newTotalPrice = workshop.price * this.updatePlacesCount
+   
 
-    // Create updated reservation object
-    const updatedReservation = {
-      ...this.selectedReservation,
-      placesBooked: this.updatePlacesCount,
-      totalPrice: newTotalPrice,
-    }
-
-    // Dispatch update action
     this.store.dispatch(
       ReservationActions.updateReservationPlaces({
         id: this.selectedReservation.id,
-        newPlaces: this.updatePlacesCount
+        newPlaces: this.updatePlacesCount,
+        workshopPrice: workshop.price 
       })
     );
+ 
 
     this.closeUpdateModal()
   }

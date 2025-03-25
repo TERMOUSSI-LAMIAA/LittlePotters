@@ -69,12 +69,12 @@ export const updateReservationStatusFailure = createAction(
 // Update Reservation places booked
 export const updateReservationPlaces = createAction(
     "[Reservations] Update Reservation Places",
-    props<{ id: number; newPlaces: number }>()
+    props < { id: number; newPlaces: number, workshopPrice: number }>()
 );
 
 export const updateReservationPlacesSuccess = createAction(
     "[Reservations] Update Reservation Places Success",
-    props<{ id: number; updatedPlaces: number }>()
+    props<{ id: number; updatedPlaces: number, workshopPrice: number }>()
 );
 
 export const updateReservationPlacesFailure = createAction(

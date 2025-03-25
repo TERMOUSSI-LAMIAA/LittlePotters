@@ -55,12 +55,13 @@ export class ReservationEffects {
     updateReservationPlaces$ = createEffect(() =>
         this.actions$.pipe(
             ofType(ReservationActions.updateReservationPlaces),
-            mergeMap(({ id, newPlaces }) =>
+            mergeMap(({ id, newPlaces, workshopPrice }) =>
                 this.reservationService.updatePlacesBooked(id, newPlaces).pipe(
-                    map(() =>
+                    map((updatedReservation) =>
                         ReservationActions.updateReservationPlacesSuccess({
                             id,
-                            updatedPlaces: newPlaces
+                            updatedPlaces: newPlaces, 
+                            workshopPrice: workshopPrice
                         })
                     ),
                     catchError(error =>
