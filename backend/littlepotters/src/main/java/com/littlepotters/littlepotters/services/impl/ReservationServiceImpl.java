@@ -89,7 +89,7 @@ public class ReservationServiceImpl  implements ReservationService {
         reservation.setStatus(reservationRequestDTO.getStatus());
         Reservation updatedReservation = reservationRepository.save(reservation);
 
-        if (updatedReservation.getStatus() == ReservationStatus.COMPLETED) {
+        if (updatedReservation.getStatus() == ReservationStatus.CANCELLED) {
             sendCompletionNotificationToCustomer(updatedReservation);
         }
 
@@ -102,10 +102,10 @@ public class ReservationServiceImpl  implements ReservationService {
 
             // Prepare email details
             String to = customer.getEmail();
-            String subject = "Workshop Completed: " + workshop.getTitle();
+            String subject = "Workshop Cancelled: " + workshop.getTitle();
             String body = String.format(
                     "Dear %s,\n\n" +
-                            "The workshop '%s' you reserved has been marked as completed.\n\n" +
+                            "The workshop '%s' you reserved has been cancelled !\n\n" +
                             "Workshop Details:\n" +
                             "Title: %s\n" +
                             "Date: %s\n\n" +
