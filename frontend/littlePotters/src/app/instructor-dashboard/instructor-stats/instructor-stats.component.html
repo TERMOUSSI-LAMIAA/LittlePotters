@@ -1,0 +1,63 @@
+<div class="p-6" *ngIf="stats">
+    <!-- Summary Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+        <div class="bg-white p-6 rounded-lg shadow">
+            <h3 class="text-lg font-semibold text-gray-700">Total Workshops</h3>
+            <p class="text-3xl mt-2 text-blue-600">{{ stats.totalWorkshops }}</p>
+        </div>
+
+        <div class="bg-white p-6 rounded-lg shadow">
+            <h3 class="text-lg font-semibold text-gray-700">Total Reservations</h3>
+            <p class="text-3xl mt-2 text-green-600">{{ stats.totalReservations }}</p>
+        </div>
+
+        
+    </div>
+
+    <!-- Status Distribution -->
+    <div class="bg-white p-6 rounded-lg shadow mb-8">
+        <h3 class="text-lg font-semibold mb-4">Reservations by Status</h3>
+        <div class="grid grid-cols-4 gap-4">
+            <div *ngFor="let status of getStatusEntries()" class="text-center p-4 rounded"
+                [ngClass]="getStatusBgClass(status.key)">
+                <p class="font-medium">{{ status.key }}</p>
+                <p class="text-xl">{{ status.value }}</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Workshop Distribution -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <!-- By Level -->
+        <div class="bg-white p-6 rounded-lg shadow">
+            <h3 class="text-lg font-semibold mb-4">Workshops by Level</h3>
+            <div *ngFor="let level of getLevelEntries()" class="mb-3">
+                <div class="flex justify-between mb-1">
+                    <span>{{ level.key }}</span>
+                    <span>{{ level.value }}</span>
+                </div>
+                <div class="w-full bg-gray-200 rounded-full h-2.5">
+                    <div class="bg-blue-600 h-2.5 rounded-full"
+                        [style.width.%]="(level.value / stats.totalWorkshops) * 100">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- By Schedule -->
+        <div class="bg-white p-6 rounded-lg shadow">
+            <h3 class="text-lg font-semibold mb-4">Workshops by Time</h3>
+            <div *ngFor="let time of getScheduleEntries()" class="mb-3">
+                <div class="flex justify-between mb-1">
+                    <span>{{ time.key }}</span>
+                    <span>{{ time.value }}</span>
+                </div>
+                <div class="w-full bg-gray-200 rounded-full h-2.5">
+                    <div class="bg-green-600 h-2.5 rounded-full"
+                        [style.width.%]="(time.value / stats.totalWorkshops) * 100">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
