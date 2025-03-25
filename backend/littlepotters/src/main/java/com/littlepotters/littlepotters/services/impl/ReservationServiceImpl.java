@@ -111,13 +111,16 @@ public class ReservationServiceImpl  implements ReservationService {
 
         Workshop workshop = reservation.getWorkshop();
         int currentPlacesBooked = reservation.getPlacesBooked();
+        int newPlacesBooked = reservationRequestDTO.getPlacesBooked();
 
-        if (reservationRequestDTO.getPlacesBooked() > workshop.getAvailablePlaces() + currentPlacesBooked) {
+        if (newPlacesBooked > workshop.getAvailablePlaces() + currentPlacesBooked) {
             throw new RuntimeException("Cannot book more places than available");
         }
-
-        workshop.setAvailablePlaces(workshop.getAvailablePlaces() + currentPlacesBooked - reservationRequestDTO.getPlacesBooked());
-        reservation.setPlacesBooked(reservationRequestDTO.getPlacesBooked());
+        double pricePerPlace = workshop.getPrice();
+        double newTotalPrice = pricePerPlace * newPlacesBooked;
+        workshop.setAvailablePlaces(workshop.getAvailablePlaces() + currentPlacesBooked - newPlacesBooked);
+        reservation.setPlacesBooked(newPlacesBooked);
+        reservation.setTotalPrice(newTotalPrice);
 
         workshopRepository.save(workshop);
         Reservation updatedReservation = reservationRepository.save(reservation);
@@ -163,7 +166,6 @@ public class ReservationServiceImpl  implements ReservationService {
     }
     @Override
     public Page<ReservationResponseDTO> getReservationsForInstructorWorkshops(Long workshopId,Pageable pageable) {
-        // Get the authenticated user
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         String email = ((UserDetails) principal).getUsername();
         User instructor = userRepository.findByEmail(email)
@@ -188,38 +190,23 @@ public class ReservationServiceImpl  implements ReservationService {
         return reservationsPage.map(reservationMapper::toDTO);
     }
 
-//    @Override
-//    public List<ReservationResponseDTO> getReservationsForCustomer() {
-//        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-//        String email = ((UserDetails) principal).getUsername();
-//        User customer = userRepository.findByEmail(email)
-//                .orElseThrow(() -> new RuntimeException("Customer not found"));
-//
-//        List<Reservation> reservations = reservationRepository.findByCustomer(customer);
-//        return reservations.stream()
-//                .map(reservationMapper::toDTO)
-//                .collect(Collectors.toList());
-//    }
-//
-//    @Override
-//    public List<ReservationResponseDTO> getReservationsForInstructor() {
-//        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-//        String email = ((UserDetails) principal).getUsername();
-//        User instructor = userRepository.findByEmail(email)
-//                .orElseThrow(() -> new RuntimeException("Instructor not found"));
-//
-//        List<Workshop> workshops = workshopRepository.findByInstructor(instructor);
-//
-//        List<Reservation> reservations = new ArrayList<>();
-//        for (Workshop workshop : workshops) {
-//            reservations.addAll(reservationRepository.findByWorkshop(workshop));
-//        }
-//
-//        return reservations.stream()
-//                .map(reservationMapper::toDTO)
-//                .collect(Collectors.toList());
-//    }
+    @Override
+    public Page<ReservationResponseDTO> getReservationsForCustomerWorkshops(Long workshopId, Pageable pageable) {
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String email = ((UserDetails) principal).getUsername();
+        User customer = userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("User not found with email: " + email));
 
+        Page<Reservation> reservationsPage;
+
+        if (workshopId != null) {
+            reservationsPage = reservationRepository.findByCustomerIdAndWorkshopId(customer.getId(), workshopId, pageable);
+        } else {
+            reservationsPage = reservationRepository.findByCustomerId(customer.getId(), pageable);
+        }
+
+        return reservationsPage.map(reservationMapper::toDTO);
+    }
     private boolean isInstructorOfWorkshop(User instructor, Workshop workshop) {
         return workshop.getInstructor().equals(instructor);
     }

@@ -65,12 +65,17 @@ public class ReservationController {
         }
     }
 
-//    @GetMapping("/customer")
-//    @PreAuthorize("hasRole('CUSTOMER')")
-//    public ResponseEntity<List<ReservationResponseDTO>> getCustomerReservations() {
-//        List<ReservationResponseDTO> reservations = reservationService.getReservationsForCustomer();
-//        return ResponseEntity.ok(reservations);
-//    }
+    @PreAuthorize("hasRole('CUSTOMER')")
+    @GetMapping("/customer/workshops")
+    public ResponseEntity<Page<ReservationResponseDTO>> getCustomerWorkshopReservations(
+            @RequestParam(required = false) Long workshopId,
+            Pageable pageable) {
+
+        Page<ReservationResponseDTO> reservations = reservationService
+                .getReservationsForCustomerWorkshops(workshopId, pageable);
+
+        return ResponseEntity.ok(reservations);
+    }
 
     @PreAuthorize("hasRole('INSTRUCTOR')")
     @GetMapping("/instructor/workshops")
@@ -81,10 +86,5 @@ public class ReservationController {
         return ResponseEntity.ok(reservations);
     }
 
-//    @GetMapping("/instructor/{instructorId}")
-//    @PreAuthorize("hasRole('INSTRUCTOR')")
-//    public ResponseEntity<Page<ReservationResponseDTO>> getInstructorReservations(Pageable pageable) {
-//        List<ReservationResponseDTO> reservations = reservationService.getReservationsForInstructor();
-//        return ResponseEntity.ok(reservations);
-//    }
+
 }

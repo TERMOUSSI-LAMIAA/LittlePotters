@@ -1,0 +1,63 @@
+<aside class="h-screen w-64 bg-amber-900 text-white fixed flex flex-col justify-between">
+    <div>
+        <div class="p-4 flex items-center border-b border-amber-800">
+            <img class="h-8 w-auto mr-2" src="/placeholder.svg?height=32&width=32" alt="Little Potters Logo" />
+            <a routerLink="/customer-space" class="text-xl font-bold hover:text-amber-200">
+                Customer Portal
+            </a>
+        </div>
+
+        <nav class="mt-4">
+            <ul>
+                <!-- Home page link -->
+                <li>
+                    <a routerLink="/home" routerLinkActive="bg-amber-800"
+                        class=" px-4 py-3 hover:bg-amber-800 transition duration-200 flex items-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24"
+                            stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M3 12l2-2m0 0l7-7 7 7m-14 0l2 2m0 0l7 7 7-7m-14 0l2-2" />
+                        </svg>
+                        Back to Home Page
+                    </a>
+                </li>
+
+                <li>
+                    <a routerLink="/customer-space/workshops" routerLinkActive="bg-amber-800"
+                        class=" px-4 py-3 hover:bg-amber-800 transition duration-200 flex items-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24"
+                            stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+                        </svg>
+                        Browse Workshops
+                    </a>
+                </li>
+
+                <li>
+                    <a routerLink="/customer-space/my-reservations" routerLinkActive="bg-amber-800"
+                        class=" px-4 py-3 hover:bg-amber-800 transition duration-200 flex items-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24"
+                            stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                        </svg>
+                        My Reservations
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+
+    <div class="p-4 border-t border-amber-800">
+        <button (click)="logout()"
+            class="w-full bg-amber-700 hover:bg-amber-600 transition duration-200 py-2 rounded text-center flex items-center justify-center">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24"
+                stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+            </svg>
+            Logout
+        </button>
+    </div>
+</aside>

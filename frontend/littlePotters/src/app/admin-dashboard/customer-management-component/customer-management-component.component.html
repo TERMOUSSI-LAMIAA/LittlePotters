@@ -7,6 +7,7 @@
         <table class="min-w-full table-auto">
             <thead class="bg-amber-50">
                 <tr>
+                    <th class="px-4 py-2 text-left text-amber-800">Image</th>
                     <th class="px-4 py-2 text-left text-amber-800">Customer ID</th>
                     <th class="px-4 py-2 text-left text-amber-800">Email</th>
                     <th class="px-4 py-2 text-left text-amber-800">Full Name</th>
@@ -16,6 +17,16 @@
             </thead>
             <tbody>
                 <tr *ngFor="let customer of customers" class="hover:bg-amber-50">
+                    <td class="px-4 py-2 border-b">
+                        <div
+                            class="h-12 w-12 rounded-full bg-amber-100 flex items-center justify-center overflow-hidden border border-amber-200">
+                            <img *ngIf="customer.imageUrl" [src]="customer.imageUrl" alt="Customer Profile"
+                                class="h-full w-full object-cover">
+                            <span *ngIf="!customer.imageUrl" class="text-lg font-bold text-amber-700">
+                                {{ customer.fullname.charAt(0) || 'C' }}
+                            </span>
+                        </div>
+                    </td>
                     <td class="px-4 py-2 border-b">{{ customer.id }}</td>
                     <td class="px-4 py-2 border-b">{{ customer.email }}</td>
                     <td class="px-4 py-2 border-b">{{ customer.fullname }}</td>

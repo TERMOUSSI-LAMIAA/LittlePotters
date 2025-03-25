@@ -16,6 +16,6 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
     boolean existsByCustomerAndWorkshop(User customer, Workshop workshop);
     Page<Reservation> findByWorkshopId(Long workshopId, Pageable pageable);
     Page<Reservation> findByWorkshopIdIn(Collection<Long> workshopIds, Pageable pageable);
-//    List<Reservation> findByCustomer(User customer);
-//    List<Reservation> findByWorkshop(Workshop workshop);
+    Page<Reservation> findByCustomerId(Long customerId, Pageable pageable);
+    Page<Reservation> findByCustomerIdAndWorkshopId(Long customerId, Long workshopId, Pageable pageable);
 }

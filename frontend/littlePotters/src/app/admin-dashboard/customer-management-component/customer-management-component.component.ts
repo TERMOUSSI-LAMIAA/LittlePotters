@@ -20,6 +20,7 @@ export class CustomerManagementComponentComponent implements OnInit {
   totalPages = 0;
   showDeleteModal = false;
   customerToDelete: number | null = null;
+  private apiBaseUrl = 'http://localhost:8081'; 
   
   constructor(private userService: UserService, private router: Router, private route: ActivatedRoute) { }
   
@@ -44,10 +45,40 @@ export class CustomerManagementComponentComponent implements OnInit {
     });
   }
 
+  getFullImageUrl(relativeUrl: string): string {
+    if (!relativeUrl || relativeUrl.startsWith("http")) {
+      return relativeUrl;
+    }
+
+    const baseUrl = this.apiBaseUrl.endsWith("/") ? this.apiBaseUrl.slice(0, -1) : this.apiBaseUrl;
+    const imageUrl = relativeUrl.startsWith("/") ? relativeUrl : `/${relativeUrl}`;
+
+    return `${baseUrl}${imageUrl}`;
+  }
+
+  loadImage(url: string, customer: User): void {
+    this.userService.loadImage(url).subscribe({
+      next: (imageBlob) => {
+        const imageUrl = URL.createObjectURL(imageBlob);
+        customer.imageUrl = imageUrl;
+      },
+      error: (error) => {
+        console.error('Error loading image', error);
+      }
+    });
+  }
+
   handlePaginatedResponse(response: PaginatedResponse<User>): void {
     this.customers = response.content;
     this.totalElements = response.totalElements;
     this.totalPages = response.totalPages;
+
+    this.customers.forEach((customer) => {
+      if (customer.imageUrl) {
+        customer.imageUrl = this.getFullImageUrl(customer.imageUrl);
+        this.loadImage(customer.imageUrl, customer);
+      }
+    });
   }
 
 

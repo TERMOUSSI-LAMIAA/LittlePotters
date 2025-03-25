@@ -5,12 +5,7 @@ export interface AuthRequest {
     password: string;
 }
 
-// export interface AuthResponse {
-//     id: number;
-//     login: string;
-//     roles: string[];
-//     token: string;
-// }
+
 export interface AuthResponse {
     roles: string[];
     user: User;

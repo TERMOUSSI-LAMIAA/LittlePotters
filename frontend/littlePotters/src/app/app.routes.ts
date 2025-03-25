@@ -17,12 +17,11 @@ import { WorkshopManagementComponent } from './instructor-dashboard/workshop-man
 import { ReservationManagementComponent } from './instructor-dashboard/reservation-management/reservation-management.component';
 import { WorkshopFormComponent } from './instructor-dashboard/workshop-form/workshop-form.component';
 import { WorkshopResolver } from './core/resolvers/workshops.resolver';
+import { WorkshopsListComponent } from './customer-space/workshops-list/workshops-list.component';
+import { MyReservationsComponent } from './customer-space/my-reservations/my-reservations.component';
 
 export const routes: Routes = [
-    // { path: '', component: HomeComponent },
-    // { path: 'home', component: HomeComponent },
-    // { path: 'login', component: LoginComponent },
-    // { path: 'register', component: RegisterComponent },
+   
     {
         path: "",
         component: MainLayoutComponent,
@@ -104,12 +103,33 @@ export const routes: Routes = [
                 component: UserprofileComponent
             }
             
-           ]
+        ]
         
     },
     {
         path: 'customer-space', component: CustomerSpaceComponent,
         canActivate: [AuthGuard],
-        data: { role: 'ROLE_CUSTOMER' }
+        data: { role: 'ROLE_CUSTOMER' },
+        children: [
+            {
+                path: 'workshops',
+                component: WorkshopsListComponent,
+                resolve: {
+                    workshops: WorkshopResolver
+                },
+
+            },
+            {
+                path: 'my-reservations',
+                component: MyReservationsComponent,
+              
+
+
+            },
+            {
+                path: 'profile',
+                component: UserprofileComponent
+            }
+        ]
     },
 ];

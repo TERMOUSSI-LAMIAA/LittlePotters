@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -133,6 +134,13 @@ public class WorkshopServiceImpl implements WorkshopService {
         return workshopsPage.map(workshopMapper::toDTO);
     }
 
+    @Transactional(readOnly = true)
+    @Override
+    public Page<WorkshopResponseDTO> getUpcomingWorkshops(Pageable pageable) {
+        LocalDate today = LocalDate.now();
+        Page<Workshop> workshopsPage= workshopRepository.findByDateGreaterThanEqual(today, pageable);
+                return workshopsPage.map(workshopMapper::toDTO);
+    }
     @Transactional
     @Override
     public void deleteWorkshop(Long id, UserDetails userDetails) {

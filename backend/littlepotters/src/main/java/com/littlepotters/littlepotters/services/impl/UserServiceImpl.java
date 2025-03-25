@@ -101,21 +101,12 @@ public class UserServiceImpl implements UserService {
                     .collect(Collectors.toList());
             user.setRoles(new HashSet<>(roles));
         }
-//        if (userRequestDTO.getImage() != null && !userRequestDTO.getImage().isEmpty()) {
-//            try {
-//                String newFileName = imageStorageService.saveProfileImage(userRequestDTO.getImage());
-//                user.setImageFileName(newFileName);
-//            } catch (IOException e) {
-//                throw new RuntimeException("Error updating profile image", e);
-//            }
-//        }
+
         if (userRequestDTO.getImage() != null && !userRequestDTO.getImage().isEmpty()) {
             try {
-                // Save the new image and update the imageFileName
                 String newFileName = imageStorageService.saveProfileImage(userRequestDTO.getImage());
                 user.setImageFileName(newFileName);
 
-                // Delete the old image if it exists
                 if (oldImageFileName != null && !oldImageFileName.isEmpty()) {
                     try {
                         imageStorageService.deleteProfileImage(oldImageFileName);
@@ -130,7 +121,6 @@ public class UserServiceImpl implements UserService {
         else if ("null".equals(userRequestDTO.getImageFileName())) {
             user.setImageFileName(null);
 
-            // Delete the old image if it exists
             if (oldImageFileName != null && !oldImageFileName.isEmpty()) {
                 try {
                     imageStorageService.deleteProfileImage(oldImageFileName);
@@ -139,20 +129,11 @@ public class UserServiceImpl implements UserService {
                 }
             }
         }
-        // Otherwise, keep the existing imageFileName
         else {
             user.setImageFileName(oldImageFileName);
         }
         User updatedUser = userRepository.save(user);
-//        if (oldImageFileName != null && !oldImageFileName.isEmpty()
-//                && userRequestDTO.getImage() != null
-//                && !userRequestDTO.getImage().isEmpty()) {
-//            try {
-//                imageStorageService.deleteProfileImage(oldImageFileName);
-//            } catch (IOException e) {
-//                System.err.println("Warning: Could not delete old profile image: " + oldImageFileName + ". Error: " + e.getMessage());
-//            }
-//        }
+
         return userMapper.toDTO(updatedUser);
     }
 

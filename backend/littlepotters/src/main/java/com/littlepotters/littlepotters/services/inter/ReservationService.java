@@ -19,8 +19,6 @@ public interface ReservationService {
     Page<ReservationResponseDTO> getReservationsForInstructorWorkshops(Long workshopId,Pageable pageable);
     ReservationResponseDTO updatePlacesBooked(Long reservationId, ReservationRequestDTO reservationRequestDTO);
 
-//    List<ReservationResponseDTO> getReservationsForCustomer();
-//
-//    List<ReservationResponseDTO> getReservationsForInstructor();
+    Page<ReservationResponseDTO> getReservationsForCustomerWorkshops(Long workshopId, Pageable pageable);
 
 }

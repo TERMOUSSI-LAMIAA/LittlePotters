@@ -1,0 +1,35 @@
+.login-page-container {
+  min-height: 100vh;
+  background-image: url('../../../../../assets/images/342369310_1981423788879160_8676145424624179726_n.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  position: relative;
+  
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(251, 236, 206, 0.8); 
+    z-index: 1;
+  }
+  
+  & > * {
+    position: relative;
+    z-index: 2;
+  }
+}
+
+.login-card {
+  box-shadow: 0 8px 24px rgba(156, 94, 30, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 28px rgba(156, 94, 30, 0.15);
+  }
+}

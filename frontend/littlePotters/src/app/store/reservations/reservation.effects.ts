@@ -22,6 +22,70 @@ export class ReservationEffects {
         )
     ));
 
+    loadCustomerReservations$ = createEffect(() => this.actions$.pipe(
+        ofType(ReservationActions.loadCustomerReservations),
+        mergeMap(({ filter }) =>
+            this.reservationService.getCustomerReservations(
+                filter.page,
+                filter.size,
+                filter.workshopId ?? undefined
+            ).pipe(
+                map(response => ReservationActions.loadCustomerReservationsSuccess({
+                    reservations: response.content,
+                    totalElements: response.totalElements,
+                    totalPages: response.totalPages
+                })),
+                catchError(error => of(ReservationActions.loadCustomerReservationsFailure({ error })))
+            )
+        )
+    ));
+
+    createReservation$ = createEffect(() =>
+        this.actions$.pipe(
+            ofType(ReservationActions.createReservation),
+            mergeMap(({ reservation }) =>
+                this.reservationService.createReservation(reservation).pipe(
+                    map((createdReservation) => ReservationActions.createReservationSuccess({ reservation: createdReservation })),
+                    catchError((error) => of(ReservationActions.createReservationFailure({ error }))),
+                ),
+            ),
+        ),
+    )
+
+    updateReservationPlaces$ = createEffect(() =>
+        this.actions$.pipe(
+            ofType(ReservationActions.updateReservationPlaces),
+            mergeMap(({ id, newPlaces }) =>
+                this.reservationService.updatePlacesBooked(id, newPlaces).pipe(
+                    map(() =>
+                        ReservationActions.updateReservationPlacesSuccess({
+                            id,
+                            updatedPlaces: newPlaces
+                        })
+                    ),
+                    catchError(error =>
+                        of(ReservationActions.updateReservationPlacesFailure({
+                            id,
+                            error: error.message || 'Failed to update places'
+                        }))
+                    )
+                )
+            )
+        )
+    );
+
+    deleteReservation$ = createEffect(() =>
+        this.actions$.pipe(
+            ofType(ReservationActions.deleteReservation),
+            mergeMap(({ id }) =>
+                this.reservationService.deleteReservation(id).pipe(
+                    map(() => ReservationActions.deleteReservationSuccess({ id })),
+                    catchError(error => of(ReservationActions.deleteReservationFailure({ error })))
+                )
+            )
+        )
+    );
+    
     updateReservationStatus$ = createEffect(() => this.actions$.pipe(
         ofType(ReservationActions.updateReservationStatus),
         mergeMap(({ id, status }) =>

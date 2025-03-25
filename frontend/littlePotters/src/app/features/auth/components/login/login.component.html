@@ -1,8 +1,8 @@
-<div class="min-h-screen bg-amber-50 py-12 px-4 sm:px-6 lg:px-8 flex flex-col justify-center">
+<div class="login-page-container py-12 px-4 sm:px-6 lg:px-8 flex flex-col justify-center">
     <div class="sm:mx-auto sm:w-full sm:max-w-md">
         <!-- Logo -->
         <div class="flex justify-center">
-            <img class="h-36 w-auto" src="../../../../../assets/images/logo.png" alt="Little Potters Logo" />
+            <img class="h-44 w-auto" src="../../../../../assets/images/logo-no-background.png" alt="Little Potters Logo" />
         </div>
         <h2 class="mt-6 text-center text-3xl font-extrabold text-amber-900">
             Sign in to your account
@@ -44,7 +44,7 @@
             </div>
         </div>
 
-        <div class="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
+        <div class="login-card bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
             <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="space-y-6">
                 <!-- Email Field -->
                 <div>

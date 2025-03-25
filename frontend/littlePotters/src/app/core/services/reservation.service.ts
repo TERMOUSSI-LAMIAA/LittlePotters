@@ -12,7 +12,6 @@ export class ReservationService {
 
     constructor(private http: HttpClient) { }
 
-    // Create new reservation
     createReservation(reservationData: ReservationRequest): Observable<Reservation> {
         return this.http.post<Reservation>(this.apiUrl, reservationData);
     }
@@ -22,11 +21,13 @@ export class ReservationService {
         return this.http.put<Reservation>(`${this.apiUrl}/${id}/status`, { status });
     }
 
-    // Update places booked
-    updatePlacesBooked(id: number, reservationData: ReservationRequest): Observable<Reservation> {
-        return this.http.put<Reservation>(`${this.apiUrl}/${id}/places`, reservationData);
+    updatePlacesBooked(id: number, placesBooked: number): Observable<Reservation> {
+        return this.http.put<Reservation>(
+            `${this.apiUrl}/${id}/places`,
+            { placesBooked } 
+        );
     }
-
+ 
     getAllReservations(): Observable<Reservation[]> {
         return this.http.get<Reservation[]>(this.apiUrl);
     }
@@ -35,14 +36,21 @@ export class ReservationService {
         return this.http.get<Reservation>(`${this.apiUrl}/${id}`);
     }
 
-    // Delete reservation
     deleteReservation(id: number): Observable<void> {
         return this.http.delete<void>(`${this.apiUrl}/${id}`);
     }
 
-    // Get reservations for customer
-    getCustomerReservations(): Observable<Reservation[]> {
-        return this.http.get<Reservation[]>(`${this.apiUrl}/customer`);
+    getCustomerReservations(page: number, size: number, workshopId?: number): Observable<PaginatedResponse<Reservation>> {
+        const params: any = {
+            page: page.toString(),
+            size: size.toString(),
+        };
+
+        if (workshopId) {
+            params.workshopId = workshopId.toString();
+        }
+
+        return this.http.get<PaginatedResponse<Reservation>>(`${this.apiUrl}/customer/workshops`, { params });
     }
 
     getInstructorReservations(page: number, size: number, workshopId?: number): Observable<PaginatedResponse<Reservation>> {

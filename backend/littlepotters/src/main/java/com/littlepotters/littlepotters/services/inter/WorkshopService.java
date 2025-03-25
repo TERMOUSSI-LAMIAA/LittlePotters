@@ -19,4 +19,5 @@ public interface WorkshopService {
     WorkshopResponseDTO updateWorkshop(Long id, WorkshopRequestDTO workshopRequestDTO,
                                        UserDetails userDetails)throws IOException ;
     Page<WorkshopResponseDTO> getWorkshopsByInstructorId(Long instructorId, Pageable pageable);
+    Page<WorkshopResponseDTO> getUpcomingWorkshops(Pageable pageable);
 }

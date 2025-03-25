@@ -30,7 +30,6 @@ import java.util.List;
 @RequestMapping("/api/instructor/workshops")
 @AllArgsConstructor
 public class WorkshopController {
-    //TODO: admin can access this endpoints but with an instructor credentials
     private final WorkshopService workshopService;
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
@@ -63,6 +62,14 @@ public class WorkshopController {
             workshopsPage  = workshopService.getAllWorkshops(pageable);
         }
 
+        return ResponseEntity.ok(workshopsPage);
+    }
+
+    @GetMapping("/upcoming")
+    public ResponseEntity<Page<WorkshopResponseDTO>> getUpcomingWorkshops(
+            Pageable pageable) {
+
+        Page<WorkshopResponseDTO> workshopsPage = workshopService.getUpcomingWorkshops(pageable);
         return ResponseEntity.ok(workshopsPage);
     }
 

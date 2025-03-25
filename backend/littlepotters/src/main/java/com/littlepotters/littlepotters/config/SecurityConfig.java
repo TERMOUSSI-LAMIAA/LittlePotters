@@ -47,6 +47,8 @@ public class SecurityConfig {
                         "ADMIN", "INSTRUCTOR", "CUSTOMER")
                 .antMatchers("/api/users/me").authenticated()
                 .antMatchers("/api/admin/**").hasRole("ADMIN")
+                .antMatchers(HttpMethod.GET, "/api/instructor/**").
+                hasAnyRole("INSTRUCTOR", "ADMIN", "CUSTOMER")
                 .antMatchers("/api/instructor/**").hasAnyRole("INSTRUCTOR","ADMIN")
                 .antMatchers("/api/customer/**").hasAnyRole("CUSTOMER","ADMIN")
                 .antMatchers("/api/auth/login", "/api/auth/register").permitAll()

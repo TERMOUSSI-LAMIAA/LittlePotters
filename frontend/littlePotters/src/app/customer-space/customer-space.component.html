@@ -1,0 +1,46 @@
+<div class="flex h-screen bg-amber-50">
+    <app-customer-sidebar></app-customer-sidebar>
+
+    <!-- Main content area -->
+    <div class="flex-1 flex flex-col overflow-hidden ml-64">
+        <!-- Top header -->
+        <header class="bg-white shadow-sm z-10">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex justify-between items-center py-4">
+                    <h1 class="text-2xl font-semibold text-amber-900">
+                        <a routerLink="/customer-space" class="hover:text-amber-700">Customer Dashboard</a>
+                    </h1>
+                    <div class="flex items-center">
+                        <span class="text-sm text-gray-600 mr-4">Welcome, {{ customerName }}</span>
+                        <div class="relative">
+                            <button (click)="toggleDropdown()" class="flex items-center focus:outline-none">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400 ml-1"
+                                    viewBox="0 0 20 20" fill="currentColor">
+                                    <path fill-rule="evenodd"
+                                        d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                                        clip-rule="evenodd" />
+                                </svg>
+                            </button>
+                            <div class="absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none"
+                                [class.hidden]="!showDropdown" [class.block]="showDropdown">
+                                <a routerLink="/customer-space/profile"
+                                    class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900">
+                                    Profile
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main content -->
+        <main class="flex-1 overflow-y-auto bg-amber-50 p-6">
+            <div class="max-w-7xl mx-auto">
+                <div class="bg-white rounded-lg shadow-md p-6">
+                    <router-outlet></router-outlet>
+                </div>
+            </div>
+        </main>
+    </div>
+</div>

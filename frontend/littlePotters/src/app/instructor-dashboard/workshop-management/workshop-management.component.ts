@@ -66,7 +66,6 @@ export class WorkshopManagementComponent {
   loadWorkshops(): void {
     this.loading = true;
 
-    // Include the filterByUser parameter in the request
     const filterParams = {
       page: this.currentPage,
       size: this.pageSize,
@@ -84,19 +83,7 @@ export class WorkshopManagementComponent {
       },
     });
   }
-  // loadWorkshops(): void {
-  //   this.loading = true;
-  //   this.workshopService.getWorkshops(this.currentPage, this.pageSize).subscribe({
-  //     next: (response) => {
-  //       this.handlePaginatedResponse(response);
-  //       this.loading = false;
-  //     },
-  //     error: (error) => {
-  //       console.error('Error loading workshops:', error);
-  //       this.loading = false;
-  //     }
-  //   });
-  // }
+
 
   handlePaginatedResponse(response: PaginatedResponse<Workshop>): void {
     this.workshops = response.content;
