@@ -12,6 +12,7 @@ import com.littlepotters.littlepotters.models.enums.ReservationStatus;
 import com.littlepotters.littlepotters.repositories.ReservationRepository;
 import com.littlepotters.littlepotters.repositories.UserRepository;
 import com.littlepotters.littlepotters.repositories.WorkshopRepository;
+import com.littlepotters.littlepotters.services.inter.EmailService;
 import com.littlepotters.littlepotters.services.inter.ReservationService;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -33,6 +34,7 @@ public class ReservationServiceImpl  implements ReservationService {
 
     private final ReservationRepository reservationRepository;
     private final WorkshopRepository workshopRepository;
+    private final EmailService emailService;
     private final UserRepository userRepository;
     private final ReservationMapper reservationMapper;
 //TODO:check the available seats for each workshop if its == the max participants
@@ -87,9 +89,42 @@ public class ReservationServiceImpl  implements ReservationService {
         reservation.setStatus(reservationRequestDTO.getStatus());
         Reservation updatedReservation = reservationRepository.save(reservation);
 
+        if (updatedReservation.getStatus() == ReservationStatus.COMPLETED) {
+            sendCompletionNotificationToCustomer(updatedReservation);
+        }
+
         return reservationMapper.toDTO(updatedReservation);
     }
+    private void sendCompletionNotificationToCustomer(Reservation reservation) {
+        try {
+            User customer = reservation.getCustomer();
+            Workshop workshop = reservation.getWorkshop();
 
+            // Prepare email details
+            String to = customer.getEmail();
+            String subject = "Workshop Completed: " + workshop.getTitle();
+            String body = String.format(
+                    "Dear %s,\n\n" +
+                            "The workshop '%s' you reserved has been marked as completed.\n\n" +
+                            "Workshop Details:\n" +
+                            "Title: %s\n" +
+                            "Date: %s\n\n" +
+                            "Thank you for your participation!\n\n" +
+                            "Best regards,\n" +
+                            "Workshop Team",
+                    customer.getFullname(),
+                    workshop.getTitle(),
+                    workshop.getTitle(),
+                    workshop.getDate()
+            );
+
+            emailService.sendSimpleMessage(to, subject, body);
+        } catch (Exception e) {
+            System.out.println("Failed to send completion notification for reservation "
+                    + reservation.getId() + ": " + e.getMessage());
+
+        }
+    }
     @Transactional
     @Override
     public ReservationResponseDTO updatePlacesBooked(Long reservationId, ReservationRequestDTO reservationRequestDTO) {

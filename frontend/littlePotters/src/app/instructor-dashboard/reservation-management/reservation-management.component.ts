@@ -31,7 +31,6 @@ export class ReservationManagementComponent implements OnInit {
   totalPages$: Observable<number>;
   loading$: Observable<boolean>;
 
-  // Regular properties for workshops and users
   workshops: Workshop[] = [];
   users: User[] = [];
   selectedWorkshopId: number | null = null;
@@ -45,7 +44,7 @@ export class ReservationManagementComponent implements OnInit {
     private authService: AuthService,
     private route: ActivatedRoute
   ) {
-    // Initialize observables from the store
+ 
     this.reservations$ = this.store.select(state => state.reservations.reservations);
     this.currentPage$ = this.store.select(state => state.reservations.currentPage);
     this.pageSize$ = this.store.select(state => state.reservations.pageSize);
@@ -55,7 +54,6 @@ export class ReservationManagementComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    // Get the current instructor ID from the auth service
     this.instructorId = this.authService.currentUserValue?.user?.id || null;
 
     if (!this.instructorId) {
@@ -63,16 +61,13 @@ export class ReservationManagementComponent implements OnInit {
       return;
     }
 
-    // Check if we have a workshopId in the query params
     this.route.queryParams.subscribe(params => {
       if (params['workshopId']) {
         this.selectedWorkshopId = +params['workshopId'];
       }
 
-      // Load instructor's workshops for the filter dropdown
       this.loadInstructorWorkshops();
 
-      // Load users for customer information
       this.loadUsers();
     });
   }
@@ -116,17 +111,15 @@ export class ReservationManagementComponent implements OnInit {
   onWorkshopFilterChange(workshopId: number | null): void {
     this.selectedWorkshopId = workshopId;
 
-    // Dispatch action to load reservations with the new filter
     this.store.dispatch(ReservationActions.loadReservations({
       filter: {
         workshopId,
-        page: 0, // Reset to first page when filter changes
+        page: 0, 
         size: 10
       }
     }));
   }
 
-  // Helper methods for displaying workshop and customer information
   getWorkshopTitle(workshopId: number): string {
     const workshop = this.workshops.find(w => w.id === workshopId);
     return workshop ? workshop.title : "Unknown Workshop";
@@ -142,7 +135,6 @@ export class ReservationManagementComponent implements OnInit {
     return user ? user.email : "Unknown Email";
   }
 
-  // Pagination methods
   goToPage(page: number): void {
     this.currentPage$.pipe(take(1)).subscribe(currentPage => {
       this.pageSize$.pipe(take(1)).subscribe(pageSize => {
@@ -175,7 +167,6 @@ export class ReservationManagementComponent implements OnInit {
     });
   }
 
-  // Update reservation status
   updateReservationStatus(id: number, status: string): void {
     this.store.dispatch(ReservationActions.updateReservationStatus({ id, status }));
   }
