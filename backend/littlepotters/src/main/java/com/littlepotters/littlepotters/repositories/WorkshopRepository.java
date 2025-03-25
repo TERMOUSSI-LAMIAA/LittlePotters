@@ -29,4 +29,10 @@ public interface WorkshopRepository extends JpaRepository<Workshop, Long> {
     long countBySchedule(WorkshopSchedule schedule);
 
     long count();
+    @Query("SELECT COUNT(w) FROM Workshop w " +
+            "JOIN w.reservations r " +
+            "WHERE r.customer.id = :customerId AND w.schedule = :schedule")
+    long countByReservationsCustomerIdAndSchedule(
+            @Param("customerId") Long customerId,
+            @Param("schedule") WorkshopSchedule schedule);
 }

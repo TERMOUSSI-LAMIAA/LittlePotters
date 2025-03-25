@@ -30,4 +30,21 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
     Double sumTotalPriceByCompletedStatus();
 
     long count();
+    long countByCustomerId(Long customerId);
+
+    @Query("SELECT COALESCE(SUM(r.totalPrice), 0) FROM Reservation r " +
+            "WHERE r.customer.id = :customerId AND r.status = 'COMPLETED'")
+    Double sumCompletedReservationsByCustomerId(@Param("customerId") Long customerId);
+
+    @Query("SELECT COALESCE(MAX(r.totalPrice), 0) FROM Reservation r " +
+            "WHERE r.customer.id = :customerId AND r.status = 'COMPLETED'")
+    Double findMaxCompletedReservationPriceByCustomerId(@Param("customerId") Long customerId);
+
+    @Query("SELECT r.workshop.instructor.id, r.workshop.instructor.fullname, COUNT(r) FROM Reservation r " +
+        "WHERE r.customer.id = :customerId " +
+        "GROUP BY r.workshop.instructor.id, r.workshop.instructor.fullname " +
+        "ORDER BY COUNT(r) DESC")
+    List<Object[]> findInstructorBookingCounts(@Param("customerId") Long customerId);
+
+    long countByCustomerIdAndStatus(Long customerId, ReservationStatus status);
 }
