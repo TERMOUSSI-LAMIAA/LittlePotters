@@ -12,6 +12,9 @@ import { FormsModule } from '@angular/forms';
 import { User } from '../../core/models/user.model';
 import { UserService } from '../../core/services/user.service';
 import { createReservation } from '../../store/reservations/reservation.actions';
+import { Actions, ofType } from '@ngrx/effects';
+import { take } from 'rxjs';
+import * as ReservationActions from '../../store/reservations/reservation.actions'
 
 @Component({
   selector: 'app-workshops-list',
@@ -32,18 +35,16 @@ export class WorkshopsListComponent implements OnInit {
   apiBaseUrl = "http://localhost:8081"
   users: User[] = [];
   loadingUsers = false;
-  // Search and filter
+
   searchTerm = ""
   levelFilter = "all"
   scheduleFilter = "all"
 
-  // Reservation modal
   showReservationModal = false
   showSuccessModal = false
   selectedWorkshopId: number | null = null
   placesToBook = 1
 
-  // Enum references for template
   workshopLevels = WorkshopLevel
   workshopSchedules = WorkshopSchedule
 
@@ -54,6 +55,7 @@ export class WorkshopsListComponent implements OnInit {
     private router: Router,
     private userService: UserService,
     private store: Store<{ reservations: ReservationState }>,
+    private actions$: Actions 
   ) { }
 
   ngOnInit(): void {
@@ -122,12 +124,10 @@ export class WorkshopsListComponent implements OnInit {
   }
 
   getFullImageUrl(relativeUrl: string): string {
-    // Check if the URL is already absolute
     if (!relativeUrl || relativeUrl.startsWith("http")) {
       return relativeUrl
     }
 
-    // Remove leading slash if present in both the base URL and the relative URL
     const baseUrl = this.apiBaseUrl.endsWith("/") ? this.apiBaseUrl.slice(0, -1) : this.apiBaseUrl
     const imageUrl = relativeUrl.startsWith("/") ? relativeUrl : `/${relativeUrl}`
 
@@ -136,17 +136,15 @@ export class WorkshopsListComponent implements OnInit {
 
   applyFilters(): void {
     this.filteredWorkshops = this.workshops.filter((workshop) => {
-      // Apply level filter
+     
       if (this.levelFilter !== "all" && workshop.level !== this.levelFilter) {
         return false
       }
 
-      // Apply schedule filter
       if (this.scheduleFilter !== "all" && workshop.schedule !== this.scheduleFilter) {
         return false
       }
 
-      // Apply search term filter
       if (this.searchTerm) {
         const searchLower = this.searchTerm.toLowerCase()
         return (
@@ -208,6 +206,21 @@ export class WorkshopsListComponent implements OnInit {
     }
 
     this.store.dispatch(createReservation({ reservation: reservationRequest }));
+    
+    this.actions$.pipe(
+      ofType(ReservationActions.createReservationSuccess),
+      take(1) 
+    ).subscribe(() => {
+      this.showReservationModal = false;
+      this.showSuccessModal = true;
+    });
+
+    this.actions$.pipe(
+      ofType(ReservationActions.createReservationFailure),
+      take(1)
+    ).subscribe(({ error }) => {
+      console.error("Reservation failed:", error);
+    });
   }
 
   closeSuccessModal(): void {
@@ -219,7 +232,6 @@ export class WorkshopsListComponent implements OnInit {
     this.router.navigate(["/customer-space/my-reservations"])
   }
 
-  // Helper methods for template
   getAvailablePlacesText(workshop: Workshop): string {
     return `${workshop.availablePlaces}/${workshop.maxParticipants} Places Available`
   }

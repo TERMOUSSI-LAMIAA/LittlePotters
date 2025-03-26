@@ -47,7 +47,7 @@ public class ReservationController {
         return ResponseEntity.ok(reservationResponseDTOS);
     }
 
-    @PreAuthorize("hasRole('ADMIN')") //??
+    @PreAuthorize("hasRole('ADMIN')") 
     @GetMapping("/{id}")
     public ResponseEntity<ReservationResponseDTO> getReservationById(@PathVariable Long id) {
         ReservationResponseDTO reservationResponseDTO = reservationService.getReservationById(id);
