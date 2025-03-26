@@ -48,6 +48,9 @@ export class WorkshopsListComponent implements OnInit {
   workshopLevels = WorkshopLevel
   workshopSchedules = WorkshopSchedule
 
+  showErrorModal = false;
+  errorMessage = '';
+
   constructor(
     private workshopService: WorkshopService,
     private reservationService: ReservationService,
@@ -220,6 +223,10 @@ export class WorkshopsListComponent implements OnInit {
       take(1)
     ).subscribe(({ error }) => {
       console.error("Reservation failed:", error);
+      const errorMessage = error.error?.message ||
+        "Failed to make reservation. Please try again.";
+
+      this.showError(errorMessage);
     });
   }
 
@@ -264,5 +271,16 @@ export class WorkshopsListComponent implements OnInit {
       default:
         return "bg-gray-100 text-gray-800"
     }
+  }
+
+  closeErrorModal(): void {
+    this.showErrorModal = false;
+    this.errorMessage = '';
+    this.showReservationModal = false; 
+  }
+
+  showError(message: string): void {
+    this.errorMessage = message;
+    this.showErrorModal = true;
   }
 }

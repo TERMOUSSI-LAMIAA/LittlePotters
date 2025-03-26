@@ -7,6 +7,7 @@ import com.littlepotters.littlepotters.exceptions.WorkshopException;
 import com.littlepotters.littlepotters.mappers.WorkshopMapper;
 import com.littlepotters.littlepotters.models.entities.User;
 import com.littlepotters.littlepotters.models.entities.Workshop;
+import com.littlepotters.littlepotters.models.enums.ReservationStatus;
 import com.littlepotters.littlepotters.repositories.UserRepository;
 import com.littlepotters.littlepotters.repositories.WorkshopRepository;
 import com.littlepotters.littlepotters.services.inter.WorkshopService;
@@ -76,11 +77,10 @@ public class WorkshopServiceImpl implements WorkshopService {
 
         String oldFileName = existingWorkshop.getImageFileName();
         if (workshopRequestDTO.getImage() != null && !workshopRequestDTO.getImage().isEmpty()) {
-            // Save the new image and delete the old one
+
             String newFileName = imageStorageService.saveWorkshopImage(workshopRequestDTO.getImage());
             existingWorkshop.setImageFileName(newFileName);
 
-            // Delete the old image if it exists
             if (oldFileName != null && !oldFileName.isEmpty()) {
                 try {
                     imageStorageService.deleteWorkshopImage(oldFileName);
@@ -89,11 +89,10 @@ public class WorkshopServiceImpl implements WorkshopService {
                 }
             }
         }
-        // If imageFileName is explicitly set to null, remove the image
+
         else if (workshopRequestDTO.getImageFileName() == null) {
             existingWorkshop.setImageFileName(null);
 
-            // Delete the old image if it exists
             if (oldFileName != null && !oldFileName.isEmpty()) {
                 try {
                     imageStorageService.deleteWorkshopImage(oldFileName);
@@ -102,7 +101,6 @@ public class WorkshopServiceImpl implements WorkshopService {
                 }
             }
         }
-        // Otherwise, keep the existing filename
         else {
             workshopRequestDTO.setImageFileName(existingWorkshop.getImageFileName());
         }
@@ -149,6 +147,14 @@ public class WorkshopServiceImpl implements WorkshopService {
 
         if (!workshop.getInstructor().getEmail().equals(userDetails.getUsername())) {
             throw new AccessDeniedException("You are not authorized to delete this workshop.");
+        }
+
+        boolean hasActiveReservations = workshop.getReservations().stream()
+                .anyMatch(reservation -> reservation.getStatus() != ReservationStatus.CANCELLED);
+
+        if (hasActiveReservations) {
+            throw new IllegalStateException("Cannot delete workshop with active reservations. " +
+                    "Cancel all reservations");
         }
         String imageFileName = workshop.getImageFileName();
 

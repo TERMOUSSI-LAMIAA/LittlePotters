@@ -135,7 +135,8 @@
                     </div>
 
                     <div class="flex space-x-3">
-                        <button (click)="openUpdateModal(reservation)"
+                        <button  *ngIf="reservation.status === reservationStatuses.PENDING"
+                        (click)="openUpdateModal(reservation)"
                             class="bg-blue-100 hover:bg-blue-200 text-blue-800 py-1.5 px-3 rounded-md text-sm flex items-center mr-2">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24"
                                 stroke="currentColor">

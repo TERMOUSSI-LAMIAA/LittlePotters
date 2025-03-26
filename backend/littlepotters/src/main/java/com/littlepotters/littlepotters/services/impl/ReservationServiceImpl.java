@@ -86,21 +86,62 @@ public class ReservationServiceImpl  implements ReservationService {
             throw new RuntimeException("You are not authorized to update the status of this reservation.");
         }
 
+        ReservationStatus previousStatus = reservation.getStatus();
         reservation.setStatus(reservationRequestDTO.getStatus());
-        Reservation updatedReservation = reservationRepository.save(reservation);
 
-        if (updatedReservation.getStatus() == ReservationStatus.CANCELLED) {
-            sendCompletionNotificationToCustomer(updatedReservation);
+
+        if (reservationRequestDTO.getStatus() == ReservationStatus.CANCELLED  &&
+                previousStatus != ReservationStatus.CANCELLED) {
+            Workshop workshop = reservation.getWorkshop();
+            workshop.setAvailablePlaces(workshop.getAvailablePlaces() + reservation.getPlacesBooked());
+            workshopRepository.save(workshop);
+
+            sendCancelledNotificationToCustomer(reservation);
+        } else if (reservationRequestDTO.getStatus() == ReservationStatus.CONFIRMED &&
+                previousStatus != ReservationStatus.CONFIRMED) {
+            sendConfirmationNotificationToCustomer(reservation);
         }
 
+        Reservation updatedReservation = reservationRepository.save(reservation);
         return reservationMapper.toDTO(updatedReservation);
     }
-    private void sendCompletionNotificationToCustomer(Reservation reservation) {
+    private void sendConfirmationNotificationToCustomer(Reservation reservation) {
         try {
             User customer = reservation.getCustomer();
             Workshop workshop = reservation.getWorkshop();
 
-            // Prepare email details
+            String to = customer.getEmail();
+            String subject = "Reservation Confirmed: " + workshop.getTitle();
+            String body = String.format(
+                    "Dear %s,\n\n" +
+                            "Your reservation for the workshop '%s' has been confirmed!\n\n" +
+                            "Reservation Details:\n" +
+                            "Workshop: %s\n" +
+                            "Date: %s\n" +
+                            "Places Booked: %d\n" +
+                            "Total Price: %.2f\n\n" +
+                            "We look forward to seeing you at the workshop!\n\n" +
+                            "Best regards,\n" +
+                            "Workshop Team",
+                    customer.getFullname(),
+                    workshop.getTitle(),
+                    workshop.getTitle(),
+                    workshop.getDate(),
+                    reservation.getPlacesBooked(),
+                    reservation.getTotalPrice()
+            );
+
+            emailService.sendSimpleMessage(to, subject, body);
+        } catch (Exception e) {
+            System.out.println("Failed to send confirmation notification for reservation "
+                    + reservation.getId() + ": " + e.getMessage());
+        }
+    }
+    private void sendCancelledNotificationToCustomer(Reservation reservation) {
+        try {
+            User customer = reservation.getCustomer();
+            Workshop workshop = reservation.getWorkshop();
+
             String to = customer.getEmail();
             String subject = "Workshop Cancelled: " + workshop.getTitle();
             String body = String.format(

@@ -1,5 +1,5 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, ValidatorFn, Validators } from '@angular/forms';
 import { WorkshopService } from '../../core/services/workshop.service';
 import { AuthService } from '../../core/services/auth.service';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -53,7 +53,7 @@ export class WorkshopFormComponent implements OnInit {
     this.workshopForm = this.fb.group({
       title: ["", [Validators.required]],
       description: ["", [Validators.required]],
-      date: ["", [Validators.required]],  
+      date: ["", [Validators.required,this.futureOrPresentDateValidator()]],  
       level: [WorkshopLevel.BEGINNER, [Validators.required]], 
       schedule: [WorkshopSchedule.MORNING, [Validators.required]], 
       maxParticipants: [1, [Validators.required, Validators.min(1)]],
@@ -62,7 +62,7 @@ export class WorkshopFormComponent implements OnInit {
     });
   }
 
-
+  
   loadWorkshopData(id: number): void {
     this.loading = true
     this.workshopService.getWorkshopById(id).subscribe({
@@ -163,7 +163,7 @@ export class WorkshopFormComponent implements OnInit {
 
     this.isSubmitting = true
     this.loading = true
-
+   
     const workshopData: WorkshopRequest = {
       title: this.workshopForm.value.title,
       description: this.workshopForm.value.description,
@@ -243,5 +243,17 @@ export class WorkshopFormComponent implements OnInit {
 
   navigateBack(): void {
     this.router.navigate(["/instructor-dashboard/workshops"])
+  }
+  
+  futureOrPresentDateValidator(): ValidatorFn {
+    return (control: AbstractControl): { [key: string]: any } | null => {
+      if (!control.value) return null;
+
+      const selectedDate = new Date(control.value);
+      const today = new Date();
+      today.setHours(0, 0, 0, 0); // Reset time to compare dates only
+
+      return selectedDate < today ? { 'datePast': true } : null;
+    };
   }
 }

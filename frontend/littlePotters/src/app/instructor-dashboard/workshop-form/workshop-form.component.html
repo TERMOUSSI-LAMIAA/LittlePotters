@@ -47,243 +47,245 @@
             Remove Image
         </button>
     </div>
-<form [formGroup]="workshopForm" (ngSubmit)="onSubmit()" class="space-y-5">
-    <!-- Title Field -->
-    <div class="form-group">
-        <label for="title" class="block text-sm font-medium text-gray-700 mb-1">Workshop Title</label>
-        <div class="relative">
-            <input type="text" id="title" formControlName="title"
-                class="w-full pl-3 pr-10 py-2.5 border rounded-md shadow-sm transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent"
-                [ngClass]="{
+    <form [formGroup]="workshopForm" (ngSubmit)="onSubmit()" class="space-y-5">
+        <!-- Title Field -->
+        <div class="form-group">
+            <label for="title" class="block text-sm font-medium text-gray-700 mb-1">Workshop Title</label>
+            <div class="relative">
+                <input type="text" id="title" formControlName="title"
+                    class="w-full pl-3 pr-10 py-2.5 border rounded-md shadow-sm transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent"
+                    [ngClass]="{
               'border-gray-300': !isFieldInvalid('title'),
               'border-red-300 bg-red-50': isFieldInvalid('title')
             }" aria-describedby="title-error">
-            <div *ngIf="isFieldInvalid('title')"
-                class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
-                <svg class="h-5 w-5 text-red-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
-                    fill="currentColor" aria-hidden="true">
-                    <path fill-rule="evenodd"
-                        d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
-                        clip-rule="evenodd" />
-                </svg>
+                <div *ngIf="isFieldInvalid('title')"
+                    class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+                    <svg class="h-5 w-5 text-red-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
+                        fill="currentColor" aria-hidden="true">
+                        <path fill-rule="evenodd"
+                            d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
+                            clip-rule="evenodd" />
+                    </svg>
+                </div>
+            </div>
+            <div *ngIf="isFieldInvalid('title')" class="mt-2 text-sm text-red-600" id="title-error">
+                Workshop title is required
             </div>
         </div>
-        <div *ngIf="isFieldInvalid('title')" class="mt-2 text-sm text-red-600" id="title-error">
-            Workshop title is required
-        </div>
-    </div>
 
-    <!-- Description Field -->
-    <div class="form-group">
-        <label for="description" class="block text-sm font-medium text-gray-700 mb-1">Description</label>
-        <div class="relative">
-            <textarea id="description" formControlName="description" rows="4"
-                class="w-full pl-3 pr-10 py-2.5 border rounded-md shadow-sm transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent"
-                [ngClass]="{
+        <!-- Description Field -->
+        <div class="form-group">
+            <label for="description" class="block text-sm font-medium text-gray-700 mb-1">Description</label>
+            <div class="relative">
+                <textarea id="description" formControlName="description" rows="4"
+                    class="w-full pl-3 pr-10 py-2.5 border rounded-md shadow-sm transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent"
+                    [ngClass]="{
               'border-gray-300': !isFieldInvalid('description'),
               'border-red-300 bg-red-50': isFieldInvalid('description')
             }" aria-describedby="description-error"></textarea>
-            <div *ngIf="isFieldInvalid('description')"
-                class="absolute top-3 right-0 pr-3 flex items-center pointer-events-none">
-                <svg class="h-5 w-5 text-red-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
-                    fill="currentColor" aria-hidden="true">
-                    <path fill-rule="evenodd"
-                        d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
-                        clip-rule="evenodd" />
-                </svg>
+                <div *ngIf="isFieldInvalid('description')"
+                    class="absolute top-3 right-0 pr-3 flex items-center pointer-events-none">
+                    <svg class="h-5 w-5 text-red-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
+                        fill="currentColor" aria-hidden="true">
+                        <path fill-rule="evenodd"
+                            d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
+                            clip-rule="evenodd" />
+                    </svg>
+                </div>
+            </div>
+            <div *ngIf="isFieldInvalid('description')" class="mt-2 text-sm text-red-600" id="description-error">
+                Workshop description is required
             </div>
         </div>
-        <div *ngIf="isFieldInvalid('description')" class="mt-2 text-sm text-red-600" id="description-error">
-            Workshop description is required
-        </div>
-    </div>
 
-    <!-- Date Field -->
-    <div class="form-group">
-        <label for="date" class="block text-sm font-medium text-gray-700 mb-1">Date</label>
-        <div class="relative">
-            <input type="date" id="date" formControlName="date"
-                class="w-full pl-3 pr-10 py-2.5 border rounded-md shadow-sm transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent"
-                [ngClass]="{
+        <!-- Date Field -->
+        <div class="form-group">
+            <label for="date" class="block text-sm font-medium text-gray-700 mb-1">Date</label>
+            <div class="relative">
+                <input type="date" id="date" formControlName="date"
+                    class="w-full pl-3 pr-10 py-2.5 border rounded-md shadow-sm transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent"
+                    [ngClass]="{
               'border-gray-300': !isFieldInvalid('date'),
               'border-red-300 bg-red-50': isFieldInvalid('date')
             }" aria-describedby="date-error">
-            <div *ngIf="isFieldInvalid('date')"
-                class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
-                <svg class="h-5 w-5 text-red-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
-                    fill="currentColor" aria-hidden="true">
-                    <path fill-rule="evenodd"
-                        d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
-                        clip-rule="evenodd" />
-                </svg>
+                <div *ngIf="isFieldInvalid('date')"
+                    class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+                    <svg class="h-5 w-5 text-red-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
+                        fill="currentColor" aria-hidden="true">
+                        <path fill-rule="evenodd"
+                            d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
+                            clip-rule="evenodd" />
+                    </svg>
+                </div>
+            </div>
+            <div *ngIf="isFieldInvalid('date')" class="mt-2 text-sm text-red-600" id="date-error">
+                <span *ngIf="getFieldError('date', 'required')">Workshop date is required</span>
+                <span *ngIf="getFieldError('date', 'datePast')">Date must be today or in the future</span>
             </div>
         </div>
-        <div *ngIf="isFieldInvalid('date')" class="mt-2 text-sm text-red-600" id="date-error">
-            Workshop date is required
-        </div>
-    </div>
 
-    <!-- Level Field -->
-    <div class="form-group">
-        <label for="level" class="block text-sm font-medium text-gray-700 mb-1">Level</label>
-        <div class="relative">
-            <select id="level" formControlName="level"
-                class="w-full pl-3 pr-10 py-2.5 border rounded-md shadow-sm transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent"
-                [ngClass]="{
+        <!-- Level Field -->
+        <div class="form-group">
+            <label for="level" class="block text-sm font-medium text-gray-700 mb-1">Level</label>
+            <div class="relative">
+                <select id="level" formControlName="level"
+                    class="w-full pl-3 pr-10 py-2.5 border rounded-md shadow-sm transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent"
+                    [ngClass]="{
               'border-gray-300': !isFieldInvalid('level'),
               'border-red-300 bg-red-50': isFieldInvalid('level')
             }" aria-describedby="level-error">
-                <option value="BEGINNER">Beginner</option>
-                <option value="INTERMEDIATE">Intermediate</option>
-                <option value="ADVANCED">Advanced</option>
-            </select>
-            <div *ngIf="isFieldInvalid('level')"
-                class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
-                <svg class="h-5 w-5 text-red-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
-                    fill="currentColor" aria-hidden="true">
-                    <path fill-rule="evenodd"
-                        d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
-                        clip-rule="evenodd" />
-                </svg>
+                    <option value="BEGINNER">Beginner</option>
+                    <option value="INTERMEDIATE">Intermediate</option>
+                    <option value="ADVANCED">Advanced</option>
+                </select>
+                <div *ngIf="isFieldInvalid('level')"
+                    class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+                    <svg class="h-5 w-5 text-red-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
+                        fill="currentColor" aria-hidden="true">
+                        <path fill-rule="evenodd"
+                            d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
+                            clip-rule="evenodd" />
+                    </svg>
+                </div>
+            </div>
+            <div *ngIf="isFieldInvalid('level')" class="mt-2 text-sm text-red-600" id="level-error">
+                Workshop level is required
             </div>
         </div>
-        <div *ngIf="isFieldInvalid('level')" class="mt-2 text-sm text-red-600" id="level-error">
-            Workshop level is required
-        </div>
-    </div>
 
-    <!-- Schedule Field -->
-    <div class="form-group">
-        <label for="schedule" class="block text-sm font-medium text-gray-700 mb-1">Schedule</label>
-        <div class="relative">
-            <select id="schedule" formControlName="schedule"
-                class="w-full pl-3 pr-10 py-2.5 border rounded-md shadow-sm transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent"
-                [ngClass]="{
+        <!-- Schedule Field -->
+        <div class="form-group">
+            <label for="schedule" class="block text-sm font-medium text-gray-700 mb-1">Schedule</label>
+            <div class="relative">
+                <select id="schedule" formControlName="schedule"
+                    class="w-full pl-3 pr-10 py-2.5 border rounded-md shadow-sm transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent"
+                    [ngClass]="{
               'border-gray-300': !isFieldInvalid('schedule'),
               'border-red-300 bg-red-50': isFieldInvalid('schedule')
             }" aria-describedby="schedule-error">
-                <option value="MORNING">Morning</option>
-                <option value="AFTERNOON">Afternoon</option>
-                <option value="EVENING">Evening</option>
-            </select>
-            <div *ngIf="isFieldInvalid('schedule')"
-                class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
-                <svg class="h-5 w-5 text-red-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
-                    fill="currentColor" aria-hidden="true">
-                    <path fill-rule="evenodd"
-                        d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
-                        clip-rule="evenodd" />
-                </svg>
+                    <option value="MORNING">Morning</option>
+                    <option value="AFTERNOON">Afternoon</option>
+                    <option value="EVENING">Evening</option>
+                </select>
+                <div *ngIf="isFieldInvalid('schedule')"
+                    class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+                    <svg class="h-5 w-5 text-red-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
+                        fill="currentColor" aria-hidden="true">
+                        <path fill-rule="evenodd"
+                            d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
+                            clip-rule="evenodd" />
+                    </svg>
+                </div>
+            </div>
+            <div *ngIf="isFieldInvalid('schedule')" class="mt-2 text-sm text-red-600" id="schedule-error">
+                Workshop schedule is required
             </div>
         </div>
-        <div *ngIf="isFieldInvalid('schedule')" class="mt-2 text-sm text-red-600" id="schedule-error">
-            Workshop schedule is required
-        </div>
-    </div>
 
-    <!-- Max Participants Field -->
-    <div class="form-group">
-        <label for="maxParticipants" class="block text-sm font-medium text-gray-700 mb-1">Maximum
-            Participants</label>
-        <div class="relative">
-            <input type="number" id="maxParticipants" formControlName="maxParticipants" min="1" step="1"
-                class="w-full pl-3 pr-10 py-2.5 border rounded-md shadow-sm transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent"
-                [ngClass]="{
+        <!-- Max Participants Field -->
+        <div class="form-group">
+            <label for="maxParticipants" class="block text-sm font-medium text-gray-700 mb-1">Maximum
+                Participants</label>
+            <div class="relative">
+                <input type="number" id="maxParticipants" formControlName="maxParticipants" min="1" step="1"
+                    class="w-full pl-3 pr-10 py-2.5 border rounded-md shadow-sm transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent"
+                    [ngClass]="{
               'border-gray-300': !isFieldInvalid('maxParticipants'),
               'border-red-300 bg-red-50': isFieldInvalid('maxParticipants')
             }" aria-describedby="maxParticipants-error">
-            <div *ngIf="isFieldInvalid('maxParticipants')"
-                class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
-                <svg class="h-5 w-5 text-red-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
-                    fill="currentColor" aria-hidden="true">
-                    <path fill-rule="evenodd"
-                        d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
-                        clip-rule="evenodd" />
-                </svg>
+                <div *ngIf="isFieldInvalid('maxParticipants')"
+                    class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+                    <svg class="h-5 w-5 text-red-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
+                        fill="currentColor" aria-hidden="true">
+                        <path fill-rule="evenodd"
+                            d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
+                            clip-rule="evenodd" />
+                    </svg>
+                </div>
+            </div>
+            <div *ngIf="isFieldInvalid('maxParticipants')" class="mt-2 text-sm text-red-600" id="maxParticipants-error">
+                <span *ngIf="getFieldError('maxParticipants', 'required')">Maximum participants is required</span>
+                <span *ngIf="getFieldError('maxParticipants', 'min')">Must be at least 1 participant</span>
             </div>
         </div>
-        <div *ngIf="isFieldInvalid('maxParticipants')" class="mt-2 text-sm text-red-600" id="maxParticipants-error">
-            <span *ngIf="getFieldError('maxParticipants', 'required')">Maximum participants is required</span>
-            <span *ngIf="getFieldError('maxParticipants', 'min')">Must be at least 1 participant</span>
-        </div>
-    </div>
 
-    <!-- Price Field -->
-    <div class="form-group">
-        <label for="price" class="block text-sm font-medium text-gray-700 mb-1">Price (€)</label>
-        <div class="relative">
-            <input type="number" id="price" formControlName="price" min="0" step="0.01"
-                class="w-full pl-3 pr-10 py-2.5 border rounded-md shadow-sm transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent"
-                [ngClass]="{
+        <!-- Price Field -->
+        <div class="form-group">
+            <label for="price" class="block text-sm font-medium text-gray-700 mb-1">Price (€)</label>
+            <div class="relative">
+                <input type="number" id="price" formControlName="price" min="0" step="0.01"
+                    class="w-full pl-3 pr-10 py-2.5 border rounded-md shadow-sm transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent"
+                    [ngClass]="{
               'border-gray-300': !isFieldInvalid('price'),
               'border-red-300 bg-red-50': isFieldInvalid('price')
             }" aria-describedby="price-error">
-            <div *ngIf="isFieldInvalid('price')"
-                class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
-                <svg class="h-5 w-5 text-red-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
-                    fill="currentColor" aria-hidden="true">
-                    <path fill-rule="evenodd"
-                        d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
-                        clip-rule="evenodd" />
-                </svg>
+                <div *ngIf="isFieldInvalid('price')"
+                    class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+                    <svg class="h-5 w-5 text-red-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
+                        fill="currentColor" aria-hidden="true">
+                        <path fill-rule="evenodd"
+                            d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
+                            clip-rule="evenodd" />
+                    </svg>
+                </div>
+            </div>
+            <div *ngIf="isFieldInvalid('price')" class="mt-2 text-sm text-red-600" id="price-error">
+                <span *ngIf="getFieldError('price', 'required')">Price is required</span>
+                <span *ngIf="getFieldError('price', 'min')">Price must be greater than or equal to 0</span>
             </div>
         </div>
-        <div *ngIf="isFieldInvalid('price')" class="mt-2 text-sm text-red-600" id="price-error">
-            <span *ngIf="getFieldError('price', 'required')">Price is required</span>
-            <span *ngIf="getFieldError('price', 'min')">Price must be greater than or equal to 0</span>
-        </div>
-    </div>
 
-    <!-- Error Message -->
-    <div *ngIf="errorMessage" class="rounded-md bg-red-50 p-4 my-4 animate-fadeIn">
-        <div class="flex">
-            <div class="flex-shrink-0">
-                <svg class="h-5 w-5 text-red-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
-                    fill="currentColor">
-                    <path fill-rule="evenodd"
-                        d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
-                        clip-rule="evenodd" />
-                </svg>
-            </div>
-            <div class="ml-3">
-                <h3 class="text-sm font-medium text-red-800">{{ errorMessage }}</h3>
-            </div>
-            <div class="ml-auto pl-3">
-                <div class="-mx-1.5 -my-1.5">
-                    <button type="button"
-                        class="inline-flex rounded-md p-1.5 text-red-500 hover:bg-red-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
-                        (click)="clearErrorMessage()" aria-label="Dismiss error">
-                        <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-                            <path fill-rule="evenodd"
-                                d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
-                                clip-rule="evenodd" />
-                        </svg>
-                    </button>
+        <!-- Error Message -->
+        <div *ngIf="errorMessage" class="rounded-md bg-red-50 p-4 my-4 animate-fadeIn">
+            <div class="flex">
+                <div class="flex-shrink-0">
+                    <svg class="h-5 w-5 text-red-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
+                        fill="currentColor">
+                        <path fill-rule="evenodd"
+                            d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+                            clip-rule="evenodd" />
+                    </svg>
+                </div>
+                <div class="ml-3">
+                    <h3 class="text-sm font-medium text-red-800">{{ errorMessage }}</h3>
+                </div>
+                <div class="ml-auto pl-3">
+                    <div class="-mx-1.5 -my-1.5">
+                        <button type="button"
+                            class="inline-flex rounded-md p-1.5 text-red-500 hover:bg-red-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
+                            (click)="clearErrorMessage()" aria-label="Dismiss error">
+                            <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
+                                fill="currentColor">
+                                <path fill-rule="evenodd"
+                                    d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                                    clip-rule="evenodd" />
+                            </svg>
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
 
-<!-- Form Buttons -->
-<div class="flex space-x-4 pt-6">
-    <button type="submit"
-        class="flex-1 sm:flex-none sm:min-w-[120px] justify-center py-2.5 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-amber-600 hover:bg-amber-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-amber-500 transition-colors duration-200 ease-in-out disabled:opacity-50 disabled:cursor-not-allowed"
-        [disabled]="workshopForm.invalid || isSubmitting">
-        <div class="flex items-center justify-center">
-            <svg *ngIf="isSubmitting" class="animate-spin -ml-1 mr-2 h-4 w-4 text-white"
-                xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4">
-                </circle>
-                <path class="opacity-75" fill="currentColor"
-                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
-                </path>
-            </svg>
-            <span>{{ isSubmitting ? 'Processing...' : (isEditMode ? 'Update' : 'Create') + ' Workshop' }}</span>
+        <!-- Form Buttons -->
+        <div class="flex space-x-4 pt-6">
+            <button type="submit"
+                class="flex-1 sm:flex-none sm:min-w-[120px] justify-center py-2.5 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-amber-600 hover:bg-amber-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-amber-500 transition-colors duration-200 ease-in-out disabled:opacity-50 disabled:cursor-not-allowed"
+                [disabled]="workshopForm.invalid || isSubmitting">
+                <div class="flex items-center justify-center">
+                    <svg *ngIf="isSubmitting" class="animate-spin -ml-1 mr-2 h-4 w-4 text-white"
+                        xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4">
+                        </circle>
+                        <path class="opacity-75" fill="currentColor"
+                            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
+                        </path>
+                    </svg>
+                    <span>{{ isSubmitting ? 'Processing...' : (isEditMode ? 'Update' : 'Create') + ' Workshop' }}</span>
+                </div>
+            </button>
+            <button type="button"
+                class="flex-1 sm:flex-none sm:min-w-[120px] justify-center py-2.5 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-amber-500 transition-colors duration-200 ease-in-out disabled:opacity-50 disabled:cursor-not-allowed"
+                (click)="cancel()" [disabled]="isSubmitting">
+                Cancel
+            </button>
         </div>
-    </button>
-    <button type="button"
-        class="flex-1 sm:flex-none sm:min-w-[120px] justify-center py-2.5 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-amber-500 transition-colors duration-200 ease-in-out disabled:opacity-50 disabled:cursor-not-allowed"
-        (click)="cancel()" [disabled]="isSubmitting">
-        Cancel
-    </button>
-</div>

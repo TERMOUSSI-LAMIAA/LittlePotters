@@ -28,6 +28,7 @@ export class WorkshopManagementComponent {
 
   filterByUser = false;
   
+  
   constructor(
     private workshopService: WorkshopService,
     private authService: AuthService,
