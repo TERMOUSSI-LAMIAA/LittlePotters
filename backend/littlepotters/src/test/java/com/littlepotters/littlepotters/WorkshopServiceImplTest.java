@@ -346,7 +346,7 @@ public class WorkshopServiceImplTest {
 
         when(workshopRepository.findById(1L)).thenReturn(Optional.of(workshop));
         when(userDetails.getUsername()).thenReturn("instructor@example.com");
-        
+
         workshop.setReservations(new HashSet<>());
 
         // Act

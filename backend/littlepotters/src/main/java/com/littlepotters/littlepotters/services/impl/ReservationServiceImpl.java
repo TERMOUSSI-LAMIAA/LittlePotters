@@ -37,8 +37,7 @@ public class ReservationServiceImpl  implements ReservationService {
     private final EmailService emailService;
     private final UserRepository userRepository;
     private final ReservationMapper reservationMapper;
-//TODO:check the available seats for each workshop if its == the max participants
-// then disable the reservation possibility and can't reserv an old workshop
+
 
     @Transactional
     @Override
