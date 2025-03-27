@@ -70,7 +70,7 @@ export class LoginComponent implements OnInit {
           } else if (userRoles.includes('ROLE_INSTRUCTOR')) {
             this.router.navigate(['/instructor-dashboard']);
           } else if (userRoles.includes('ROLE_CUSTOMER')) {
-            this.router.navigate(['/customer-space']);
+            this.router.navigate(['/home']);
           } else {
             this.router.navigate(['/home']);
           }

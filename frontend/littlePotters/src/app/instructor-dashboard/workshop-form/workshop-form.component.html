@@ -206,12 +206,13 @@
             <div *ngIf="isFieldInvalid('maxParticipants')" class="mt-2 text-sm text-red-600" id="maxParticipants-error">
                 <span *ngIf="getFieldError('maxParticipants', 'required')">Maximum participants is required</span>
                 <span *ngIf="getFieldError('maxParticipants', 'min')">Must be at least 1 participant</span>
+                <span *ngIf="getFieldError('maxParticipants', 'max')">Cannot exceed 20 participants</span>
             </div>
         </div>
 
         <!-- Price Field -->
         <div class="form-group">
-            <label for="price" class="block text-sm font-medium text-gray-700 mb-1">Price (€)</label>
+            <label for="price" class="block text-sm font-medium text-gray-700 mb-1">Price (MAD)</label>
             <div class="relative">
                 <input type="number" id="price" formControlName="price" min="0" step="0.01"
                     class="w-full pl-3 pr-10 py-2.5 border rounded-md shadow-sm transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent"

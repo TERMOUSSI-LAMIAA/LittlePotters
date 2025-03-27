@@ -19,6 +19,7 @@ import { WorkshopFormComponent } from './instructor-dashboard/workshop-form/work
 import { WorkshopResolver } from './core/resolvers/workshops.resolver';
 import { WorkshopsListComponent } from './customer-space/workshops-list/workshops-list.component';
 import { MyReservationsComponent } from './customer-space/my-reservations/my-reservations.component';
+import { TutorialsComponent } from './customer-space/tutorials/tutorials.component';
 
 export const routes: Routes = [
    
@@ -129,6 +130,9 @@ export const routes: Routes = [
             {
                 path: 'profile',
                 component: UserprofileComponent
+            },
+            {
+                path: "tutorials", component: TutorialsComponent 
             }
         ]
     },

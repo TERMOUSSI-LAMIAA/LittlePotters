@@ -33,10 +33,7 @@ public class WorkshopServiceImpl implements WorkshopService {
     private final UserRepository userRepository;
 
     private final ImageStorageService imageStorageService;
-//TODO: when delete a workshop notify the clients with reservations + cannot delete a workhop with date has passed
-// + when delete workshop delete its reservations
-    //TODO: delete old imge while updating (check content-type in header)
-    //TODO: update & delete the workshop by its instructor not any instructor
+
     @Transactional
     @Override
     public WorkshopResponseDTO createWorkshop(WorkshopRequestDTO workshopRequestDTO) throws IOException {
@@ -104,9 +101,6 @@ public class WorkshopServiceImpl implements WorkshopService {
         else {
             workshopRequestDTO.setImageFileName(existingWorkshop.getImageFileName());
         }
-
-
-
         int originalMaxParticipants = existingWorkshop.getMaxParticipants();
         if (existingWorkshop.getMaxParticipants() !=originalMaxParticipants ) {
             existingWorkshop.setAvailablePlaces(workshopRequestDTO.getMaxParticipants());

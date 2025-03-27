@@ -1,7 +1,8 @@
 <aside class="h-screen w-64 bg-amber-900 text-white fixed flex flex-col justify-between">
     <div>
         <div class="p-4 flex items-center border-b border-amber-800">
-            <img class="h-8 w-auto mr-2" src="/placeholder.svg?height=32&width=32" alt="Little Potters Logo" />
+            <img class="h-28 w-auto mr-2" src="../../../assets/images/logo-no-background2.png"
+                alt="Little Potters Logo" />
             <a routerLink="/customer-space" class="text-xl font-bold hover:text-amber-200">
                 Customer Portal
             </a>
@@ -33,7 +34,17 @@
                         Browse Workshops
                     </a>
                 </li>
-
+                <li>
+                    <a routerLink="/customer-space/tutorials" routerLinkActive="bg-amber-800"
+                        class=" px-4 py-3 hover:bg-amber-800 transition duration-200 flex items-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24"
+                            stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                        </svg>
+                        Tutorials
+                    </a>
+                </li>
                 <li>
                     <a routerLink="/customer-space/my-reservations" routerLinkActive="bg-amber-800"
                         class=" px-4 py-3 hover:bg-amber-800 transition duration-200 flex items-center">

@@ -56,7 +56,7 @@ export class WorkshopFormComponent implements OnInit {
       date: ["", [Validators.required,this.futureOrPresentDateValidator()]],  
       level: [WorkshopLevel.BEGINNER, [Validators.required]], 
       schedule: [WorkshopSchedule.MORNING, [Validators.required]], 
-      maxParticipants: [1, [Validators.required, Validators.min(1)]],
+      maxParticipants: [1, [Validators.required, Validators.min(1), Validators.max(20)]],
       price: [0, [Validators.required, Validators.min(0)]],
     
     });
