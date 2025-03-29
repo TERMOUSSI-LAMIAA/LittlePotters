@@ -94,9 +94,6 @@ export const routes: Routes = [
             {
                 path: 'reservations',
                 component: ReservationManagementComponent,
-                resolve: {
-                    // my-reservations: ReservationsResolver
-                }
 
             },
             {
@@ -136,4 +133,5 @@ export const routes: Routes = [
             }
         ]
     },
+    { path: "**", redirectTo: "home", pathMatch: "full" }
 ];

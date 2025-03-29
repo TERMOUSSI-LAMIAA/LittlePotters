@@ -29,7 +29,7 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
           if (isPlatformBrowser(platformId)) {
             localStorage.removeItem('auth_token');
             localStorage.removeItem('currentUser');
-            //TODO:remove the role also
+            localStorage.removeItem('roles'); //?
           }
           router.navigate(['/login']);
         }
