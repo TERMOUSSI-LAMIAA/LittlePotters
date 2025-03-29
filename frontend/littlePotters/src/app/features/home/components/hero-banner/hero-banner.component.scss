@@ -1,0 +1,35 @@
+// Add custom animations and effects
+@keyframes float {
+  0% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+  100% {
+    transform: translateY(0px);
+  }
+}
+
+:host {
+  display: block;
+  
+  // Custom styling for buttons if needed
+  button {
+    &:hover {
+      box-shadow: 0 4px 12px rgba(193, 132, 86, 0.3);
+    }
+  }
+  
+  // Add a subtle clay texture to the background
+  .bg-texture {
+    background-image: url('/assets/images/clay-texture.png');
+    background-blend-mode: multiply;
+    opacity: 0.1;
+  }
+}
+
+// Add a subtle animation to the decorative element
+.decorative-element {
+  animation: float 6s ease-in-out infinite;
+}

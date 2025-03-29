@@ -10,7 +10,6 @@ interface Tutorial {
   videoUrl?: string
   imageUrls?: string[]
   duration: string
-  level: "Beginner" | "Intermediate" | "Advanced"
   category: string
 }
 
@@ -25,90 +24,76 @@ export class TutorialsComponent {
   selectedCategory = "All"
   selectedTutorial: Tutorial | null = null
   isVideoPlaying = false;
-  categories: string[] = ["All", "Clay Preparation", "Wheel Throwing", "Hand Building", "Glazing", "Firing"]
+  categories: string[] = ["All", "Handbuilding", "Wheel Throwing", "Decorating"]
 
   tutorials: Tutorial[] = [
     {
       id: 1,
-      title: "Clay Preparation Basics",
+      title: "How to Make a Stoneware Pottery Bowl, from Beginning to End",
       description:
-        "Learn the fundamentals of preparing clay for pottery workshops. This tutorial covers wedging techniques, clay consistency, and storage methods to ensure optimal results.",
-      thumbnailUrl: "assets/images/485403873_1187842876679777_4036242185063634361_n.jpg",
-      videoUrl: "https://www.youtube.com/embed/U64bLz4EWRI",
-      duration: "12 min",
-      level: "Beginner",
-      category: "Clay Preparation",
+        "Learn the fundamentals of preparing clay for pottery workshops. This tutorial covers techniques, clay consistency, and storage methods to ensure optimal results.",
+      thumbnailUrl: "assets/images/handbuilding.png",
+      videoUrl: "https://www.youtube.com/embed/U64bLz4EWRI?rel=0",
+      duration: "8 min",
+      category: "Handbuilding",
     },
     {
       id: 2,
-      title: "Introduction to Wheel Throwing",
+      title: "Easy Handmade Plate Tutorial",
       description:
-        "Master the basics of wheel throwing with this comprehensive tutorial. Learn how to center clay, open the form, and pull walls to create beautiful cylindrical vessels.",
-      thumbnailUrl: "/placeholder.svg?height=200&width=350",
-      videoUrl: "https://example.com/videos/wheel-throwing-intro.mp4",
-      duration: "18 min",
-      level: "Beginner",
-      category: "Wheel Throwing",
+        "If you've ever wondered how to make a plate from clay, this plate DIY is for you.",
+      thumbnailUrl: "assets/images/handbuilding2.png",
+      videoUrl: "https://www.youtube.com/embed/3DDm6tG_Xzc?si=QHBJyolfdofKGYZx",
+      duration: "8 min",
+      category: "Handbuilding",
     },
     {
       id: 3,
-      title: "Advanced Glazing Techniques",
+      title: "5 Tips & Tricks for Centring and Throwing on the Potter's Wheel",
       description:
-        "Explore advanced glazing methods to create stunning finishes on your pottery. This tutorial covers layering, wax resist, and specialty application techniques.",
-      thumbnailUrl: "/placeholder.svg?height=200&width=350",
-      imageUrls: [
-        "/placeholder.svg?height=400&width=600",
-        "/placeholder.svg?height=400&width=600",
-        "/placeholder.svg?height=400&width=600",
-      ],
-      duration: "25 min",
-      level: "Advanced",
-      category: "Glazing",
+        "Improve your pottery skills with five essential tips and tricks for throwing better pots.",
+      thumbnailUrl: "assets/images/wheel.png",
+      videoUrl: "https://www.youtube.com/embed/Ec9WcarGSTo?si=3HFP3F_YADpUtxMl",
+      duration: "9 min",
+      category: "Wheel Throwing",
     },
     {
       id: 4,
-      title: "Coil Building for Beginners",
+      title: "Throwing Pottery on the Wheel",
       description:
-        "Learn the ancient technique of coil building to create pottery without a wheel. This tutorial shows how to roll even coils, join them securely, and build various forms.",
-      thumbnailUrl: "/placeholder.svg?height=200&width=350",
-      videoUrl: "https://example.com/videos/coil-building.mp4",
-      duration: "15 min",
-      level: "Beginner",
-      category: "Hand Building",
+        "Few tips on how to make pulling wall whilst throwing easier",
+      thumbnailUrl: "assets/images/wheel2.png",
+      videoUrl: "https://www.youtube.com/embed/EcLF4kOiTPQ?si=hrHLuO4OlYW-jqP4",
+      duration: "4 min",
+      category: "Wheel Throwing",
     },
     {
       id: 5,
-      title: "Kiln Loading and Firing Safety",
+      title: "ceramic painting 🎨 how to paint and glaze ceramics",
       description:
-        "Essential knowledge for safe and efficient kiln operation. Learn proper loading techniques, temperature management, and safety protocols for electric and gas kilns.",
-      thumbnailUrl: "/placeholder.svg?height=200&width=350",
-      videoUrl: "https://example.com/videos/kiln-safety.mp4",
-      duration: "22 min",
-      level: "Intermediate",
-      category: "Firing",
+        "how you can paint and glaze ceramics.pottery for beginners.",
+      thumbnailUrl: "assets/images/decor.png",
+      videoUrl: "https://www.youtube.com/embed/Cr-ATLXK5ho?si=xs5SIE-5lkOI12kh",
+      duration: "15 min",
+      category: "Decorating",
     },
     {
       id: 6,
-      title: "Decorative Slab Techniques",
+      title: "Ceramic Painting Process",
       description:
-        "Explore creative ways to texture and form clay slabs into functional and decorative pieces. Learn to use texture tools, templates, and joining methods.",
-      thumbnailUrl: "/placeholder.svg?height=200&width=350",
-      imageUrls: [
-        "/placeholder.svg?height=400&width=600",
-        "/placeholder.svg?height=400&width=600",
-        "/placeholder.svg?height=400&width=600",
-      ],
-      duration: "20 min",
-      level: "Intermediate",
-      category: "Hand Building",
+        "Master the art of decorating pottery with underglaze colors. Learn the basics of sketching, mixing, and painting vibrant designs onto your pieces using fine-tipped brushes.",
+      thumbnailUrl: "assets/images/decor2.png",
+      videoUrl: "https://www.youtube.com/embed/lkt6MT-Gh8c?si=prYeXteC5TT5tr4X",
+      duration: "6 min",
+      category: "Decorating",
     },
+    
   ]
 
   constructor(private sanitizer: DomSanitizer) { }
 
 
   getSafeVideoUrl(url: string): SafeResourceUrl {
-    // Add autoplay when video is playing
     const videoUrl = this.isVideoPlaying ? `${url}?autoplay=1` : url
     return this.sanitizer.bypassSecurityTrustResourceUrl(videoUrl)
   }
@@ -123,12 +108,12 @@ export class TutorialsComponent {
   selectCategory(category: string): void {
     this.selectedCategory = category
     this.selectedTutorial = null
-    this.isVideoPlaying = false // Reset video state when changing category
+    this.isVideoPlaying = false 
   }
 
   viewTutorial(tutorial: Tutorial): void {
     this.selectedTutorial = tutorial
-    this.isVideoPlaying = false // Start with placeholder visible
+    this.isVideoPlaying = false 
   }
 
   playVideo(): void {

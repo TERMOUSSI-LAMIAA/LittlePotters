@@ -36,15 +36,6 @@
                 </div>
                 <div class="p-4">
                     <div class="flex justify-between items-center mb-2">
-                        <span class="text-xs font-medium px-2 py-1 rounded-full"
-                            [class.bg-green-100]="tutorial.level === 'Beginner'"
-                            [class.text-green-800]="tutorial.level === 'Beginner'"
-                            [class.bg-yellow-100]="tutorial.level === 'Intermediate'"
-                            [class.text-yellow-800]="tutorial.level === 'Intermediate'"
-                            [class.bg-red-100]="tutorial.level === 'Advanced'"
-                            [class.text-red-800]="tutorial.level === 'Advanced'">
-                            {{ tutorial.level }}
-                        </span>
                         <span class="text-xs text-gray-500">{{ tutorial.category }}</span>
                     </div>
                     <h3 class="text-lg font-semibold text-amber-900 mb-2">{{ tutorial.title }}</h3>
@@ -80,15 +71,6 @@
                 <h1 class="text-2xl font-bold text-amber-900 mb-2">{{ selectedTutorial.title }}</h1>
 
                 <div class="flex items-center gap-3 mb-4">
-                    <span class="text-xs font-medium px-2 py-1 rounded-full"
-                        [class.bg-green-100]="selectedTutorial.level === 'Beginner'"
-                        [class.text-green-800]="selectedTutorial.level === 'Beginner'"
-                        [class.bg-yellow-100]="selectedTutorial.level === 'Intermediate'"
-                        [class.text-yellow-800]="selectedTutorial.level === 'Intermediate'"
-                        [class.bg-red-100]="selectedTutorial.level === 'Advanced'"
-                        [class.text-red-800]="selectedTutorial.level === 'Advanced'">
-                        {{ selectedTutorial.level }}
-                    </span>
                     <span class="text-gray-500 text-sm">{{ selectedTutorial.category }}</span>
                     <span class="text-gray-500 text-sm">{{ selectedTutorial.duration }}</span>
                 </div>
@@ -97,7 +79,6 @@
 
                 <!-- Video Player (if video URL exists) -->
                 <div *ngIf="selectedTutorial.videoUrl" class="mb-6 rounded-lg overflow-hidden aspect-video">
-                    <!-- Video Placeholder - shown when isVideoPlaying is false -->
                 <!-- Thumbnail Preview (shown when not playing) -->
                 <div *ngIf="!isVideoPlaying" class="w-full h-full relative cursor-pointer" (click)="playVideo()">
                 
@@ -147,7 +128,7 @@
 
             <div class="md:w-1/3">
                 <div class="bg-amber-50 rounded-lg p-4">
-                    <h3 class="text-lg font-semibold text-amber-900 mb-3">Key Takeaways</h3>
+                    <h3 class="text-lg font-semibold text-amber-900 mb-3">What You'll Gain</h3>
                     <ul class="space-y-2">
                         <li class="flex items-start">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-amber-600 mr-2 mt-0.5"
@@ -155,7 +136,7 @@
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                     d="M5 13l4 4L19 7" />
                             </svg>
-                            <span class="text-gray-700">Master essential techniques for effective teaching</span>
+                            <span class="text-gray-700">Learn fundamental pottery techniques to enhance your skills</span>
                         </li>
                         <li class="flex items-start">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-amber-600 mr-2 mt-0.5"
@@ -163,7 +144,7 @@
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                     d="M5 13l4 4L19 7" />
                             </svg>
-                            <span class="text-gray-700">Learn how to demonstrate techniques clearly to students</span>
+                            <span class="text-gray-700">Discover how to create unique, personalized pottery pieces</span>
                         </li>
                         <li class="flex items-start">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-amber-600 mr-2 mt-0.5"
@@ -171,7 +152,7 @@
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                     d="M5 13l4 4L19 7" />
                             </svg>
-                            <span class="text-gray-700">Troubleshoot common issues students may encounter</span>
+                            <span class="text-gray-700">Gain confidence in your creative abilities through hands-on practice</span>
                         </li>
                         <li class="flex items-start">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-amber-600 mr-2 mt-0.5"
@@ -179,7 +160,7 @@
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                     d="M5 13l4 4L19 7" />
                             </svg>
-                            <span class="text-gray-700">Enhance your workshop curriculum with new ideas</span>
+                            <span class="text-gray-700">Enjoy a supportive and inspiring environment to explore your creativity</span>
                         </li>
                     </ul>
                 </div>
