@@ -4,7 +4,7 @@ services:
   backend:
     build: ./backend/littlepotters
     ports:
-      - "8081:8081"  # Map your app's port
+      - "8081:8081"  
     environment:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/little_potters
       - SPRING_DATASOURCE_USERNAME=postgres
