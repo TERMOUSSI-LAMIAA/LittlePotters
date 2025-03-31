@@ -47,4 +47,5 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
     List<Object[]> findInstructorBookingCounts(@Param("customerId") Long customerId);
 
     long countByCustomerIdAndStatus(Long customerId, ReservationStatus status);
+
 }

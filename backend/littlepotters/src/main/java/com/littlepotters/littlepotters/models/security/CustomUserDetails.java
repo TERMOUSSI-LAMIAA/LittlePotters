@@ -18,12 +18,7 @@ public class CustomUserDetails  implements UserDetails {
     private Boolean active;
     private Collection<? extends GrantedAuthority> authorities;
 
-//    @Override
-//    public Collection<? extends GrantedAuthority> getAuthorities() {
-//        return authorities.stream()
-//                .map(authority -> new SimpleGrantedAuthority("ROLE_" + authority.getAuthority()))
-//                .collect(Collectors.toList());
-//    }
+
 
     @Override
     public boolean isAccountNonExpired() {

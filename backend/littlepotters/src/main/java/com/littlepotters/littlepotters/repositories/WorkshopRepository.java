@@ -35,4 +35,5 @@ public interface WorkshopRepository extends JpaRepository<Workshop, Long> {
     long countByReservationsCustomerIdAndSchedule(
             @Param("customerId") Long customerId,
             @Param("schedule") WorkshopSchedule schedule);
+
 }

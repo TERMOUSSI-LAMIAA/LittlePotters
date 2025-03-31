@@ -286,4 +286,5 @@ public class ReservationServiceImpl  implements ReservationService {
         return workshop.getInstructor().equals(instructor);
     }
 
+
 }

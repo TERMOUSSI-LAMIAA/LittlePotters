@@ -39,7 +39,6 @@ public class AuthController {
     private final UserService userService;
     private final UserRepository userRepository;
     private final UserMapper userMapper;
-//todo: handle image in register
 
     @PostMapping("/login")
     public ResponseEntity<Map<String, Object>> login(@RequestBody AuthRequestDTO authRequestDTO) {
@@ -69,6 +68,7 @@ public class AuthController {
             throw e;
         }
     }
+
     @PostMapping(value="/register", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<AuthResponseDTO> register(@ModelAttribute @Valid UserRequestDTO userRequestDTO) {
 

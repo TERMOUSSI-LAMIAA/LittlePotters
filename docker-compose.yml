@@ -1,0 +1,53 @@
+version: '3.8'
+
+services:
+  backend:
+    build: ./backend/littlepotters
+    ports:
+      - "8081:8081"  # Map your app's port
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/little_potters
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=lamiaa
+      - JWT_SECRET=secureJwtSecretKey
+      - JWT_EXPIRATION=3600000
+      - SPRING_MAIL_HOST=smtp.gmail.com
+      - SPRING_MAIL_PORT=587
+      - SPRING_MAIL_USERNAME=lamiaa.eagle@gmail.com
+      - SPRING_MAIL_PASSWORD=pkagrdifzvpgzmlp
+      - SPRING_MAIL_PROPERTIES_MAIL_SMTP_AUTH=true
+      - SPRING_MAIL_PROPERTIES_MAIL_SMTP_STARTTLS_ENABLE=true
+      - ADMIN_EMAIL=admin@example.com
+      - ADMIN_PASSWORD=password123
+      - ADMIN_ROLE=ADMIN
+      - ADMIN_FULLNAME=Administrateur
+      - ADMIN_PHONE=0000000000
+    depends_on:
+      - db
+
+  frontend:
+    build: ./frontend/littlepotters
+    ports:
+      - "4200:4200"  
+    depends_on:
+      - backend
+    volumes:
+      - ./frontend/littlepotters:/app  
+      - /app/node_modules  
+    command: npm start 
+
+  db:
+    image: postgres:13
+    environment:
+      - POSTGRES_DB=little_potters
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=lamiaa
+    ports:
+      - "5432:5432"  
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:
+
+  
