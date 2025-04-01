@@ -7,18 +7,18 @@ services:
       - "8081:8081"  
     environment:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/little_potters
-      - SPRING_DATASOURCE_USERNAME=postgres
-      - SPRING_DATASOURCE_PASSWORD=lamiaa
-      - JWT_SECRET=secureJwtSecretKey
-      - JWT_EXPIRATION=3600000
+      - SPRING_DATASOURCE_USERNAME=
+      - SPRING_DATASOURCE_PASSWORD=
+      - JWT_SECRET=
+      - JWT_EXPIRATION=
       - SPRING_MAIL_HOST=smtp.gmail.com
       - SPRING_MAIL_PORT=587
-      - SPRING_MAIL_USERNAME=lamiaa.eagle@gmail.com
-      - SPRING_MAIL_PASSWORD=pkagrdifzvpgzmlp
+      - SPRING_MAIL_USERNAME=
+      - SPRING_MAIL_PASSWORD=
       - SPRING_MAIL_PROPERTIES_MAIL_SMTP_AUTH=true
       - SPRING_MAIL_PROPERTIES_MAIL_SMTP_STARTTLS_ENABLE=true
-      - ADMIN_EMAIL=admin@example.com
-      - ADMIN_PASSWORD=password123
+      - ADMIN_EMAIL=
+      - ADMIN_PASSWORD=
       - ADMIN_ROLE=ADMIN
       - ADMIN_FULLNAME=Administrateur
       - ADMIN_PHONE=0000000000
@@ -40,8 +40,8 @@ services:
     image: postgres:13
     environment:
       - POSTGRES_DB=little_potters
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=lamiaa
+      - POSTGRES_USER=
+      - POSTGRES_PASSWORD=
     ports:
       - "5432:5432"  
     volumes:
